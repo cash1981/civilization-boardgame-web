@@ -1,1 +1,2145 @@
-"use strict";!function(){var a=angular.module("civApp",["ngAnimate","ngResource","ngRoute","ngSanitize","ngMessages","ui.bootstrap","ngTouch","ab-base64","angular-growl","ngTable","nya.bootstrap.select"]);a.config(["$routeProvider",function(a){a.when("/",{templateUrl:"views/list.html",controller:"GameListController as gameListCtrl",resolve:{games:["GameService",function(a){return a.getAllGames()}]}}).when("/game/:id",{templateUrl:"views/game.html",controller:"ChatController as chatCtrl",resolve:{chatList:["GameService","$route",function(a,b){return a.getChatList(b.current.params.id)}]}}).when("/help",{templateUrl:"views/help.html"}).when("/about",{templateUrl:"views/about.html"}).when("/logout",{redirectTo:"/"}).when("/endgame",{redirectTo:"/"}).otherwise({templateUrl:"404.html"})}]),a.config(["growlProvider",function(a){a.globalTimeToLive(7e3),a.globalDisableCountDown(!1),a.globalPosition("top-center"),a.onlyUniqueMessages(!0)}]).constant("BASE_URL","https://civilization-boardgame.herokuapp.com/api")}(),function(a){a.config(["$provide",function(a){a.provider("GameService",["BASE_URL",function(a){var b={},c={},d={},e={},f=a+"/game/";this.$get=["$http","$log","growl","$location","$q","formEncode","currentUser",function(a,g,h,i,j,k,l){var m=function(b){if(!b)return j.reject("No game to create");var c={name:b.name,type:b.type,numOfPlayers:b.numOfPlayers,color:b.color};return a.post(f,c).success(function(a,b,c){h.success("Game created!");var d=c("Location");if(d){var e=_.last(d.split("/"));e&&i.path("/game/"+e)}return a}).error(function(a){return h.error("Could not create game"),a})},n=function(b){return b&&b.id?a.post(f+b.id+"/join").then(function(a){return a.data}):j.reject("No game to join")},o=function(c){var e=f+c,g=c+l.profile.id;return d[g]=!0,a.get(e).then(function(a){return b[g]=a.data,d[g]=!1,a.data})},p=function(a){var c=a+l.profile.id;return b[c]?b[c]:void(d[c]||o(a))},q=function(){return a.get(f).then(function(a){return a.data})},r=function(b,c){var d=f+b+"/undo/"+c;a.put(d).success(function(a){return h.success("Undo initiated!"),a}).success(function(a){return o(b),a}).error(function(a,b){return h.error(400===b?"Undo already initiated":"Could not initiate undo for unknown reason"),a})},s=function(b){if(!b)return j.reject("No gameid");var c=f+b+"/techs";return a.get(c).then(function(a){return g.info("Got all available techs"),a.data})},t=function(b,c){var d=f+b+"/vote/"+c+"/yes";a.put(d).success(function(a){return h.success("You voted yes!"),a}).success(function(a){return o(b),a}).error(function(a,b){return h.error(412===b?"Could not register vote. Nothing to vote on":"Could not vote for unknown reason"),a})},u=function(b,c){var d=f+b+"/vote/"+c+"/no";a.put(d).success(function(a){return h.success("You voted no!"),a}).success(function(a){return o(b),a}).error(function(a,b){return h.error(412===b?"Could not register vote. Nothing to vote on":"Could not vote for unknown reason"),a})},v=function(b){if(!b)return j.reject("No gameid");var c=f+b+"/chat/";return a.get(c).then(function(a){return a.data})},w=function(b,c){if(!b||!c)return j.reject("No gameid or chat message");var d=f+b+"/chat/",e={headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}},g=k({message:encodeURIComponent(c)});return a.post(d,g,e).then(function(a){return a.data})},x=function(a){var b=a+l.profile.id;if(!e[b])return c[b]?c[b]:y(a)},y=function(b){if(!b)return j.reject("No gameid");var d=b+l.profile.id,g=f+b+"/players";return e[d]=!0,a.get(g,{cache:!0}).then(function(a){return c[d]=a.data,e[d]=!1,a.data})},z=function(b){return b?a["delete"](f+b).then(function(a){return h.info("Game has ended"),a.data}):j.reject("No gameid")},A=function(b){return b?a.post(f+b+"/withdraw").then(function(a){return h.info("You have withdrawn from the game"),a.data}):j.reject("No gameid")},B=function(b,c){if(!c||!b)return j.reject("No maplink or gameid");var d=f+b+"/map/",e={headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}},g=k({link:encodeURIComponent(c)});return a.post(d,g,e).then(function(a){return a.data})},C=function(b,c){if(!c||!b)return j.reject("No assetlink or gameid");var d=f+b+"/asset/",e={headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}},g=k({link:encodeURIComponent(c)});return a.post(d,g,e).then(function(a){return a.data})};return{getAllGames:q,getGameById:p,fetchGameByIdFromServer:o,joinGame:n,createGame:m,undoDraw:r,getAvailableTechs:s,voteYes:t,voteNo:u,getChatList:v,chat:w,players:x,fetchPlayersFromServer:y,endGame:z,withdrawFromGame:A,updateMapLink:B,updateAssetLink:C}}]}])}])}(angular.module("civApp")),function(a){a.factory("DrawService",["$http","$q","$log","growl","currentUser","BASE_URL","GameService","Util",function(a,b,c,d,e,f,g,h){var i=f+"/draw/",j=function(b,e){var f=i+b+"/battle";return a({url:f,method:"PUT",params:{numOfUnits:e}}).success(function(a){return a.length>0?d.success("Units added to battlehand"):d.warning("You have no units to draw"),a}).success(function(a){return g.fetchGameByIdFromServer(b),a}).error(function(a){return c.error(a),d.error("Could not add units to battlehand for unknown reason"),a})},k=function(b){var e=i+b+"/battle/barbarians";return a.put(e).success(function(a){return d.success("Barbarians have been drawn"),a}).success(function(a){return g.fetchGameByIdFromServer(b),a}).error(function(a){return c.error(a),d.error(412===a.status?"Cannot draw more barbarians until the others are discarded":"Unable to draw barbarian units"),a})},l=function(c){var e=i+c+"/battle/discard/barbarians";return a.post(e).success(function(a){return d.success("Barbarians discarded"),a}).success(function(a){return g.fetchGameByIdFromServer(c),a}).error(function(){return d.error("Could not discard barbarians for unknown reason"),b.reject()})},m=function(b){var c=i+b+"/battlehand/reveal";return a.put(c).success(function(a){return d.success("Units are revealed and discarded from hand"),a}).success(function(a){return g.fetchGameByIdFromServer(b),a}).error(function(){d.error("Units could not be revealed and discarded")})},n=function(b,c){var e=i+b+"/"+c;return a.post(e).success(function(a){return d.success("Item successfully drawn"),a}).success(function(a){return g.fetchGameByIdFromServer(b),a}).error(function(a,b){d.error(410===b?"There are no more "+c+" to draw!":"Item could not be drawn")})},o=function(b,c,e){var f=i+b+"/"+c+"/loot/"+e;return a.post(f).success(function(a){var b=h.nextElement(a);return d.success("Item "+b.name+" looted by another player"),a}).success(function(a){return g.fetchGameByIdFromServer(b),a}).error(function(a){return d.error("Item could not be lootet"),a})};return{drawUnitsFromHand:j,revealHand:m,discardBarbarians:l,drawBarbarians:k,drawItem:n,loot:o}}])}(angular.module("civApp")),function(a){a.factory("PlayerService",["$http","$q","$log","growl","currentUser","BASE_URL","GameService","Util",function(a,b,c,d,e,f,g,h){var i=f+"/player/",j=function(e,f){if(!e||!f)return b.reject("No gameId or logid");var j=i+e+"/item/reveal",k={name:h.nextElement(f).name,ownerId:h.nextElement(f).ownerId,sheetName:h.nextElement(f).sheetName,pbfId:e};c.info("Before calling put, json is ",angular.toJson(k));var l={headers:{"Content-Type":"application/json"}};return a.put(j,k,l).success(function(a){return d.success("Item revealed"),a}).success(function(a){return g.fetchGameByIdFromServer(e),a}).error(function(){d.error("Item could not be revealed")})},k=function(c,e){if(!c||!e)return b.reject("No gameId or logid");var f=i+c+"/tech/reveal/"+e;a.put(f).success(function(a){return d.success("Research revealed!"),a}).success(function(a){return g.fetchGameByIdFromServer(c),a}).error(function(a){return d.error("Could not reveal tech"),a})},l=function(e,f){if(!e||!f)return b.reject("No gameId or item");var j=i+e+"/item/discard",k={name:h.nextElement(f).name,ownerId:h.nextElement(f).ownerId,sheetName:h.nextElement(f).sheetName,pbfId:e};c.info("Before calling post, json is ",angular.toJson(k));var l={headers:{"Content-Type":"application/json"}};a.post(j,k,l).success(function(a){return d.success("Item discarded"),a}).success(function(a){return g.fetchGameByIdFromServer(e),a}).error(function(a){return d.error("Item could not be discarded"),a})},m=function(c){if(!c)return b.reject("No gameId");var e=i+c+"/endturn";return a.post(e).success(function(a){return d.success("Turn ended"),a}).success(function(a){return g.fetchGameByIdFromServer(c),a}).error(function(a){return d.error("Could not end turn"),a})},n=function(f){if(!f)return b.reject("No gameId");var g=i+f+"/tech/"+e.profile.id;return a.get(g).then(function(a){return a.data},function(a){return c.error(a),d.error("Could not get chosen techs"),b.reject()})},o=function(c,e){if(!c||!e)return b.reject("No gameId or tech");var f=i+c+"/tech/choose";return a({url:f,method:"POST",params:{name:e.tech.name}}).success(function(a){return d.success("Tech chosen successfully"),a}).success(function(a){return g.fetchGameByIdFromServer(c),a}).error(function(a){return d.error("Could not choose tech"),a})},p=function(e,f){if(!e||!f)return b.reject("No gameId or tech");var h=i+e+"/tech/remove";return a({url:h,method:"DELETE",params:{name:f}}).success(function(a){return d.success("Tech removed successfully"),a}).success(function(a){return g.fetchGameByIdFromServer(e),a}).error(function(a){return c.error(a),d.error("Could not remove tech"),a})},q=function(e,f){if(!e||!f)return b.reject("Couldn't get gameId or item");var h=i+e+"/trade/",j={name:f.name,sheetName:f.sheetName,pbfId:e,ownerId:f.ownerId};c.info("Before calling post, json is ",angular.toJson(j));var k={headers:{"Content-Type":"application/json"}};a.post(h,j,k).success(function(a){return d.success("Item sent to another player"),a}).success(function(a){return g.fetchGameByIdFromServer(e),a}).error(function(a){return d.error("Item could not be sent to another player"),a})};return{revealItem:j,revealTech:k,discardItem:l,endTurn:m,selectTech:o,getChosenTechs:n,removeTech:p,trade:q}}])}(angular.module("civApp")),function(a){var b=function(a){var b=0,c=function(c){return b+=1,a.when(c)},d=function(c){return b-=1,a.reject(c)},e=function(c){return b-=1,a.when(c)},f=function(c){return b-=1,a.reject(c)},g=function(){return b};return{request:c,response:e,requestError:d,responseError:f,getRequestCount:g}};b.$inject=["$q"],a.factory("requestCounter",b),a.config(["$httpProvider",function(a){a.interceptors.push("requestCounter")}])}(angular.module("civApp")),function(a){var b=function(a){var b=a.localStorage,c=function(a,c){c=angular.toJson(c),b.setItem(a,c)},d=function(a){var c=b.getItem(a);return c&&(c=angular.fromJson(c)),c},e=function(a){b.removeItem(a)};return{add:c,get:d,remove:e}};b.$inject=["$window"],a.factory("localStorage",b)}(angular.module("civApp")),function(a){var b=function(){return function(a){var b=[];for(var c in a)b.push(encodeURIComponent(c)+"="+encodeURIComponent(a[c]));return b.join("&").replace(/%20/g,"+")}};a.factory("formEncode",b)}(angular.module("civApp")),function(a){var b=function(){var a="/auth",b="";this.$get=["$q","$location",function(c,d){return{responseError:function(e){return 401===e.status&&(b=d.path(),d.path(a)),c.reject(e)},redirectPreLogin:function(){b?(d.path(b),b=""):d.path("/")}}}]};a.provider("loginRedirect",b),a.config(["$httpProvider",function(a){a.interceptors.push("loginRedirect")}])}(angular.module("civApp")),function(a){var b="authorizationEncoded",c=function(a){var c=function(){a.add(b,f)},d=function(){a.remove(b)},e=function(){var c={username:"",password:"",id:"",authorizationEncoded:"",get loggedIn(){return this.authorizationEncoded?!0:!1}},d=a.get(b);return d&&(c.username=d.username,c.password=d.password,c.id=d.id,c.authorizationEncoded=d.authorizationEncoded),c},f=e();return{save:c,remove:d,profile:f}};c.$inject=["localStorage"],a.factory("currentUser",c)}(angular.module("civApp")),function(a){var b=function(a,b){return{request:function(c){return a.profile.authorizationEncoded&&(c.headers.Authorization="Basic "+a.profile.authorizationEncoded),b.when(c)}}};b.$inject=["currentUser","$q"],a.factory("addToken",b),a.config(["$httpProvider",function(a){a.interceptors.push("addToken")}])}(angular.module("civApp")),function(a){var b=function(){this.$get=function(a,b,c,d,e,f){var g=e+"/auth",h=function(a,b){return function(e){return c.profile.username=a,c.profile.id=e.data.id,c.profile.authorizationEncoded=d.encode(a+":"+b),c.save(),a}},i=function(c,d){var e={headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}},i=b({username:encodeURIComponent(c),password:encodeURIComponent(d),grant_type:"password"});return a.post(g+"/login",i,e).then(h(c,d),function(){f.error("Invalid login")})},j=function(){c.profile.username="",c.profile.password="",c.profile.authorizationEncoded="",c.profile.id="",c.remove()},k=function(c){var e={headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}},h=b({username:encodeURIComponent(c.username),password:encodeURIComponent(d.encode(c.password)),email:encodeURIComponent(c.email)});return a.post(g+"/register",h,e).success(function(a){return f.success("User created"),a}).success(function(a){return i(c.username,c.password),a}).error(function(a){return f.error("Could not register"),a})};return{login:i,logout:j,register:k}}};a.config(["$provide",function(a){a.provider("basicauth",[b])}])}(angular.module("civApp")),function(a){var b=function(){var a=function(a){if(a){var b=Object.keys(a);if(b&&b.length>0)return a[b[0]]}return a},b=function(a){var b="https://docs.google.com/presentation/d/",c="/embed?start=false&loop=false&delayms=3000";return b+a+c},c=function(a){var b="https://docs.google.com/spreadsheets/d/",c="/pubhtml?widget=true&amp;headers=false";return b+a+c};return{nextElement:a,mapLink:b,assetLink:c}};a.factory("Util",b)}(angular.module("civApp")),function(a){var b=function(){this.value={show:!1,showEndGame:!1},this.getValue=function(){return this.value},this.setShowValue=function(a){this.value.show=a},this.setShowEndGameValue=function(a){this.value.showEndGame=a}};a.service("GameOption",b)}(angular.module("civApp")),function(a){var b=function(a){return{restrict:"EAC",transclude:!0,scope:{},template:"<ng-transclude ng-show='requestCount'></ng-transclude>",link:function(b){b.$watch(function(){return a.getRequestCount()},function(a){b.requestCount=a})}}};b.$inject=["requestCounter"],a.directive("workSpinner",b)}(angular.module("civApp")),angular.module("civApp").directive("ngReallyClick",[function(){return{restrict:"A",link:function(a,b,c){b.bind("click",function(){var b=c.ngReallyMessage;b&&confirm(b)&&a.$apply(c.ngReallyClick)})}}}]),angular.module("civApp").directive("uniqueUsername",["$http","BASE_URL",function(a,b){return{require:"ngModel",link:function(c,d,e,f){c.busy=!1,c.$watch(e.ngModel,function(d){if(f.$setValidity("isTaken",!0),f.$setValidity("invalidChars",!0),d){var e=b+"/auth/register/check/username";c.busy=!0,a.post(e,{name:d}).success(function(){c.busy=!1}).error(function(a){a.isTaken?f.$setValidity("isTaken",!1):a.invalidChars&&f.$setValidity("invalidChars",!1),c.busy=!1})}})}}}]),angular.module("civApp").directive("uniqueGamename",["$http","BASE_URL",function(a,b){return{require:"ngModel",link:function(c,d,e,f){c.busy=!1,c.$watch(e.ngModel,function(d){if(f.$setValidity("isTaken",!0),f.$setValidity("invalidChars",!0),d){var e=b+"/game/check/gamename";c.busy=!0,a.post(e,{name:d}).success(function(){c.busy=!1}).error(function(a){a.isTaken?f.$setValidity("isTaken",!1):a.invalidChars&&f.$setValidity("invalidChars",!1),c.busy=!1})}})}}}]),angular.module("civApp").directive("match",[function(){return{require:"ngModel",link:function(a,b,c,d){a.$watch("["+c.ngModel+", "+c.match+"]",function(a){d.$setValidity("match",a[0]===a[1])},!0)}}}]),function(a){var b=function(a,b,c,d,e,f){var g=this;g.isUserPlaying=function(a){if(a)for(var b=0;b<a.length;b++){var c=a[b];if(c&&c.username===g.user.username)return!0}return!1},g.joinGame=function(a){var d=c.joinGame(a).then(function(a){return g.game=a,f.userHasAccess=a.player&&a.player.username===g.user.username,g.yourTurn=a.player&&a.player.yourTurn,a});return b.debug("User wants to join game with nr "+a.id),d},g.showMyGames=function(){f.filterContent=f.onlyMyGames.value?g.user.username:""},g.openCreateNewGame=function(a){var d=e.open({templateUrl:"createNewGame.html",controller:"RegisterController as registerCtrl",size:a});d.result.then(function(a){a&&(b.info(a.name),b.info(a.type),b.info(a.numOfPlayers),b.info(a.color),c.createGame(a))},function(){})};var h=function(){g.user=d.profile,g.games=[],g.finishedGames=[],f.onlyMyGames={},_.forEach(a,function(a){a.active?g.games.push(a):g.finishedGames.push(a)}),b.info("Got games")};h()};a.controller("GameListController",["games","$log","GameService","currentUser","$modal","$scope",b])}(angular.module("civApp")),function(a){var b=function(a,b,c,d,e,f,g,h,i,j,k,l,m){function n(a){return j.userHasAccess&&a&&a.draw&&a.log.indexOf("drew")>-1}var o=this;j.$watch(function(){return c.getGameById(o.gameId)},function(a){if(a){var b=a;j.currentGame=b,j.currentGame.mapLink=m.trustAsResourceUrl(j.currentGame.mapLink?f.mapLink(j.currentGame.mapLink):"https://docs.google.com/presentation/d/1hgP0f6hj4-lU6ysdOb02gd7oC5gXo8zAAke4RhgIt54/embed?start=false&loop=false&delayms=3000"),j.currentGame.assetLink=m.trustAsResourceUrl(j.currentGame.assetLink?f.assetLink(j.currentGame.assetLink):"https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/pubhtml?widget=true&amp;headers=false");var c=b.player&&b.player.username===o.user.username&&b.active;return j.userHasAccess=c,g.setShowValue(c),g.setShowEndGameValue(c&&b.player.gameCreator),b.active&&(_.forEach(b.publicLogs,function(a){return j.canVote(a)?(k.warning("An undo was requested which needs your vote"),!1):void 0}),o.yourTurn=b.player&&b.player.yourTurn,o.yourTurn&&k.info("<strong>It's your turn! Press end turn when you are done!</strong>")),o.tableParams.reload(),b}}),o.endTurn=function(){a.info("Ending turn"),d.endTurn(o.gameId)},j.canInitiateUndo=function(a){return n(a)&&!a.draw.undo},j.initiateUndo=function(a){c.undoDraw(b.id,a)},j.canVote=function(a){var b=!1;if(n(a)&&a.draw.undo){var c=a.draw.undo.votes;for(var d in c)if(d===o.user.id)return!1;return!0}return b},j.openModalVote=function(b,d){var e=l.open({templateUrl:"modalVote.html",controller:"VoteController",size:b,resolve:{logToUndo:function(){return d}}});e.result.then(function(b){a.info("Vote was "+b.vote+" and logid is "+b.id),b.vote?c.voteYes(o.gameId,b.id):c.voteNo(o.gameId,b.id)},function(){a.info("Modal dismissed at: "+new Date)})},o.updateMapLink=function(){var d=j.currentGame.newMapLink,e=new RegExp("^https://docs.google.com/presentation/d/","i");if(!e.test(d))return void k.error("Wrong URL. Must start with https://docs.google.com/presentation/d/");var g=c.updateMapLink(b.id,d).then(function(b){if(b){var c=f.mapLink(b.msg);a.info("Map link is "+c),j.currentGame.mapLink=m.trustAsResourceUrl(c)}});return g},o.updateAssetLink=function(){var d=j.currentGame.newAssetLink,e=new RegExp("^https://docs.google.com/spreadsheets/d/","i");if(!e.test(d))return void k.error("Wrong URL. Must start with https://docs.google.com/spreadsheets/d/");var g=c.updateAssetLink(b.id,d).then(function(b){if(b){var c=f.assetLink(b.msg);a.info("Asset link is "+c),j.currentGame.assetLink=m.trustAsResourceUrl(c)}});return g},o.tableParams=new i({page:1,count:10,sorting:{created:"desc"}},{total:0,getData:function(a,b){if(!j.currentGame)return void a.reject("No game yet");var c=j.currentGame,d=_.last(c.publicLogs);d&&d.log&&(j.latestLog=d.log);var e=b.sorting()?h("orderBy")(c.publicLogs,b.orderBy()):c.publicLogs;b.total(c.publicLogs.length),a.resolve(e.slice((b.page()-1)*b.count(),b.page()*b.count()))},$scope:{$data:{},$emit:function(){}}}),o.nextElement=function(a){return f.nextElement(a)};var p=function(){o.user=e.profile,j.userHasAccess=!1,o.yourTurn=!1,o.gameId=b.id,o.GameOption=g};p()};a.controller("GameController",["$log","$routeParams","GameService","PlayerService","currentUser","Util","GameOption","$filter","ngTableParams","$scope","growl","$modal","$sce",b])}(angular.module("civApp")),function(a){var b=function(a,b,c,d,e,f,g,h){var i=this;i.GameOption=g,i.user=d.profile,i.username="",i.password="",i.user=d.profile,i.registerUsername=null,i.registerEmail=null,i.registerPassword=null,i.registerVerification=null,i.clearOptions=function(){g.setShowValue(!1),g.setShowEndGameValue(!1)},i.endGame=function(){var c=a.getGameById(b.id);c&&c.player&&c.player.gameCreator?(i.clearOptions(),a.endGame(b.id)):e.error("Only the game creator can end a game!")},i.withdrawGame=function(){var c=a.getGameById(b.id);if(c&&c.player){if(c.player.gameCreator)return void e.error("As game creator you cannot withdraw from the game. You can only end it!");c.player.username===i.user.username?(i.clearOptions(),a.withdrawFromGame(b.id)):e.error("Only player playing the game can withdraw from it!")}},i.login=function(a){a.$valid&&(c.login(i.username,i.password).then(f.redirectPreLogin),i.password="")},i.signOut=function(){c.logout()},i.openSignup=function(a){var b=h.open({templateUrl:"signup.html",controller:"RegisterController as registerCtrl",size:a});b.result.then(function(a){a&&(c.register(a),i.registerUsername=null,i.registerEmail=null,i.registerPassword=null,i.registerVerification=null)},function(){})}};a.controller("NavController",["GameService","$routeParams","basicauth","currentUser","growl","loginRedirect","GameOption","$modal",b])}(angular.module("civApp")),function(a){var b=function(a,b,c,d,e,f,g,h){var i=this;h.$watch(function(){return b.getGameById(g.id)},function(a){if(a){var b=a;i.barbarians=b.player.barbarians,i.battlehand=b.player.battlehand}});var j=function(){i.user=d.profile,i.number=3,i.barbarians=h.currentGame.player.barbarians?h.currentGame.player.barbarians:[],i.battlehand=h.currentGame.player.battlehand?h.currentGame.player.battlehand:[]};i.drawUnits=function(){return a.info("Draw "+i.number+" units"),i.number<1?void f.error("You must draw at least 1 unit"):void c.drawUnitsFromHand(g.id,i.number)},i.drawBarbarians=function(){c.drawBarbarians(g.id)},i.discardBarbarians=function(){c.discardBarbarians(g.id).then(function(){i.barbarians=[]})},i.nextElement=function(a){return e.nextElement(a)},i.revealBattlehand=function(){i.battlehand&&i.battlehand.length>0&&c.revealHand(g.id)},j()};a.controller("DrawController",["$log","GameService","DrawService","currentUser","Util","growl","$routeParams","$scope",b])}(angular.module("civApp")),function(a){var b=function(a,b,c,d,e,f,g,h,i,j,k){function l(a){a.forEach(function(a){var b=Object.keys(a)[0];"cultureI"===b||"cultureII"===b||"cultureIII"===b?n.cultureCards.push(a):"greatperson"===b?n.greatPersons.push(a):"hut"===b?n.huts.push(a):"village"===b?n.villages.push(a):"tile"===b?n.tiles.push(a):"civ"===b?n.civs.push(a):"aircraft"===b||"mounted"===b||"infantry"===b||"artillery"===b?n.units.push(a):n.items.push(a)})}function m(a){n.chosenTechs1=[],n.chosenTechs2=[],n.chosenTechs3=[],n.chosenTechs4=[],n.chosenTechs5=[],n.availableTech1=[],n.availableTech2=[],n.availableTech3=[],n.availableTech4=[],a.forEach(function(a){var b=a.tech||a;b&&(1===b.level?n.chosenTechs1.push(b):2===b.level?n.chosenTechs2.push(b):3===b.level?n.chosenTechs3.push(b):4===b.level?n.chosenTechs4.push(b):5===b.level&&n.chosenTechs5.push(b))});for(var b=0;b<5-n.chosenTechs1.length;b++)n.availableTech1.push(b);for(var c=0;c<4-n.chosenTechs2.length;c++)n.availableTech2.push(c);for(var d=0;d<3-n.chosenTechs3.length;d++)n.availableTech3.push(d);for(var e=0;e<2-n.chosenTechs4.length;e++)n.availableTech4.push(e)}var n=this;n.nextElement=function(a){return f.nextElement(a)},n.itemName=function(a){var b=Object.keys(a);return b&&b.length>-1?_.capitalize(b[0]):a},n.revealItem=function(c){var d=j.revealItem(b.id,c);a.info("Revealed item, response is "+d)},n.discardItem=function(c){a.info("Discard item "+c.name),j.discardItem(b.id,c)},i.$watch(function(){return c.getGameById(b.id)},function(a){if(a){var b=a;return n.techsChosen=b.player.techsChosen,m(n.techsChosen),n.civs=[],n.cultureCards=[],n.greatPersons=[],n.huts=[],n.villages=[],n.tiles=[],n.units=[],n.items=[],l(b.player.items),n.tablePrivateLog.reload(),b}}),n.drawItem=function(a){a&&d.drawItem(b.id,a)},n.selectTech=function(){i.selectedTech.tech&&j.selectTech(b.id,i.selectedTech.tech).then(function(){c.getAvailableTechs(b.id).then(function(a){n.allAvailableTechs=a})})},n.removeTech=function(d){a.info("Removing tech "+d),j.removeTech(b.id,d).then(function(){c.getAvailableTechs(b.id).then(function(a){n.allAvailableTechs=a})})},n.canRevealTech=function(a){return i.userHasAccess&&a&&a.draw&&a.draw.hidden&&a.log.indexOf("researched")>-1},n.revealTechFromLog=function(a){j.revealTech(b.id,a)};var o=(c.getAvailableTechs(b.id).then(function(a){n.allAvailableTechs=a}),j.getChosenTechs(b.id).then(function(a){n.chosenTechs=a,m(n.chosenTechs)}),c.players(b.id));n.openModalTrade=function(c,d){if(d){var e=k.open({templateUrl:"modalTrade.html",controller:"TradeController as tradeCtrl",size:c,resolve:{players:function(){return o},item:function(){return d}}});e.result.then(function(a){j.trade(b.id,a)},function(){a.info("Modal dismissed at: "+new Date)})}},n.openModalLoot=function(c,e){if(e){var f=k.open({templateUrl:"modalLoot.html",controller:"LootController as lootCtrl",size:c,resolve:{players:function(){return o},sheetName:function(){return e}}});f.result.then(function(a){d.loot(b.id,a.sheetName,a.playerId)},function(){a.info("Modal dismissed at: "+new Date)})}},n.tablePrivateLog=new h({page:1,count:10,sorting:{created:"desc"}},{total:0,getData:function(a,b){if(!i.currentGame)return void a.reject("No game yet");var c=i.currentGame,d=b.sorting()?g("orderBy")(c.privateLogs,b.orderBy()):c.privateLogs;b.total(c.privateLogs.length),a.resolve(d.slice((b.page()-1)*b.count(),b.page()*b.count()))},$scope:{$data:{},$emit:function(){}}});var p=function(){n.user=e.profile,n.allAvailableTechs=[],i.privateLogCollapse=!1,i.itemCollapse=!1,i.gpCollapse=!1,i.unitCollapse=!1,i.cultureCardsCollapse=!1,i.civCollapse=!1,i.hutsCollapse=!1,i.villagesCollapse=!1,i.selectedTech={},n.yourTurn=!1,n.items=[],n.techsChosen=[],n.civs=[],n.cultureCards=[],n.greatPersons=[],n.huts=[],n.villages=[],n.tiles=[],n.units=[]};p()};a.controller("UserItemController",["$log","$routeParams","GameService","DrawService","currentUser","Util","$filter","ngTableParams","$scope","PlayerService","$modal",b])}(angular.module("civApp")),angular.module("civApp").controller("VoteController",["$scope","$modalInstance","$log","logToUndo",function(a,b,c,d){a.voteOk=function(){var a={id:d.id,vote:!0};b.close(a)},a.voteNok=function(){var a={id:d.id,vote:!1};b.close(a)},a.voteCancel=function(){b.dismiss("cancel")}}]),angular.module("civApp").controller("RegisterController",["$scope","$modalInstance","$log","growl",function(a,b,c,d){var e=this;e.gameTypes=[{label:"Base Game",value:"BASE",disabled:!0},{label:"Fame and Fortune (FAF)",value:"FAF",disabled:!0},{label:"Wisdom and Warfare (WAW) & Fame and Fortune",value:"WAW",disabled:!1},{label:"Dawn of Civilization",value:"DOC",disabled:!0}],e.selectedGametype=e.gameTypes[2],a.createGameOk=function(){if(e.selectedGametype&&"WAW"!==e.selectedGametype.value)return void d.error("We only support Wisdom and Warfare the time being");var a={name:e.gamename,type:e.selectedGametype.value,numOfPlayers:e.numOfPlayers,color:e.color};b.close(a)},a.registerOk=function(){if(!a.verification||!a.password&&a.password!==a.verification)return void d.error("Passwords did not match");if(!a.securityQuestion||"WRITING"!==a.securityQuestion.toUpperCase())return void d.error("Wrong answer to the security question");var c={username:e.registerUsername,email:e.registerEmail,password:a.password};b.close(c)},a.registerCancel=function(){b.dismiss("cancel")}}]),function(a){var b=function(a,b,c,d,e,f,g){var h=this;h.chat=function(){h.chatMessage&&d.chat(f.id,h.chatMessage).then(function(a){var b=a;b&&(b.message=a.message,g.chatList.unshift(b),h.chatMessage="")})};var i=function(){g.chatList=a};i()};a.controller("ChatController",["chatList","$log","currentUser","GameService","growl","$routeParams","$scope",b])}(angular.module("civApp")),angular.module("civApp").controller("TradeController",["players","item","currentUser","$scope","$modalInstance",function(a,b,c,d,e){var f=this;f.players=a,f.item=b,f.ok=function(){b.ownerId=f.playerTradeChosen.playerId,e.close(b)},f.cancel=function(){e.dismiss("cancel")}}]),angular.module("civApp").controller("LootController",["players","sheetName","currentUser","$scope","$modalInstance",function(a,b,c,d,e){var f=this;f.players=a,f.sheetName=b,f.ok=function(){e.close({playerId:f.playerLootChosen.playerId,sheetName:b})},f.cancel=function(){e.dismiss("cancel")}}]);
+'use strict';
+
+(function () {
+  var application = angular.module('civApp', [
+    'ngAnimate',
+    'ngResource',
+    'ngRoute',
+    'ngSanitize',
+    'ngMessages',
+    'ui.bootstrap',
+    'ngTouch',
+    'ab-base64',
+    'angular-growl',
+    'ngTable',
+    'nya.bootstrap.select'
+  ]);
+
+  application.config(function ($routeProvider) {
+    $routeProvider
+      .when('/', {
+        templateUrl: 'views/list.html',
+        controller: "GameListController as gameListCtrl",
+        resolve: {
+          games: ["GameService", function(m) {
+            return m.getAllGames();
+          }]
+        }
+      })
+      .when('/game/:id', {
+        templateUrl: 'views/game.html',
+        controller: "ChatController as chatCtrl",
+        resolve: {
+          chatList: ["GameService", "$route", function(m, r) {
+            //return m.getChatList(r.$$url.split('/')[2]);
+            return m.getChatList(r.current.params.id);
+          }]
+        }
+        //Use resolve when you want the data to appear before going to the page
+        /*
+         ,resolve: {
+         game = function(GameService) { GameService.getGame(gameId) }
+         Then put this game in the controller, but you need to define controller here also
+         }
+         */
+      })
+      .when('/help', {
+        templateUrl: 'views/help.html'
+      })
+      .when('/about', {
+        templateUrl: 'views/about.html'
+      })
+      .when('/logout', {
+        redirectTo: '/'
+      })
+      .when('/endgame', {
+        redirectTo: '/'
+      })
+      .otherwise({
+        templateUrl: '404.html'
+      });
+  });
+
+  application.config(function (growlProvider) {
+    growlProvider.globalTimeToLive(7000);
+    growlProvider.globalDisableCountDown(false);
+    growlProvider.globalPosition('top-center');
+    growlProvider.onlyUniqueMessages(true);
+  })
+    .constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
+
+}());
+
+'use strict';
+(function (civApp) {
+
+  civApp.config(["$provide", function ($provide) {
+    $provide.provider("GameService", ["BASE_URL", function (BASE_URL) {
+      var games = {};
+      var playersCache = {};
+      var loading = {};
+      var playerLoading = {};
+      var baseUrl = BASE_URL + "/game/";
+
+      this.$get = ["$http", "$log", "growl", "$location", "$q", "formEncode", "currentUser", function ($http, $log, growl, $location, $q, formEncode, currentUser) {
+        var createGame = function (game) {
+          if (!game) {
+            return $q.reject("No game to create");
+          }
+          var newGameDTO = {
+            "name": game.name,
+            "type": game.type,
+            "numOfPlayers": game.numOfPlayers,
+            "color": game.color
+          };
+
+          //$log.info("Before calling post, json is ", angularN.toJson(newGameDTO));
+
+          return $http.post(baseUrl, newGameDTO)
+            .success(function (data, status, headers) {
+              growl.success("Game created!");
+              var loc = headers('Location');
+              if (loc) {
+                /* jshint ignore:start */
+                var gameid = _.last(loc.split('/'));
+                if (gameid) {
+                  $location.path('/game/' + gameid);
+                }
+                /* jshint ignore:end */
+              }
+              return data;
+            })
+            .error(function (data) {
+              growl.error("Could not create game");
+              return data;
+            });
+        };
+
+        var joinGame = function (game) {
+          if (!game || !game.id) {
+            return $q.reject("No game to join");
+          }
+          return $http.post(baseUrl + game.id + "/join")
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var fetchGameByIdFromServer = function (id) {
+          var url = baseUrl + id;
+          var cacheid = id + currentUser.profile.id;
+
+          loading[cacheid] = true;
+          return $http.get(url)
+            .then(function (response) {
+              games[cacheid] = response.data;
+              loading[cacheid] = false;
+              return response.data;
+            });
+        };
+
+        var getGameById = function (id) {
+          var cacheid = id + currentUser.profile.id;
+          if (games[cacheid]) {
+            return games[cacheid];
+          }
+          if (loading[cacheid]) {
+            return;
+          }
+
+          fetchGameByIdFromServer(id);
+        };
+
+        var getAllGames = function () {
+          //return $http.get(baseUrl, {cache: true})
+          return $http.get(baseUrl)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var undoDraw = function (gameid, logid) {
+          var url = baseUrl + gameid + "/undo/" + logid;
+          $http.put(url)
+            .success(function (response) {
+              growl.success("Undo initiated!");
+              return response;
+            }).success(function (response) {
+              fetchGameByIdFromServer(gameid);
+              return response;
+            })
+            .error(function (data, status) {
+              if (status === 400) {
+                growl.error("Undo already initiated");
+              } else {
+                growl.error("Could not initiate undo for unknown reason");
+              }
+              return data;
+            });
+        };
+
+        var getAvailableTechs = function (gameid) {
+          if (!gameid) {
+            return $q.reject("No gameid");
+          }
+          var url = baseUrl + gameid + "/techs";
+          return $http.get(url)
+            .then(function (response) {
+              $log.info("Got all available techs");
+              return response.data;
+            });
+        };
+
+        var voteYes = function (gameid, logid) {
+          var url = baseUrl + gameid + "/vote/" + logid + "/yes";
+          $http.put(url)
+            .success(function (response) {
+              growl.success("You voted yes!");
+              return response;
+            }).success(function (response) {
+              fetchGameByIdFromServer(gameid);
+              return response;
+            })
+            .error(function (data, status) {
+              if (status === 412) {
+                growl.error("Could not register vote. Nothing to vote on");
+              } else {
+                growl.error("Could not vote for unknown reason");
+              }
+              return data;
+            });
+        };
+
+        var voteNo = function (gameid, logid) {
+          var url = baseUrl + gameid + "/vote/" + logid + "/no";
+          $http.put(url)
+            .success(function (response) {
+              growl.success("You voted no!");
+              return response;
+            }).success(function (response) {
+              fetchGameByIdFromServer(gameid);
+              return response;
+            })
+            .error(function (data, status) {
+              if (status === 412) {
+                growl.error("Could not register vote. Nothing to vote on");
+              } else {
+                growl.error("Could not vote for unknown reason");
+              }
+              return data;
+            });
+        };
+
+        var getChatList = function (gameid) {
+          if (!gameid) {
+            return $q.reject("No gameid");
+          }
+          var url = baseUrl + gameid + "/chat/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var chat = function (gameid, message) {
+          if (!gameid || !message) {
+            return $q.reject('No gameid or chat message');
+          }
+
+          var url = baseUrl + gameid + "/chat/";
+
+          var configuration = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            }
+          };
+
+          var data = formEncode({
+            message: encodeURIComponent(message)
+          });
+
+          return $http.post(url, data, configuration)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var players = function (gameid) {
+          var cacheid = gameid + currentUser.profile.id;
+          if (playerLoading[cacheid]) {
+            return;
+          }
+
+          if (playersCache[cacheid]) {
+            return playersCache[cacheid];
+          }
+
+          return fetchPlayersFromServer(gameid);
+        };
+
+        var fetchPlayersFromServer = function (gameid) {
+          if (!gameid) {
+            return $q.reject("No gameid");
+          }
+          var cacheid = gameid + currentUser.profile.id;
+          var url = baseUrl + gameid + "/players";
+          playerLoading[cacheid] = true;
+          return $http.get(url, {cache: true})
+            .then(function (response) {
+              playersCache[cacheid] = response.data;
+              playerLoading[cacheid] = false;
+              return response.data;
+            });
+        };
+
+        var endGame = function (gameid) {
+          if (!gameid) {
+            return $q.reject("No gameid");
+          }
+          return $http.delete(baseUrl + gameid)
+            .then(function (response) {
+              growl.info("Game has ended");
+              return response.data;
+            });
+        };
+
+        var withdrawFromGame = function (gameid) {
+          if (!gameid) {
+            return $q.reject("No gameid");
+          }
+          return $http.post(baseUrl + gameid + "/withdraw")
+            .then(function (response) {
+              growl.info("You have withdrawn from the game");
+              return response.data;
+            });
+        };
+
+        var updateMapLink = function (gameid, maplink) {
+          if (!maplink || !gameid) {
+            return $q.reject("No maplink or gameid");
+          }
+          var url = baseUrl + gameid + "/map/";
+
+          var configuration = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            }
+          };
+
+          var data = formEncode({
+            link: encodeURIComponent(maplink)
+          });
+
+          return $http.post(url, data, configuration)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var updateAssetLink = function (gameid, assetlink) {
+          if (!assetlink || !gameid) {
+            return $q.reject("No assetlink or gameid");
+          }
+          var url = baseUrl + gameid + "/asset/";
+
+          var configuration = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            }
+          };
+
+          var data = formEncode({
+            link: encodeURIComponent(assetlink)
+          });
+
+          return $http.post(url, data, configuration)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        return {
+          getAllGames: getAllGames,
+          getGameById: getGameById,
+          fetchGameByIdFromServer: fetchGameByIdFromServer,
+          joinGame: joinGame,
+          createGame: createGame,
+          undoDraw: undoDraw,
+          getAvailableTechs: getAvailableTechs,
+          voteYes: voteYes,
+          voteNo: voteNo,
+          getChatList: getChatList,
+          chat: chat,
+          players: players,
+          fetchPlayersFromServer: fetchPlayersFromServer,
+          endGame: endGame,
+          withdrawFromGame: withdrawFromGame,
+          updateMapLink: updateMapLink,
+          updateAssetLink: updateAssetLink
+        };
+      }];
+
+    }]);
+  }]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (civApp) {
+
+  civApp.factory('DrawService', ["$http", "$q", "$log", "growl", "currentUser", "BASE_URL", "GameService", "Util", function ($http, $q, $log, growl, currentUser, BASE_URL, GameService, Util) {
+    var baseUrl = BASE_URL + "/draw/";
+
+    var drawUnitsFromHand = function(gameId, numOfUnits) {
+      var url = baseUrl + gameId + "/battle";
+
+      return $http({
+        url: url,
+        method: "PUT",
+        params: {numOfUnits: numOfUnits}
+      })
+        .success(function (response) {
+          if(response.length > 0) {
+            growl.success("Units added to battlehand");
+          } else {
+            growl.warning("You have no units to draw");
+          }
+          return response;
+        })
+        .success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function (data) {
+          $log.error(data);
+          growl.error("Could not add units to battlehand for unknown reason");
+          return data;
+        });
+    };
+
+    var drawBarbarians = function (gameId) {
+      var url = baseUrl + gameId + "/battle/barbarians";
+
+      return $http.put(url)
+        .success(function (response) {
+          growl.success("Barbarians have been drawn");
+          return response;
+        })
+        .success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function (data) {
+          $log.error(data);
+          if(data.status === 412) {
+            growl.error("Cannot draw more barbarians until the others are discarded");
+          } else {
+            growl.error("Unable to draw barbarian units");
+          }
+          return data;
+        });
+    };
+
+    var discardBarbarians = function(gameId) {
+      var url = baseUrl + gameId + "/battle/discard/barbarians";
+
+      return $http.post(url)
+        .success(function (response) {
+          growl.success("Barbarians discarded");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function () {
+          growl.error("Could not discard barbarians for unknown reason");
+          return $q.reject();
+        });
+    };
+
+    var revealHand = function(gameId) {
+      var url = baseUrl + gameId + "/battlehand/reveal";
+      return $http.put(url)
+        .success(function (response) {
+          growl.success("Units are revealed and discarded from hand");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function () {
+          growl.error("Units could not be revealed and discarded");
+        });
+    };
+
+    var drawItem = function (gameId, sheetName) {
+      var url = baseUrl + gameId + "/" + sheetName;
+      return $http.post(url)
+        .success(function (response) {
+          growl.success("Item successfully drawn");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function (data, status) {
+          if (status === 410) {
+            growl.error("There are no more " + sheetName + " to draw!");
+          } else {
+            growl.error("Item could not be drawn");
+          }
+        });
+    };
+
+    var loot = function (gameId, sheetName, playerId) {
+      var url = baseUrl + gameId + "/" + sheetName + "/loot/" + playerId;
+      return $http.post(url)
+        .success(function (response) {
+          var item = Util.nextElement(response);
+          growl.success("Item " + item.name + " looted by another player");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function(data) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+          growl.error("Item could not be lootet");
+          return data;
+        });
+    };
+
+    return {
+      drawUnitsFromHand: drawUnitsFromHand,
+      revealHand: revealHand,
+      discardBarbarians: discardBarbarians,
+      drawBarbarians: drawBarbarians,
+      drawItem: drawItem,
+      loot: loot
+    };
+
+  }]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (civApp) {
+
+    civApp.factory('PlayerService', ["$http", "$q", "$log", "growl", "currentUser", "BASE_URL", "GameService", "Util", function ($http, $q, $log, growl, currentUser, BASE_URL, GameService, Util) {
+        var baseUrl = BASE_URL + "/player/";
+
+        var revealItem = function (gameId, item) {
+            if(!gameId || !item) {
+                return $q.reject("No gameId or logid");
+            }
+            var url = baseUrl + gameId + "/item/reveal";
+
+            var itemDTO = {
+                "name": Util.nextElement(item).name,
+                "ownerId": Util.nextElement(item).ownerId,
+                "sheetName": Util.nextElement(item).sheetName,
+                "pbfId": gameId
+            };
+
+            $log.info("Before calling put, json is ", angular.toJson(itemDTO));
+            var configuration = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            return $http.put(url, itemDTO, configuration)
+                .success(function (response) {
+                    growl.success("Item revealed");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                })
+                .error(function () {
+                    growl.error("Item could not be revealed");
+                });
+        };
+
+        var revealTech = function (gameId, logid) {
+            if(!gameId || !logid) {
+                return $q.reject("No gameId or logid");
+            }
+            var url = baseUrl + gameId + "/tech/reveal/" + logid;
+            $http.put(url)
+                .success(function (response) {
+                    growl.success("Research revealed!");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                })
+                .error(function (data) {
+                    growl.error("Could not reveal tech");
+                    return data;
+                });
+        };
+
+        var discardItem = function (gameId, item) {
+            if(!gameId || !item) {
+                return $q.reject("No gameId or item");
+            }
+            var url = baseUrl + gameId + "/item/discard";
+
+            var itemDTO = {
+                "name": Util.nextElement(item).name,
+                "ownerId": Util.nextElement(item).ownerId,
+                "sheetName": Util.nextElement(item).sheetName,
+                "pbfId": gameId
+            };
+
+            $log.info("Before calling post, json is ", angular.toJson(itemDTO));
+
+            var configuration = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            $http.post(url, itemDTO, configuration)
+                .success(function (response) {
+                    growl.success("Item discarded");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                }).error(function (data) {
+                    growl.error("Item could not be discarded");
+                    return data;
+                });
+        };
+
+        var endTurn = function (gameId) {
+            if(!gameId) {
+                return $q.reject("No gameId");
+            }
+            var url = baseUrl + gameId + "/endturn";
+            return $http.post(url)
+                .success(function (response) {
+                    growl.success("Turn ended");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                })
+                .error(function (data) {
+                    growl.error("Could not end turn");
+                    return data;
+                });
+        };
+
+        var getChosenTechs = function (gameId) {
+            if(!gameId) {
+                return $q.reject("No gameId");
+            }
+            var url = baseUrl + gameId + "/tech/" + currentUser.profile.id;
+            return $http.get(url)
+                .then(function (response) {
+                    return response.data;
+                }, function (data) {
+                    $log.error(data);
+                    growl.error("Could not get chosen techs");
+                    return $q.reject();
+                });
+        };
+
+        var selectTech = function (gameId, selectedTech) {
+            if(!gameId || !selectedTech) {
+                return $q.reject("No gameId or tech");
+            }
+            var url = baseUrl + gameId + "/tech/choose";
+
+            return $http({
+                url: url,
+                method: "POST",
+                params: {name: selectedTech.tech.name}
+            })
+                .success(function (response) {
+                    growl.success("Tech chosen successfully");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                }).error(function (data) {
+                    growl.error("Could not choose tech");
+                    return data;
+                });
+        };
+
+        var removeTech = function (gameId, techName) {
+            if(!gameId || !techName) {
+                return $q.reject("No gameId or tech");
+            }
+            var url = baseUrl + gameId + "/tech/remove";
+
+            return $http({
+                url: url,
+                method: "DELETE",
+                params: {name: techName}
+            })
+                .success(function (response) {
+                    growl.success("Tech removed successfully");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                }).error(function (data) {
+                    $log.error(data);
+                    growl.error("Could not remove tech");
+                    return data;
+                });
+        };
+
+        var trade = function (gameId, item) {
+            if (!gameId || !item) {
+                return $q.reject("Couldn't get gameId or item");
+            }
+            var url = baseUrl + gameId + "/trade/";
+
+            var itemDTO = {
+                "name": item.name,
+                "sheetName": item.sheetName,
+                "pbfId": gameId,
+                "ownerId": item.ownerId
+            };
+
+            $log.info("Before calling post, json is ", angular.toJson(itemDTO));
+
+            var configuration = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            $http.post(url, itemDTO, configuration)
+                .success(function (response) {
+                    growl.success("Item sent to another player");
+                    return response;
+                }).success(function (response) {
+                    GameService.fetchGameByIdFromServer(gameId);
+                    return response;
+                }).error(function (data) {
+                    growl.error("Item could not be sent to another player");
+                    return data;
+                });
+        };
+
+        return {
+            revealItem: revealItem,
+            revealTech: revealTech,
+            discardItem: discardItem,
+            endTurn: endTurn,
+            selectTech: selectTech,
+            getChosenTechs: getChosenTechs,
+            removeTech: removeTech,
+            trade: trade
+        };
+
+    }]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var requestCounter = function ($q) {
+
+    var requests = 0;
+
+    var request = function (config) {
+      requests += 1;
+      return $q.when(config);
+    };
+
+    var requestError = function (error) {
+      requests -= 1;
+      return $q.reject(error);
+    };
+
+    var response = function (response) {
+      requests -= 1;
+      return $q.when(response);
+    };
+
+    var responseError = function (error) {
+      requests -= 1;
+      return $q.reject(error);
+    };
+
+    var getRequestCount = function () {
+      return requests;
+    };
+
+    return {
+      request: request,
+      response: response,
+      requestError: requestError,
+      responseError: responseError,
+      getRequestCount: getRequestCount
+    };
+
+  };
+  requestCounter.$inject = ["$q"];
+
+  module.factory("requestCounter", requestCounter);
+
+  module.config(["$httpProvider", function ($httpProvider) {
+    $httpProvider.interceptors.push("requestCounter");
+  }]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var localStorage = function ($window) {
+
+    var store = $window.localStorage;
+
+    var add = function (key, value) {
+      value = angular.toJson(value);
+      store.setItem(key, value);
+    };
+
+    var get = function (key) {
+      var value = store.getItem(key);
+      if (value) {
+        value = angular.fromJson(value);
+      }
+      return value;
+    };
+
+    var remove = function (key) {
+      store.removeItem(key);
+    };
+
+    return {
+      add: add,
+      get: get,
+      remove: remove
+    };
+  };
+  localStorage.$inject = ["$window"];
+
+  module.factory("localStorage", localStorage);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var formEncode = function () {
+    return function (data) {
+      var pairs = [];
+      for (var name in data) {
+        pairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+      }
+      return pairs.join('&').replace(/%20/g, '+');
+    };
+  };
+
+  module.factory("formEncode", formEncode);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var loginRedirect = function () {
+
+    var loginUrl = "/auth";
+    var lastPath = "";
+
+    this.$get = ["$q", "$location", function ($q, $location) {
+
+      return {
+
+        responseError: function (response) {
+          if (response.status === 401) {
+            lastPath = $location.path();
+            $location.path(loginUrl);
+          }
+          return $q.reject(response);
+        },
+
+        redirectPreLogin: function () {
+          if (lastPath) {
+            $location.path(lastPath);
+            lastPath = "";
+          } else {
+            $location.path("/");
+          }
+        }
+      };
+    }];
+  };
+
+  module.provider("loginRedirect", loginRedirect);
+  module.config(["$httpProvider", function ($httpProvider) {
+    $httpProvider.interceptors.push("loginRedirect");
+  }]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var USERKEY = "authorizationEncoded";
+
+  var currentUser = function (localStorage) {
+    var saveUser = function () {
+      localStorage.add(USERKEY, profile);
+    };
+
+    var removeUser = function () {
+      localStorage.remove(USERKEY);
+    };
+
+    var initialize = function () {
+      var user = {
+        username: "",
+        password: "",
+        id: "",
+        authorizationEncoded: "",
+        get loggedIn() {
+          //$log.info("Checking if user is logged in " + this.authorizationEncoded);
+          return this.authorizationEncoded ? true : false;
+        }
+      };
+
+      var localUser = localStorage.get(USERKEY);
+      if (localUser) {
+        user.username = localUser.username;
+        user.password = localUser.password;
+        user.id = localUser.id;
+        user.authorizationEncoded = localUser.authorizationEncoded;
+      }
+      return user;
+    };
+
+    var profile = initialize();
+
+    return {
+      save: saveUser,
+      remove: removeUser,
+      profile: profile
+    };
+  };
+  currentUser.$inject = ["localStorage"];
+
+  module.factory("currentUser", currentUser);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var addToken = function (currentUser, $q) {
+
+    return {
+      request: function (config) {
+        if (currentUser.profile.authorizationEncoded) {
+          //$log.debug("Adding authorization to header " + "Basic " + currentUser.profile.authorizationEncoded);
+          config.headers.Authorization = "Basic " + currentUser.profile.authorizationEncoded;
+        }
+        return $q.when(config);
+      }
+    };
+  };
+  addToken.$inject = ["currentUser", "$q"];
+
+  module.factory("addToken", addToken);
+  module.config(["$httpProvider", function ($httpProvider) {
+    $httpProvider.interceptors.push("addToken");
+  }]);
+
+})(angular.module("civApp"));
+
+'use strict';
+(function (module) {
+
+  var basicauth = function () {
+    this.$get = function ($http, formEncode, currentUser, base64, BASE_URL, growl) {
+      var url = BASE_URL + '/auth';
+
+      var processToken = function (username, password) {
+        return function (response) {
+          currentUser.profile.username = username;
+          currentUser.profile.id = response.data.id;
+          currentUser.profile.authorizationEncoded = base64.encode(username + ':' + password);
+          currentUser.save();
+          return username;
+        };
+      };
+
+      var login = function (username, password) {
+        var configuration = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          }
+        };
+
+        var data = formEncode({
+          username: encodeURIComponent(username),
+          password: encodeURIComponent(password),
+          grant_type: 'password'
+        });
+
+        return $http.post(url + '/login', data, configuration)
+          .then(
+          processToken(username, password),
+          function () {
+            growl.error('Invalid login');
+          }
+        );
+      };
+
+      var logout = function () {
+        currentUser.profile.username = '';
+        currentUser.profile.password = '';
+        currentUser.profile.authorizationEncoded = '';
+        currentUser.profile.id = '';
+        currentUser.remove();
+      };
+
+      var register = function (register) {
+        var configuration = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          }
+        };
+
+        var data = formEncode({
+          username: encodeURIComponent(register.username),
+          password: encodeURIComponent(base64.encode(register.password)),
+          email: encodeURIComponent(register.email)
+        });
+
+        return $http.post(url + '/register', data, configuration)
+          .success(function (response) {
+            growl.success('User created');
+            return response;
+          }).success(function (response) {
+            login(register.username, register.password);
+            return response;
+          }).error(function (data) {
+            growl.error('Could not register');
+            return data;
+          });
+      };
+
+      return {
+        login: login,
+        logout: logout,
+        register: register
+      };
+    };
+  };
+
+  module.config(["$provide", function ($provide) {
+    $provide.provider('basicauth', [basicauth]);
+  }]);
+
+}(angular.module('civApp')));
+
+
+'use strict';
+(function (module) {
+
+  /**
+   * Utility factory
+   */
+  var util = function() {
+
+    /**
+     * Returns the next element in the object
+     * @param obj
+     * @returns {*}
+     */
+    var nextElement = function(obj) {
+      if(obj) {
+        var keys = Object.keys(obj);
+        if(keys && keys.length > 0) {
+          return obj[keys[0]];
+        }
+      }
+      return obj;
+    };
+
+    var mapLink = function(id) {
+      var base = "https://docs.google.com/presentation/d/";
+      var end = "/embed?start=false&loop=false&delayms=3000";
+      return base + id + end;
+    };
+
+    var assetLink = function(id) {
+      var base = "https://docs.google.com/spreadsheets/d/";
+      var end = "/pubhtml?widget=true&amp;headers=false";
+      return base + id + end;
+    };
+
+    return {
+      nextElement: nextElement,
+      mapLink: mapLink,
+      assetLink: assetLink
+    };
+  };
+
+  module.factory("Util", util);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function(module) {
+
+  var options = function() {
+    this.value = {
+      show: false,
+      showEndGame: false
+    };
+
+    this.getValue = function() {
+      return this.value;
+    };
+
+    this.setShowValue = function(val) {
+      this.value.show = val;
+    };
+
+    this.setShowEndGameValue = function(val) {
+      this.value.showEndGame = val;
+    };
+  };
+
+  module.service("GameOption", options);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var workSpinner = function (requestCounter) {
+    return {
+      restrict: "EAC",
+      transclude: true,
+      scope: {},
+      template: "<ng-transclude ng-show='requestCount'></ng-transclude>",
+      link: function (scope) {
+
+        scope.$watch(function () {
+          return requestCounter.getRequestCount();
+        }, function (requestCount) {
+          scope.requestCount = requestCount;
+        });
+
+      }
+    };
+  };
+  workSpinner.$inject = ["requestCounter"];
+
+  module.directive("workSpinner", workSpinner);
+
+}(angular.module("civApp")));
+
+'use strict';
+/**
+ * A generic confirmation for risky actions.
+ * Usage: Add attributes: ng-really-message="Are you sure"? ng-really-click="takeAction()" function
+ */
+/* jshint ignore:start */
+angular.module('civApp').directive('ngReallyClick', [function() {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      element.bind('click', function() {
+        var message = attrs.ngReallyMessage;
+        if (message && confirm(message)) {
+          scope.$apply(attrs.ngReallyClick);
+        }
+      });
+    }
+  };
+}]);
+/* jshint ignore:end */
+
+'use strict';
+/**
+ * Copied and modified from ng-signup-form
+ * https://github.com/zemirco/ng-signup-form
+ */
+angular.module('civApp').directive('uniqueUsername', ['$http', 'BASE_URL', function($http, BASE_URL) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elem, attrs, ctrl) {
+      scope.busy = false;
+      scope.$watch(attrs.ngModel, function(value) {
+
+        // hide old error messages
+        ctrl.$setValidity('isTaken', true);
+        ctrl.$setValidity('invalidChars', true);
+        if(!value) {
+          return;
+        }
+
+        var url = BASE_URL + '/auth/register/check/username';
+        scope.busy = true;
+        $http.post(url, {name: value})
+          .success(function() {
+            // everything is fine -> do nothing
+            scope.busy = false;
+          })
+          .error(function(data) {
+            // display new error message
+            if (data.isTaken) {
+              ctrl.$setValidity('isTaken', false);
+            } else if (data.invalidChars) {
+              ctrl.$setValidity('invalidChars', false);
+            }
+            scope.busy = false;
+          });
+      });
+    }
+  };
+}]);
+
+'use strict';
+/**
+ * Copied and modified from ng-signup-form
+ * https://github.com/zemirco/ng-signup-form
+ */
+angular.module('civApp').directive('uniqueGamename', ['$http', 'BASE_URL', function($http, BASE_URL) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elem, attrs, ctrl) {
+      scope.busy = false;
+      scope.$watch(attrs.ngModel, function(value) {
+
+        // hide old error messages
+        ctrl.$setValidity('isTaken', true);
+        ctrl.$setValidity('invalidChars', true);
+        if(!value) {
+          return;
+        }
+
+        var url = BASE_URL + '/game/check/gamename';
+        scope.busy = true;
+        $http.post(url, {name: value})
+          .success(function() {
+            // everything is fine -> do nothing
+            scope.busy = false;
+          })
+          .error(function(data) {
+            // display new error message
+            if (data.isTaken) {
+              ctrl.$setValidity('isTaken', false);
+            } else if (data.invalidChars) {
+              ctrl.$setValidity('invalidChars', false);
+            }
+            scope.busy = false;
+          });
+      });
+    }
+  };
+}]);
+
+'use strict';
+// http://codepen.io/brunoscopelliti/pen/ECyka
+
+angular.module('civApp').directive('match', [function () {
+  return {
+    require: 'ngModel',
+    link: function (scope, elem, attrs, ctrl) {
+
+      scope.$watch('[' + attrs.ngModel + ', ' + attrs.match + ']', function (value) {
+        ctrl.$setValidity('match', value[0] === value[1]);
+      }, true);
+
+    }
+  };
+}]);
+
+'use strict';
+(function (module) {
+  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope) {
+    var model = this;
+
+    model.isUserPlaying = function(players) {
+      if(players) {
+        for(var i = 0; i < players.length; i++) {
+          var player = players[i];
+          if(player && player.username === model.user.username) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    model.joinGame = function (game) {
+      var joinPromise = GameService.joinGame(game)
+        .then(function (game) {
+          model.game = game;
+          $scope.userHasAccess = game.player && game.player.username === model.user.username;
+          model.yourTurn = game.player && game.player.yourTurn;
+          return game;
+        });
+
+      $log.debug("User wants to join game with nr " + game.id);
+      return joinPromise;
+    };
+
+    model.showMyGames = function() {
+      //Binding with primitives can break two-way-binding in angular. Must add the a value
+      if($scope.onlyMyGames.value) {
+        $scope.filterContent = model.user.username;
+      } else {
+        $scope.filterContent = "";
+      }
+    };
+
+    model.openCreateNewGame = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'createNewGame.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function(game) {
+        if(game) {
+          $log.info(game.name);
+          $log.info(game.type);
+          $log.info(game.numOfPlayers);
+          $log.info(game.color);
+          GameService.createGame(game);
+        }
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
+    var initialize = function () {
+      model.user = currentUser.profile;
+      model.games = [];
+      model.finishedGames = [];
+      $scope.onlyMyGames = {};
+      /* jshint ignore:start */
+      _.forEach(games, function(g) {
+        if(g.active) {
+          model.games.push(g);
+        } else {
+          model.finishedGames.push(g);
+        }
+      });
+      /* jshint ignore:end */
+      $log.info("Got games");
+    };
+
+    initialize();
+  };
+
+  module.controller("GameListController",
+    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", GameListController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $modal, $sce) {
+  var model = this;
+
+  $scope.$watch(function () {
+    return GameService.getGameById(model.gameId);
+  }, function (newVal) {
+    if (!newVal) {
+      return;
+    }
+    var game = newVal;
+    $scope.currentGame = game;
+
+    if(!$scope.currentGame.mapLink) {
+      $scope.currentGame.mapLink = $sce.trustAsResourceUrl("https://docs.google.com/presentation/d/1hgP0f6hj4-lU6ysdOb02gd7oC5gXo8zAAke4RhgIt54/embed?start=false&loop=false&delayms=3000");
+    } else {
+      $scope.currentGame.mapLink = $sce.trustAsResourceUrl(Util.mapLink($scope.currentGame.mapLink));
+    }
+
+    if(!$scope.currentGame.assetLink) {
+      $scope.currentGame.assetLink = $sce.trustAsResourceUrl("https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/pubhtml?widget=true&amp;headers=false");
+    } else {
+      $scope.currentGame.assetLink = $sce.trustAsResourceUrl(Util.assetLink($scope.currentGame.assetLink));
+    }
+
+    var hasAccess = game.player && game.player.username === model.user.username && game.active;
+    $scope.userHasAccess = hasAccess;
+    GameOption.setShowValue(hasAccess);
+    GameOption.setShowEndGameValue(hasAccess && game.player.gameCreator);
+
+    if(game.active) {
+      //Check votes
+      /* jshint ignore:start */
+      _.forEach(game.publicLogs, function(log) {
+        if($scope.canVote(log)) {
+          growl.warning("An undo was requested which needs your vote");
+          return false;
+        }
+      });
+      /* jshint ignore:end */
+
+      model.yourTurn = game.player && game.player.yourTurn;
+
+      if(model.yourTurn) {
+        growl.info("<strong>It's your turn! Press end turn when you are done!</strong>");
+      }
+    }
+
+    model.tableParams.reload();
+    return game;
+  });
+
+  model.endTurn = function () {
+    $log.info("Ending turn");
+    PlayerService.endTurn(model.gameId);
+  };
+
+  //In scope so that we can use it from another view which is included
+  $scope.canInitiateUndo = function(log) {
+    return checkPermissionForVote(log) && !log.draw.undo;
+  };
+
+  function checkPermissionForVote(log) {
+    return $scope.userHasAccess && log && log.draw && log.log.indexOf("drew") > -1;
+  }
+
+  //In scope so that we can use it from another view which is included
+  $scope.initiateUndo = function(logid) {
+    GameService.undoDraw($routeParams.id, logid);
+  };
+
+  //In scope so that we can use it from another view which is included
+  $scope.canVote = function(log) {
+    var hasVoted = false;
+    if(checkPermissionForVote(log) && log.draw.undo) {
+      //Take out the users
+      var votes = log.draw.undo.votes;
+
+      for(var vote in votes) {
+        if(vote === model.user.id) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return hasVoted;
+  };
+
+  $scope.openModalVote = function(size, log) {
+    var modalInstance = $modal.open({
+      templateUrl: 'modalVote.html',
+      controller: 'VoteController',
+      size: size,
+      resolve: {
+        logToUndo: function () {
+          return log;
+        }
+      }
+    });
+
+    modalInstance.result.then(function(vote) {
+      $log.info('Vote was ' + vote.vote + ' and logid is ' + vote.id);
+      if(vote.vote) {
+        GameService.voteYes(model.gameId, vote.id);
+      } else {
+        GameService.voteNo(model.gameId, vote.id);
+      }
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+
+  model.updateMapLink = function() {
+    var link = $scope.currentGame.newMapLink;
+    var startsWith = new RegExp('^' + "https://docs.google.com/presentation/d/", 'i');
+    if(!startsWith.test(link)) {
+      growl.error("Wrong URL. Must start with https://docs.google.com/presentation/d/");
+      return;
+    }
+    var mapPromise = GameService.updateMapLink($routeParams.id, link)
+      .then(function(data) {
+        if(data) {
+          var link = Util.mapLink(data.msg);
+          $log.info("Map link is " + link);
+          $scope.currentGame.mapLink = $sce.trustAsResourceUrl(link);
+        }
+      });
+    return mapPromise;
+  };
+
+  model.updateAssetLink = function() {
+    var link = $scope.currentGame.newAssetLink;
+    var startsWith = new RegExp('^' + "https://docs.google.com/spreadsheets/d/", 'i');
+    if(!startsWith.test(link)) {
+      growl.error("Wrong URL. Must start with https://docs.google.com/spreadsheets/d/");
+      return;
+    }
+    var assetPromise = GameService.updateAssetLink($routeParams.id, link)
+      .then(function(data) {
+        if(data) {
+          var link = Util.assetLink(data.msg);
+          $log.info("Asset link is " + link);
+          $scope.currentGame.assetLink = $sce.trustAsResourceUrl(link);
+        }
+      });
+    return assetPromise;
+  };
+
+  /* jshint ignore:start */
+  model.tableParams = new ngTableParams({
+    page: 1,            // show first page
+    count: 10,          // count per page
+    sorting: {
+      created: 'desc'     // initial sorting
+    }
+  }, {
+    total: 0, // length of data
+    getData: function ($defer, params) {
+      // use build-in angular filter
+      // update table params
+      if (!$scope.currentGame) {
+        $defer.reject("No game yet");
+        return;
+      }
+      var game = $scope.currentGame;
+      var lastLog = _.last(game.publicLogs);
+      if(lastLog && lastLog.log) {
+        $scope.latestLog = lastLog.log;
+      }
+
+      var orderedData = params.sorting() ? $filter('orderBy')(game.publicLogs, params.orderBy()) : game.publicLogs;
+      params.total(game.publicLogs.length);
+      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    },
+    $scope: { $data: {}, $emit: function () {}}
+  });
+  /* jshint ignore:end */
+
+  /**
+   * Returns the next element in the object
+   * @param obj
+   * @returns obj.next
+   */
+  model.nextElement = function(obj) {
+    return Util.nextElement(obj);
+  };
+
+  var initialize = function() {
+    model.user = currentUser.profile;
+    $scope.userHasAccess = false;
+    model.yourTurn = false;
+    model.gameId = $routeParams.id;
+    model.GameOption = GameOption;
+  };
+
+  initialize();
+
+};
+
+  module.controller("GameController",
+    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$modal", "$sce", GameController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+
+  var NavController = function (GameService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
+    var model = this;
+    model.GameOption = GameOption;
+    model.user = currentUser.profile;
+
+    model.username = "";
+    model.password = "";
+    model.user = currentUser.profile;
+
+    model.registerUsername = null;
+    model.registerEmail = null;
+    model.registerPassword = null;
+    model.registerVerification = null;
+
+    model.clearOptions = function() {
+      GameOption.setShowValue(false);
+      GameOption.setShowEndGameValue(false);
+    };
+
+    model.endGame = function() {
+      var game = GameService.getGameById($routeParams.id);
+
+      if(game && game.player && game.player.gameCreator) {
+        model.clearOptions();
+        GameService.endGame($routeParams.id);
+      } else {
+        growl.error('Only the game creator can end a game!');
+      }
+    };
+
+    model.withdrawGame = function() {
+      var game = GameService.getGameById($routeParams.id);
+      if(game && game.player) {
+        if(game.player.gameCreator) {
+          growl.error('As game creator you cannot withdraw from the game. You can only end it!');
+          return;
+        }
+
+        if(game.player.username === model.user.username) {
+          model.clearOptions();
+          GameService.withdrawFromGame($routeParams.id);
+        } else {
+          growl.error('Only player playing the game can withdraw from it!');
+        }
+      }
+    };
+
+    model.login = function (form) {
+      if (form.$valid) {
+        basicauth.login(model.username, model.password)
+          .then(loginRedirect.redirectPreLogin);
+        model.password = "";
+      }
+    };
+
+    model.signOut = function () {
+      basicauth.logout();
+    };
+
+    model.openSignup = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'signup.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function(register) {
+        if(register) {
+          basicauth.register(register);
+          model.registerUsername = null;
+          model.registerEmail = null;
+          model.registerPassword = null;
+          model.registerVerification = null;
+        }
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
+  };
+
+  module.controller("NavController", ['GameService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+  var DrawController = function ($log, GameService, DrawService, currentUser, Util, growl, $routeParams, $scope) {
+    var model = this;
+
+    $scope.$watch(function () {
+      return GameService.getGameById($routeParams.id);
+    }, function (newVal) {
+      if (!newVal) {
+        return;
+      }
+      var game = newVal;
+      model.barbarians = game.player.barbarians;
+      model.battlehand = game.player.battlehand;
+    });
+
+    var initialize = function() {
+      model.user = currentUser.profile;
+      model.number = 3;
+      if($scope.currentGame.player.barbarians) {
+        model.barbarians = $scope.currentGame.player.barbarians;
+      } else {
+        model.barbarians = [];
+      }
+
+      if($scope.currentGame.player.battlehand) {
+        model.battlehand = $scope.currentGame.player.battlehand;
+      } else {
+        model.battlehand = [];
+      }
+    };
+
+    model.drawUnits = function() {
+      $log.info("Draw " + model.number + " units");
+      if(model.number < 1) {
+        growl.error("You must draw at least 1 unit");
+        return;
+      }
+      DrawService.drawUnitsFromHand($routeParams.id, model.number);
+    };
+
+    model.drawBarbarians = function() {
+      DrawService.drawBarbarians($routeParams.id);
+    };
+
+    model.discardBarbarians = function() {
+      DrawService.discardBarbarians($routeParams.id)
+        .then(function() {
+          model.barbarians = [];
+        });
+    };
+
+    model.nextElement = function(obj) {
+      return Util.nextElement(obj);
+    };
+
+    model.revealBattlehand = function() {
+      if(model.battlehand && model.battlehand.length > 0) {
+        DrawService.revealHand($routeParams.id);
+      }
+    };
+
+    initialize();
+  };
+
+  module.controller("DrawController",
+    ["$log", "GameService", "DrawService", "currentUser", "Util", "growl", "$routeParams", "$scope", DrawController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $modal) {
+    var model = this;
+
+    model.nextElement = function(obj) {
+      return Util.nextElement(obj);
+    };
+
+    model.itemName = function(item) {
+      var key = Object.keys(item);
+      if(key && key.length > -1) {
+        /* jshint ignore:start */
+        return _.capitalize(key[0]);
+        /* jshint ignore:end */
+      }
+      return item;
+    };
+
+    model.revealItem = function (item) {
+      var response = PlayerService.revealItem($routeParams.id, item);
+      $log.info("Revealed item, response is " + response);
+    };
+
+    model.discardItem = function (item) {
+      $log.info("Discard item " + item.name);
+      PlayerService.discardItem($routeParams.id, item);
+    };
+
+    $scope.$watch(function () {
+      return GameService.getGameById($routeParams.id);
+    }, function (newVal) {
+      if (!newVal) {
+        return;
+      }
+      var game = newVal;
+      model.techsChosen = game.player.techsChosen;
+      putTechsInScope(model.techsChosen);
+      model.civs = [];
+      model.cultureCards = [];
+      model.greatPersons = [];
+      model.huts = [];
+      model.villages = [];
+      model.tiles = [];
+      model.units = [];
+      model.items = [];
+      readKeysFromItems(game.player.items);
+      model.tablePrivateLog.reload();
+      return game;
+    });
+
+    function readKeysFromItems(items) {
+      //TODO refactor to lodash _forEach
+      items.forEach(function (item) {
+        var itemKey = Object.keys(item)[0];
+        if ("cultureI" === itemKey || "cultureII" === itemKey || "cultureIII" === itemKey) {
+          model.cultureCards.push(item);
+        } else if ("greatperson" === itemKey) {
+          model.greatPersons.push(item);
+        } else if ("hut" === itemKey) {
+          model.huts.push(item);
+        } else if ("village" === itemKey) {
+          model.villages.push(item);
+        } else if ("tile" === itemKey) {
+          model.tiles.push(item);
+        } else if ("civ" === itemKey) {
+          model.civs.push(item);
+        } else if ("aircraft" === itemKey || "mounted" === itemKey || "infantry" === itemKey || "artillery" === itemKey) {
+          model.units.push(item);
+        } else {
+          model.items.push(item);
+        }
+      });
+    }
+
+    function putTechsInScope(techs) {
+      model.chosenTechs1 = [];
+      model.chosenTechs2 = [];
+      model.chosenTechs3 = [];
+      model.chosenTechs4 = [];
+      model.chosenTechs5 = [];
+      model.availableTech1 = [];
+      model.availableTech2 = [];
+      model.availableTech3 = [];
+      model.availableTech4 = [];
+
+      //TODO refactor to lodash _forEach
+      techs.forEach(function (tech) {
+        var chosenTech = tech.tech || tech;
+        if(!chosenTech) {
+          return;
+        }
+
+        if(chosenTech.level === 1) {
+          model.chosenTechs1.push(chosenTech);
+        } else if(chosenTech.level === 2) {
+          model.chosenTechs2.push(chosenTech);
+        } else if(chosenTech.level === 3) {
+          model.chosenTechs3.push(chosenTech);
+        } else if(chosenTech.level === 4) {
+          model.chosenTechs4.push(chosenTech);
+        } else if(chosenTech.level === 5) {
+          model.chosenTechs5.push(chosenTech);
+        }
+      });
+
+      //Find out how many techs are available for each level
+      for(var i = 0; i < (5-model.chosenTechs1.length); i++) {
+        model.availableTech1.push(i);
+      }
+      for(var j = 0; j < (4-model.chosenTechs2.length); j++) {
+        model.availableTech2.push(j);
+      }
+      for(var k = 0; k < (3-model.chosenTechs3.length); k++) {
+        model.availableTech3.push(k);
+      }
+      for(var l = 0; l < (2-model.chosenTechs4.length); l++) {
+        model.availableTech4.push(l);
+      }
+    }
+
+    model.drawItem = function(itemToDraw) {
+      if(itemToDraw) {
+        DrawService.drawItem($routeParams.id, itemToDraw);
+      }
+    };
+
+    model.selectTech = function() {
+      if($scope.selectedTech.tech) {
+        PlayerService.selectTech($routeParams.id, $scope.selectedTech.tech)
+          .then(function() {
+            GameService.getAvailableTechs($routeParams.id)
+              .then(function(techs) {
+                model.allAvailableTechs = techs;
+              });
+          });
+      }
+    };
+
+    model.removeTech = function(techname) {
+      $log.info("Removing tech " + techname);
+      PlayerService.removeTech($routeParams.id, techname)
+        .then(function() {
+          GameService.getAvailableTechs($routeParams.id)
+            .then(function(techs) {
+              model.allAvailableTechs = techs;
+            });
+        });
+    };
+
+    model.canRevealTech = function(log) {
+      return $scope.userHasAccess && log && log.draw && log.draw.hidden && log.log.indexOf("researched") > -1;
+    };
+
+    model.revealTechFromLog = function(logid) {
+      PlayerService.revealTech($routeParams.id, logid);
+    };
+
+    /* jshint ignore:start */
+    var getAvailableTechs = GameService.getAvailableTechs($routeParams.id)
+      .then(function(techs) {
+        model.allAvailableTechs = techs;
+      });
+
+    var getChosenTechs = PlayerService.getChosenTechs($routeParams.id)
+      .then(function(techs) {
+        model.chosenTechs = techs;
+        putTechsInScope(model.chosenTechs);
+      });
+    /* jshint ignore:end */
+
+    var getPlayers = GameService.players($routeParams.id);
+
+    model.openModalTrade = function(size, itemToTrade) {
+      if(!itemToTrade) {
+        return;
+      }
+
+      var modalInstance = $modal.open({
+        templateUrl: 'modalTrade.html',
+        controller: 'TradeController as tradeCtrl',
+        size: size,
+        resolve: {
+          players: function() {
+            return getPlayers;
+          },
+          item: function () {
+            return itemToTrade;
+          }
+
+        }
+      });
+
+      modalInstance.result.then(function(itemToTrade) {
+        PlayerService.trade($routeParams.id, itemToTrade);
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
+    model.openModalLoot = function(size, sheetName) {
+      if(!sheetName) {
+        return;
+      }
+
+      var modalInstance = $modal.open({
+        templateUrl: 'modalLoot.html',
+        controller: 'LootController as lootCtrl',
+        size: size,
+        resolve: {
+          players: function() {
+            return getPlayers;
+          },
+          sheetName: function () {
+            return sheetName;
+          }
+        }
+      });
+
+      modalInstance.result.then(function(loot) {
+        DrawService.loot($routeParams.id, loot.sheetName, loot.playerId);
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
+    /* jshint ignore:start */
+    model.tablePrivateLog = new ngTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        created: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function ($defer, params) {
+        // use build-in angular filter
+        // update table params
+        if (!$scope.currentGame) {
+          $defer.reject("No game yet");
+          return;
+        }
+        var game = $scope.currentGame;
+        var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
+        params.total(game.privateLogs.length);
+        $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      },
+      $scope: { $data: {}, $emit: function () {}}
+    });
+    /* jshint ignore:end */
+
+    var initialize = function() {
+      model.user = currentUser.profile;
+      model.allAvailableTechs = [];
+      $scope.privateLogCollapse = false;
+      $scope.itemCollapse = false;
+      $scope.gpCollapse = false;
+      $scope.unitCollapse = false;
+      $scope.cultureCardsCollapse = false;
+      $scope.civCollapse = false;
+      $scope.hutsCollapse = false;
+      $scope.villagesCollapse = false;
+      $scope.selectedTech = {};
+      model.yourTurn = false;
+      model.items = [];
+      model.techsChosen = [];
+      model.civs = [];
+      model.cultureCards = [];
+      model.greatPersons = [];
+      model.huts = [];
+      model.villages = [];
+      model.tiles = [];
+      model.units = [];
+
+      /* jshint ignore:start */
+      getAvailableTechs;
+      getChosenTechs;
+      /* jshint ignore:end */
+
+    };
+
+    initialize();
+  };
+
+  module.controller("UserItemController",
+    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$modal", UserItemController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+angular.module('civApp').controller('VoteController', ["$scope", "$modalInstance", "$log", "logToUndo", function ($scope, $modalInstance, $log, logToUndo) {
+  $scope.voteOk = function () {
+    var vote = {
+      id: logToUndo.id,
+      vote: true
+    };
+    $modalInstance.close(vote);
+  };
+
+  $scope.voteNok = function () {
+    var vote = {
+      id: logToUndo.id,
+      vote: false
+    };
+    $modalInstance.close(vote);
+  };
+
+  $scope.voteCancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}]);
+
+'use strict';
+angular.module('civApp').controller('RegisterController', ["$scope", "$modalInstance", "$log", "growl", function ($scope, $modalInstance, $log, growl) {
+  var model = this;
+
+  //Can also request this from the backend
+  model.gameTypes = [
+    { label: 'Base Game', value: 'BASE', disabled: true },
+    { label: 'Fame and Fortune (FAF)', value: 'FAF', disabled: true },
+    { label: 'Wisdom and Warfare (WAW) & Fame and Fortune', value: 'WAW', disabled: false },
+    { label: 'Dawn of Civilization', value: 'DOC', disabled: true }
+  ];
+
+  model.selectedGametype = model.gameTypes[2];
+
+  $scope.createGameOk = function() {
+    if(model.selectedGametype && model.selectedGametype.value !== 'WAW') {
+      growl.error('We only support Wisdom and Warfare the time being');
+      return;
+    }
+
+    var createNewGame = {
+      'name' : model.gamename,
+      'type' : model.selectedGametype.value,
+      'numOfPlayers' : model.numOfPlayers,
+      'color' : model.color
+    };
+
+    $modalInstance.close(createNewGame);
+  };
+
+  $scope.registerOk = function() {
+    if(!$scope.verification || !$scope.password && $scope.password !== $scope.verification) {
+      growl.error("Passwords did not match");
+      return;
+    }
+
+    if(!$scope.securityQuestion || $scope.securityQuestion.toUpperCase() !== "WRITING") {
+      growl.error('Wrong answer to the security question');
+      return;
+    }
+
+    var register = {
+      'username' : model.registerUsername,
+      'email' : model.registerEmail,
+      'password' : $scope.password
+    };
+
+    $modalInstance.close(register);
+  };
+
+  $scope.registerCancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}]);
+
+'use strict';
+(function (module) {
+  var ChatController = function (chatList, $log, currentUser, GameService, growl, $routeParams, $scope) {
+    var model = this;
+
+    model.chat = function() {
+      if(model.chatMessage) {
+        GameService.chat($routeParams.id, model.chatMessage)
+          .then(function (data) {
+            var newChat = data;
+            if (newChat) {
+              newChat.message = data.message;
+              $scope.chatList.unshift(newChat);
+              model.chatMessage = "";
+            }
+          });
+      }
+    };
+
+    var init = function() {
+      $scope.chatList = chatList;
+    };
+
+    init();
+
+  };
+
+  module.controller("ChatController",
+    ["chatList", "$log", "currentUser", "GameService", "growl", "$routeParams", "$scope", ChatController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$modalInstance", function (players, item, currentUser, $scope, $modalInstance) {
+  var model = this;
+  model.players = players;
+  model.item = item;
+
+  model.ok = function() {
+    item.ownerId = model.playerTradeChosen.playerId;
+    $modalInstance.close(item);
+  };
+
+  model.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}]);
+
+'use strict';
+angular.module('civApp').controller('LootController', ["players", "sheetName", "currentUser", "$scope", "$modalInstance", function (players, sheetName, currentUser, $scope, $modalInstance) {
+  var model = this;
+  model.players = players;
+  model.sheetName = sheetName;
+
+  model.ok = function() {
+    $modalInstance.close({
+      playerId: model.playerLootChosen.playerId,
+      sheetName: sheetName
+    });
+  };
+
+  model.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}]);
