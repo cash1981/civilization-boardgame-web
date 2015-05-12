@@ -66,6 +66,6 @@
     growlProvider.globalPosition('top-center');
     growlProvider.onlyUniqueMessages(true);
   })
-    .constant('BASE_URL', 'http://0.0.0.0:8080/api');
+    .constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
 
 }());
