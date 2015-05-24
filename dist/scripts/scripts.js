@@ -186,7 +186,6 @@
           var url = baseUrl + gameid + "/techs";
           return $http.get(url)
             .then(function (response) {
-              $log.info("Got all available techs");
               return response.data;
             });
         };
@@ -543,7 +542,6 @@
                 "pbfId": gameId
             };
 
-            $log.info("Before calling put, json is ", angular.toJson(itemDTO));
             var configuration = {
                 headers: {
                     "Content-Type": "application/json"
@@ -594,8 +592,6 @@
                 "sheetName": Util.nextElement(item).sheetName,
                 "pbfId": gameId
             };
-
-            $log.info("Before calling post, json is ", angular.toJson(itemDTO));
 
             var configuration = {
                 headers: {
@@ -709,8 +705,6 @@
                 "pbfId": gameId,
                 "ownerId": item.ownerId
             };
-
-            $log.info("Before calling post, json is ", angular.toJson(itemDTO));
 
             var configuration = {
                 headers: {
@@ -1291,7 +1285,6 @@ angular.module('civApp').directive('match', [function () {
           return game;
         });
 
-      $log.debug("User wants to join game with nr " + game.id);
       return joinPromise;
     };
 
@@ -1313,10 +1306,6 @@ angular.module('civApp').directive('match', [function () {
 
       modalInstance.result.then(function(game) {
         if(game) {
-          $log.info(game.name);
-          $log.info(game.type);
-          $log.info(game.numOfPlayers);
-          $log.info(game.color);
           GameService.createGame(game);
         }
       }, function () {
@@ -1338,7 +1327,6 @@ angular.module('civApp').directive('match', [function () {
         }
       });
       /* jshint ignore:end */
-      $log.info("Got games");
     };
 
     initialize();
@@ -1403,7 +1391,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   });
 
   model.endTurn = function () {
-    $log.info("Ending turn");
     PlayerService.endTurn(model.gameId);
   };
 
@@ -1451,14 +1438,12 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     });
 
     modalInstance.result.then(function(vote) {
-      $log.info('Vote was ' + vote.vote + ' and logid is ' + vote.id);
       if(vote.vote) {
         GameService.voteYes(model.gameId, vote.id);
       } else {
         GameService.voteNo(model.gameId, vote.id);
       }
     }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
     });
   };
 
@@ -1473,7 +1458,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       .then(function(data) {
         if(data) {
           var link = Util.mapLink(data.msg);
-          $log.info("Map link is " + link);
           $scope.currentGame.mapLink = $sce.trustAsResourceUrl(link);
         }
       });
@@ -1491,7 +1475,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       .then(function(data) {
         if(data) {
           var link = Util.assetLink(data.msg);
-          $log.info("Asset link is " + link);
           $scope.currentGame.assetLink = $sce.trustAsResourceUrl(link);
         }
       });
@@ -1702,7 +1685,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.drawUnits = function() {
-      $log.info("Draw " + model.number + " units");
       if(model.number < 1) {
         growl.error("You must draw at least 1 unit");
         return;
@@ -1759,12 +1741,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.revealItem = function (item) {
-      var response = PlayerService.revealItem($routeParams.id, item);
-      $log.info("Revealed item, response is " + response);
+      PlayerService.revealItem($routeParams.id, item);
     };
 
     model.discardItem = function (item) {
-      $log.info("Discard item " + item.name);
       PlayerService.discardItem($routeParams.id, item);
     };
 
@@ -1879,7 +1859,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.removeTech = function(techname) {
-      $log.info("Removing tech " + techname);
       PlayerService.removeTech($routeParams.id, techname)
         .then(function() {
           GameService.getAvailableTechs($routeParams.id)
@@ -1935,7 +1914,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       modalInstance.result.then(function(itemToTrade) {
         PlayerService.trade($routeParams.id, itemToTrade);
       }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
       });
     };
 
@@ -1961,7 +1939,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       modalInstance.result.then(function(loot) {
         DrawService.loot($routeParams.id, loot.sheetName, loot.playerId);
       }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
       });
     };
 
