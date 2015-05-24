@@ -113,7 +113,6 @@
           var url = baseUrl + gameid + "/techs";
           return $http.get(url)
             .then(function (response) {
-              $log.info("Got all available techs");
               return response.data;
             });
         };

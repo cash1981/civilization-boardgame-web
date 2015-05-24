@@ -78,7 +78,6 @@
     };
 
     model.removeTech = function(techname) {
-      $log.info("Removing tech " + techname);
       PlayerService.removeTech($routeParams.id, techname)
         .then(function() {
           GameService.getAvailableTechs($routeParams.id)

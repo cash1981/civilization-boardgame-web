@@ -31,7 +31,6 @@
     };
 
     model.drawUnits = function() {
-      $log.info("Draw " + model.number + " units");
       if(model.number < 1) {
         growl.error("You must draw at least 1 unit");
         return;

@@ -17,7 +17,6 @@
                 "pbfId": gameId
             };
 
-            $log.info("Before calling put, json is ", angular.toJson(itemDTO));
             var configuration = {
                 headers: {
                     "Content-Type": "application/json"
@@ -68,8 +67,6 @@
                 "sheetName": Util.nextElement(item).sheetName,
                 "pbfId": gameId
             };
-
-            $log.info("Before calling post, json is ", angular.toJson(itemDTO));
 
             var configuration = {
                 headers: {
@@ -183,8 +180,6 @@
                 "pbfId": gameId,
                 "ownerId": item.ownerId
             };
-
-            $log.info("Before calling post, json is ", angular.toJson(itemDTO));
 
             var configuration = {
                 headers: {

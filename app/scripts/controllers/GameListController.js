@@ -24,7 +24,6 @@
           return game;
         });
 
-      $log.debug("User wants to join game with nr " + game.id);
       return joinPromise;
     };
 
@@ -46,10 +45,6 @@
 
       modalInstance.result.then(function(game) {
         if(game) {
-          $log.info(game.name);
-          $log.info(game.type);
-          $log.info(game.numOfPlayers);
-          $log.info(game.color);
           GameService.createGame(game);
         }
       }, function () {
@@ -71,7 +66,6 @@
         }
       });
       /* jshint ignore:end */
-      $log.info("Got games");
     };
 
     initialize();

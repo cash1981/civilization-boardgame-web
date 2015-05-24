@@ -18,12 +18,10 @@
     };
 
     model.revealItem = function (item) {
-      var response = PlayerService.revealItem($routeParams.id, item);
-      $log.info("Revealed item, response is " + response);
+      PlayerService.revealItem($routeParams.id, item);
     };
 
     model.discardItem = function (item) {
-      $log.info("Discard item " + item.name);
       PlayerService.discardItem($routeParams.id, item);
     };
 
@@ -138,7 +136,6 @@
     };
 
     model.removeTech = function(techname) {
-      $log.info("Removing tech " + techname);
       PlayerService.removeTech($routeParams.id, techname)
         .then(function() {
           GameService.getAvailableTechs($routeParams.id)
@@ -194,7 +191,6 @@
       modalInstance.result.then(function(itemToTrade) {
         PlayerService.trade($routeParams.id, itemToTrade);
       }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
       });
     };
 
@@ -220,7 +216,6 @@
       modalInstance.result.then(function(loot) {
         DrawService.loot($routeParams.id, loot.sheetName, loot.playerId);
       }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
       });
     };
 

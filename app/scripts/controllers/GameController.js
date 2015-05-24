@@ -52,7 +52,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   });
 
   model.endTurn = function () {
-    $log.info("Ending turn");
     PlayerService.endTurn(model.gameId);
   };
 
@@ -100,14 +99,12 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     });
 
     modalInstance.result.then(function(vote) {
-      $log.info('Vote was ' + vote.vote + ' and logid is ' + vote.id);
       if(vote.vote) {
         GameService.voteYes(model.gameId, vote.id);
       } else {
         GameService.voteNo(model.gameId, vote.id);
       }
     }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
     });
   };
 
@@ -122,7 +119,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       .then(function(data) {
         if(data) {
           var link = Util.mapLink(data.msg);
-          $log.info("Map link is " + link);
           $scope.currentGame.mapLink = $sce.trustAsResourceUrl(link);
         }
       });
@@ -140,7 +136,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       .then(function(data) {
         if(data) {
           var link = Util.assetLink(data.msg);
-          $log.info("Asset link is " + link);
           $scope.currentGame.assetLink = $sce.trustAsResourceUrl(link);
         }
       });
