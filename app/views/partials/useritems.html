@@ -465,115 +465,135 @@
 
   <!-- allAvailableTechs -->
   <div class="row">
-    <div class="col-md-9">
-      <table class="tech-pyramid">
-        <tbody>
-        <tr>
-          <td class="spacer" colspan="4"></td>
-          <td class="researched" colspan="2" title="Space Flight" ng-if="userCtrl.chosenTechs5.length > 0">
-            Space Flight
+    <div class="col-xs-12">
+      <button class="btn btn-info" ng-click="techsCollapse = !techsCollapse">Toggle Techs</button>
+      <hr>
+    </div>
+  </div>
+
+  <div collapse="techsCollapse">
+  <div class="row">
+    <div class="col-xs-12">
+      <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Library</a></li>
+        <li class="active">Data</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row">
+
+      <div class="col-md-9">
+        <table class="tech-pyramid">
+          <tbody>
+          <tr>
+            <td class="spacer" colspan="4"></td>
+            <td class="researched" colspan="2" title="Space Flight" ng-if="userCtrl.chosenTechs5.length > 0">
+              Space Flight
               <span
                 class="glyphicon glyphicon-remove remove red"
                 aria-hidden="true"
                 tooltip="This will remove your tech"
                 ng-really-message="Are you sure you want to remove the tech?"
                 ng-really-click="userCtrl.removeTech('Space Flight')">&nbsp;</span>
-          </td>
-          <td class="available" colspan="2" title="Space Flight" ng-if="userCtrl.chosenTechs5.length == 0">Space
-            Flight
-          </td>
-          <td class="spacer"></td>
-        </tr>
-        <tr>
-          <td class="spacer" colspan="3"></td>
-          <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs4" title="{{tech.name}}">
-            {{tech.name}}
+            </td>
+            <td class="available" colspan="2" title="Space Flight" ng-if="userCtrl.chosenTechs5.length == 0">Space
+              Flight
+            </td>
+            <td class="spacer"></td>
+          </tr>
+          <tr>
+            <td class="spacer" colspan="3"></td>
+            <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs4" title="{{tech.name}}">
+              {{tech.name}}
               <span
                 class="glyphicon glyphicon-remove remove red"
                 aria-hidden="true"
                 tooltip="This will remove your tech"
                 ng-really-message="Are you sure you want to remove the tech?"
                 ng-really-click="userCtrl.removeTech(tech.name)">&nbsp;</span>
-          </td>
-          <td class="available" colspan="2" title="21 trade needed to learn level 4 tech"
-              ng-repeat="lvl3 in userCtrl.availableTech4">21
-          </td>
-          <td class="spacer"></td>
-        </tr>
-        <tr>
-          <td class="spacer" colspan="2"></td>
-          <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs3" title="{{tech.name}}">
-            {{tech.name}}
+            </td>
+            <td class="available" colspan="2" title="21 trade needed to learn level 4 tech"
+                ng-repeat="lvl3 in userCtrl.availableTech4">21
+            </td>
+            <td class="spacer"></td>
+          </tr>
+          <tr>
+            <td class="spacer" colspan="2"></td>
+            <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs3" title="{{tech.name}}">
+              {{tech.name}}
               <span
                 class="glyphicon glyphicon-remove remove red"
                 aria-hidden="true"
                 tooltip="This will remove your tech"
                 ng-really-message="Are you sure you want to remove the tech?"
                 ng-really-click="userCtrl.removeTech(tech.name)">&nbsp;</span>
-          </td>
-          <td class="available" colspan="2" title="16 trade needed to learn level 3 tech"
-              ng-repeat="lvl3 in userCtrl.availableTech3">16
-          </td>
-          <td class="spacer"></td>
-        </tr>
-        <tr>
-          <td class="spacer" colspan="1"></td>
-          <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs2" title="{{tech.name}}">
-            {{tech.name}}
+            </td>
+            <td class="available" colspan="2" title="16 trade needed to learn level 3 tech"
+                ng-repeat="lvl3 in userCtrl.availableTech3">16
+            </td>
+            <td class="spacer"></td>
+          </tr>
+          <tr>
+            <td class="spacer" colspan="1"></td>
+            <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs2" title="{{tech.name}}">
+              {{tech.name}}
               <span
                 class="glyphicon glyphicon-remove remove red"
                 aria-hidden="true"
                 tooltip="This will remove your tech"
                 ng-really-message="Are you sure you want to remove the tech?"
                 ng-really-click="userCtrl.removeTech(tech.name)">&nbsp;</span>
-          </td>
-          <td class="available" colspan="2" title="11 trade needed to learn level 2 tech"
-              ng-repeat="lvl2 in userCtrl.availableTech2">11
-          </td>
-          <td class="spacer"></td>
-        </tr>
-        <tr>
-          <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs1" title="{{tech.name}}">
-            {{tech.name}}
+            </td>
+            <td class="available" colspan="2" title="11 trade needed to learn level 2 tech"
+                ng-repeat="lvl2 in userCtrl.availableTech2">11
+            </td>
+            <td class="spacer"></td>
+          </tr>
+          <tr>
+            <td class="researched" colspan="2" ng-repeat="tech in userCtrl.chosenTechs1" title="{{tech.name}}">
+              {{tech.name}}
               <span
                 class="glyphicon glyphicon-remove remove red"
                 aria-hidden="true"
                 tooltip="This will remove your tech"
                 ng-really-message="Are you sure you want to remove the tech?"
                 ng-really-click="userCtrl.removeTech(tech.name)">&nbsp;</span>
-          </td>
-          <td class="available" colspan="2" title="6 trade needed to learn level 1 tech"
-              ng-repeat="lvl1 in userCtrl.availableTech1">6
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-md-3" ng-if="currentGame.whosTurnIsIt">
-      <div class="input-group">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title panel-primary">
-              Choose tech
-            </h3>
-          </div>
-          <div class="panel-body">
-            <ol class="nya-bs-select" ng-model="selectedTech.tech" data-live-search="true">
-              <li nya-bs-option="tech in userCtrl.allAvailableTechs group by tech.tech.level">
-                <span class="dropdown-header">Level {{$group}}</span>
-                <a>
-                  <span>{{tech.tech.name}}</span>
-                </a>
-              </li>
-            </ol>
-            <div class="form-group">
-              <input type="button"
-                     ng-really-message="Are you sure you want to select tech?"
-                     ng-really-click="userCtrl.selectTech()"
-                     class="btn btn-danger form-control"
-                     ng-disabled="selectedTech.tech == null"
-                     value="Select Tech"
-                />
+            </td>
+            <td class="available" colspan="2" title="6 trade needed to learn level 1 tech"
+                ng-repeat="lvl1 in userCtrl.availableTech1">6
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3" ng-if="currentGame.whosTurnIsIt">
+        <div class="input-group">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title panel-primary">
+                Choose tech
+              </h3>
+            </div>
+            <div class="panel-body">
+              <ol class="nya-bs-select" ng-model="selectedTech.tech" data-live-search="true">
+                <li nya-bs-option="tech in userCtrl.allAvailableTechs group by tech.tech.level">
+                  <span class="dropdown-header">Level {{$group}}</span>
+                  <a tooltip="{{tech.tech.description}}">
+                    <span>{{tech.tech.name}}</span>
+                  </a>
+                </li>
+              </ol>
+              <div class="form-group">
+                <input type="button"
+                       ng-really-message="Are you sure you want to select tech?"
+                       ng-really-click="userCtrl.selectTech()"
+                       class="btn btn-danger form-control"
+                       ng-disabled="selectedTech.tech == null"
+                       value="Select Tech"
+                  />
+              </div>
             </div>
           </div>
         </div>
@@ -606,7 +626,8 @@
 <!-- Modal for loot -->
 <script type="text/ng-template" id="modalLoot.html">
   <div class="modal-header">
-    <h3 class="modal-title">Choose player that will loot a randomly selected <span><i>{{lootCtrl.sheetName}}</i></span> from you!</h3>
+    <h3 class="modal-title">Choose player that will loot a randomly selected <span><i>{{lootCtrl.sheetName}}</i></span>
+      from you!</h3>
   </div>
   <div class="modal-body">
     <ul class="nav nav-pills nav-stacked">

@@ -80,6 +80,33 @@
       });
     };
 
+    model.openGeneralInfo = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'image1.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function() {
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
+    model.openTechOverview = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'image2.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function() {
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
+
   };
 
   module.controller("NavController", ['GameService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);

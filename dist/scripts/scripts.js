@@ -66,7 +66,8 @@
     growlProvider.globalPosition('top-center');
     growlProvider.onlyUniqueMessages(true);
   })
-    .constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
+    //.constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
+    .constant('BASE_URL', 'http://localhost:8080/api');
 
 }());
 
@@ -1634,6 +1635,33 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         //Cancel callback here
       });
     };
+
+    model.openGeneralInfo = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'image1.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function() {
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
+    model.openTechOverview = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'image2.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function() {
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
 
   };
 
