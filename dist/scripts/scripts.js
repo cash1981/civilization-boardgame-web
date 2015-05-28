@@ -43,8 +43,8 @@
          }
          */
       })
-      .when('/help', {
-        templateUrl: 'views/help.html'
+      .when('/faq', {
+        templateUrl: 'views/faq.html'
       })
       .when('/about', {
         templateUrl: 'views/about.html'
