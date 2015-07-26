@@ -2094,8 +2094,7 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
           .then(function (data) {
             var newChat = data;
             if (newChat) {
-              newChat.message = data.message;
-              $scope.chatList.unshift(newChat);
+              $scope.chatList = newChat;
               model.chatMessage = "";
             }
           });
