@@ -34,6 +34,8 @@
       if(model.number < 1) {
         growl.error("You must draw at least 1 unit");
         return;
+      } else if(model.number > 99) {
+        growl.error("You can only draw max 99 units");
       }
       DrawService.drawUnitsFromHand($routeParams.id, model.number);
     };

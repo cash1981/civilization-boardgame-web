@@ -223,7 +223,7 @@
           if (!gameid) {
             return $q.reject("No gameid");
           }
-          return $http.delete(baseUrl + gameid)
+          return $http.delete(baseUrl + gameid + "/end")
             .then(function (response) {
               growl.info("Game has ended");
               return response.data;
