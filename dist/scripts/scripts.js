@@ -296,7 +296,7 @@
           if (!gameid) {
             return $q.reject("No gameid");
           }
-          return $http.delete(baseUrl + gameid)
+          return $http.delete(baseUrl + gameid + "/end")
             .then(function (response) {
               growl.info("Game has ended");
               return response.data;
@@ -1688,6 +1688,8 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       if(model.number < 1) {
         growl.error("You must draw at least 1 unit");
         return;
+      } else if(model.number > 99) {
+        growl.error("You can only draw max 99 units");
       }
       DrawService.drawUnitsFromHand($routeParams.id, model.number);
     };
