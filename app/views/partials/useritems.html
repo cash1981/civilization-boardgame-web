@@ -194,14 +194,14 @@
                     ng-really-click="userCtrl.discardItem(item)"
                     class="btn btn-sm btn-warning"
                     tooltip="Discard your item. This will make an entry in the game log">
-              Discard Item
+              Discard Great Person
             </button>
             <button ng-really-message="This will reveal your item. Are you sure?"
                     ng-really-click="userCtrl.revealItem(item)"
                     ng-disabled="item.greatperson.hidden == false"
                     class="btn btn-sm btn-warning"
                     tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
-              Reveal Item
+              Reveal Great Person
             </button>
           </p>
         </div>
@@ -219,34 +219,6 @@
   <div class="row" ng-show="userCtrl.units.length > 0">
     <div collapse="unitCollapse">
 
-      <!-- Doesn't quite work -->
-      <!--<carousel interval="0">
-        <slide ng-repeat="item in userCtrl.units">
-          <img ng-src="/images/useritems/{{userCtrl.nextElement(item).image}}"
-               tooltip="{{userCtrl.nextElement(item).name}}"/>
-
-          <div class="carousel-caption">
-            <h3 class="text-center">{{userCtrl.nextElement(item).name}}</h3>
-            <h4>Unit {{$index+1}} of {{userCtrl.units.length}}</h4>
-
-            <p>
-              <button ng-really-message="This will discard your item. Are you sure?"
-                      ng-really-click="userCtrl.discardItem(item)"
-                      class="btn btn-sm btn-warning"
-                      tooltip="Discard your item. This will make an entry in the game log">
-                Discard Unit
-              </button>
-              <button ng-really-message="This will reveal your unit. Are you sure?"
-                      ng-really-click="userCtrl.revealItem(item)"
-                      ng-disabled="userCtrl.nextElement(item).hidden == false"
-                      class="btn btn-sm btn-warning"
-                      tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
-                Reveal Unit
-              </button>
-            </p>
-          </div>
-        </slide>
-      </carousel>-->
       <div ng-repeat="item in userCtrl.units" class="thumbnail col-md-2">
         <img ng-src="/images/useritems/{{userCtrl.nextElement(item).image}}"
              tooltip="{{userCtrl.nextElement(item).name}}"/>
@@ -299,7 +271,7 @@
                     ng-really-click="userCtrl.discardItem(item)"
                     class="btn btn-sm btn-warning"
                     tooltip="Discard your item. This will make an entry in the game log">
-              Discard Item
+              Discard Tile
             </button>
           </p>
         </div>
@@ -340,20 +312,14 @@
           </p>
 
           <p class="text-center">
-            <button ng-really-message="This will discard your item. Are you sure?"
+            <button ng-really-message="This will reveal and discard your culture card. Are you sure?"
                     ng-really-click="userCtrl.discardItem(item)"
                     class="btn btn-sm btn-warning"
-                    tooltip="Discard your item. This will make an entry in the game log">
+                    tooltip="Reveal and discard your culture card. This will make an entry in the game log">
               Discard Item
             </button>
-            <button ng-really-message="This will reveal your unit. Are you sure?"
-                    ng-really-click="userCtrl.revealItem(item)"
-                    ng-disabled="userCtrl.nextElement(item).hidden == false"
-                    class="btn btn-sm btn-warning"
-                    tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
-              Reveal Item
-            </button>
-            <button tooltip="Send item to a player" class="btn btn-sm btn-warning"
+
+            <button tooltip="Send culture card to a player" class="btn btn-sm btn-warning"
                     ng-click="userCtrl.openModalTrade('md', userCtrl.nextElement(item))">
               Send to Player
             </button>
@@ -392,18 +358,11 @@
           <h3 class="text-center">{{item.hut.name}}</h3>
 
           <p class="text-center">
-            <button ng-really-message="This will discard your item. Are you sure?"
+            <button ng-really-message="This will reveal and discard your hut. Are you sure?"
                     ng-really-click="userCtrl.discardItem(item)"
                     class="btn btn-sm btn-warning"
-                    tooltip="Discard your item. This will make an entry in the game log">
-              Discard Item
-            </button>
-            <button ng-really-message="This will reveal your unit. Are you sure?"
-                    ng-really-click="userCtrl.revealItem(item)"
-                    ng-disabled="userCtrl.nextElement(item).hidden == false"
-                    class="btn btn-sm btn-warning"
-                    tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
-              Reveal Item
+                    tooltip="Reveal and discard your hut. This will make an entry in the game log">
+              Discard Hut
             </button>
             <button tooltip="Send item to a player" class="btn btn-sm btn-warning"
                     ng-click="userCtrl.openModalTrade('md', userCtrl.nextElement(item))">
@@ -445,19 +404,13 @@
           <h3 class="text-center">{{item.village.name}}</h3>
 
           <p class="text-center">
-            <button ng-really-message="This will discard your item. Are you sure?"
+            <button ng-really-message="This will reveal and discard your village. Are you sure?"
                     ng-really-click="userCtrl.discardItem(item)"
                     class="btn btn-sm btn-warning"
-                    tooltip="Discard your item. This will make an entry in the game log">
-              Discard Item
+                    tooltip="Reveal and discard your item. This will make an entry in the game log">
+              Discard Village
             </button>
-            <button ng-really-message="This will reveal your unit. Are you sure?"
-                    ng-really-click="userCtrl.revealItem(item)"
-                    ng-disabled="userCtrl.nextElement(item).hidden == false"
-                    class="btn btn-sm btn-warning"
-                    tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
-              Reveal Item
-            </button>
+
             <button tooltip="Send item to a player" class="btn btn-sm btn-warning"
                     ng-click="userCtrl.openModalTrade('md', userCtrl.nextElement(item))">
               Send to Player
