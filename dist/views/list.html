@@ -1,4 +1,23 @@
-<div class="container-fluid"> <div class="jumbotron"> <h1>Welcome to PlayCiv! A multiplayer online boardgame of Civilization from Fantasy Flight Games</h1> <p class="lead"> This site was created for owners of the boardgame to play this wonderful game online. </p> <iframe width="560" height="315" src="https://www.youtube.com/embed/P6OW_925CYs" frameborder="0" allowfullscreen></iframe> </div> <tabset justified="true" type="pills"> <tab heading="Active Games" class="col-xs-6"> <div class="table-responsive padd-top-7"> <input type="text" ng-model="filterContent" alt="Filter the table" placeholder="Search games"> <label> <input type="checkbox" ng-model="onlyMyGames.value" ng-click="gameListCtrl.showMyGames()"> Show my games</label> <button class="btn btn-lg btn-success pull-right" ng-click="gameListCtrl.openCreateNewGame('md')" ng-show="gameListCtrl.user.loggedIn">Create New Game</button> <table class="table table-striped table-hover table-condensed"> <thead> <tr> <th># <th>Created <th>Name <th>Type <th>Number of players <th>Players <th>Active <th>Action   <tbody> <!-- Games that are not active anymore should have a light grey background --> <tr ng-repeat="game in gameListCtrl.games | filter: filterContent" class="{{game.active ? 'active' : ''}} fadeIn" ng-class-even="'row-even'" ng-class-odd="'row-odd'"> <td>{{$index+1}} <td>{{game.created | date}} <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a> <td>{{game.type }} <td>{{game.numOfPlayers}} <td> <span ng-repeat="player in game.players"> {{player.username}}<br> </span>  <td>{{game.active ? 'Active' : 'Finished'}} <td> <a ng-href="#/game/{{game.id}}" id="btnJoinGame" ng-if="(game.numOfPlayers > game.players.length) && gameListCtrl.user.loggedIn && !gameListCtrl.isUserPlaying(game.players)" type="button" class="btn btn-info" ng-click="gameListCtrl.joinGame(game)"> Join </a>    </table> </div> </tab> <tab heading="Finished Games" class="col-md-6"> <div class="table-responsive padd-top-7"> <table class="table table-striped table-hover table-condensed"> <thead> <tr> <th># <th>Created <th>Name <th>Type <th>Number of players <th>Players <th>Active   <tbody> <tr ng-repeat="game in gameListCtrl.finishedGames" ng-class-even="'row-even'" ng-class-odd="'row-odd'"> <td>{{$index+1}} <td>{{game.created | date}} <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a> <td>{{game.type }} <td>{{game.numOfPlayers}} <td> <span ng-repeat="player in game.players"> {{player.username}}<br> </span>  <td>Finished   </table> </div> </tab> </tabset> </div> <!-- Modal for create game --> <script type="text/ng-template" id="createNewGame.html"><div class="modal-header">
+<div id="fb-root"></div> <script>(function (d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script> <!-- Plasser denne taggen etter den siste del-taggen. --> <script type="text/javascript">(function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();</script> <div class="container-fluid"> <div class="jumbotron"> <h1>Welcome to PlayCiv! A multiplayer online boardgame of Civilization from Fantasy Flight Games</h1> <p class="lead"> This site was created for owners of the boardgame to play this wonderful game online. </p> <iframe width="560" height="315" src="https://www.youtube.com/embed/P6OW_925CYs" frameborder="0" allowfullscreen></iframe> </div> <!-- Social media content --> <div class="row"> <h4>Share this site with your friends</h4> <ul class="list-inline"> <li class="col-xs-1"> <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://playciv.com" data-text="Play civilization the boardgame online at" data-via="ShervinAsgari" data-hashtags="civilization">Tweet</a> <script>!function (d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+          if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.src = p + '://platform.twitter.com/widgets.js';
+            fjs.parentNode.insertBefore(js, fjs);
+          }
+        }(document, 'script', 'twitter-wjs');</script> </li> <li> <div class="col-xs-1 fb-share-button" data-href="http://playciv.com" data-layout="button_count"></div> </li> <li class="col-xs-1"> <!-- Plasser denne taggen der du vil at delingsknapp skal gjengis. --> <div class="g-plus" data-action="share" data-annotation="bubble" data-href="http://playciv.com"></div> </li> </ul> </div> <div class="padd-top-7 row col-xs-12"> <tabset justified="true" type="pills"> <tab heading="Active Games" class="col-xs-6"> <div class="table-responsive padd-top-7"> <input type="text" ng-model="filterContent" alt="Filter the table" placeholder="Search games"> <label> <input type="checkbox" ng-model="onlyMyGames.value" ng-click="gameListCtrl.showMyGames()"> Show my games</label> <button class="btn btn-lg btn-success pull-right" ng-click="gameListCtrl.openCreateNewGame('md')" ng-show="gameListCtrl.user.loggedIn">Create New Game </button> <table class="table table-striped table-hover table-condensed"> <thead> <tr> <th># <th>Created <th>Name <th>Type <th>Number of players <th>Players <th>Active <th>Action   <tbody> <!-- Games that are not active anymore should have a light grey background --> <tr ng-repeat="game in gameListCtrl.games | filter: filterContent" class="{{game.active ? 'active' : ''}} fadeIn" ng-class-even="'row-even'" ng-class-odd="'row-odd'"> <td>{{$index+1}} <td>{{game.created | date}} <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a> <td>{{game.type }} <td>{{game.numOfPlayers}} <td> <span ng-repeat="player in game.players"> {{player.username}}<br> </span>  <td>{{game.active ? 'Active' : 'Finished'}} <td> <a ng-href="#/game/{{game.id}}" id="btnJoinGame" ng-if="(game.numOfPlayers > game.players.length) && gameListCtrl.user.loggedIn && !gameListCtrl.isUserPlaying(game.players)" type="button" class="btn btn-info" ng-click="gameListCtrl.joinGame(game)"> Join </a>    </table> </div> </tab> <tab heading="Finished Games" class="col-md-6"> <div class="table-responsive padd-top-7"> <table class="table table-striped table-hover table-condensed"> <thead> <tr> <th># <th>Created <th>Name <th>Type <th>Number of players <th>Players <th>Active   <tbody> <tr ng-repeat="game in gameListCtrl.finishedGames" ng-class-even="'row-even'" ng-class-odd="'row-odd'"> <td>{{$index+1}} <td>{{game.created | date}} <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a> <td>{{game.type }} <td>{{game.numOfPlayers}} <td> <span ng-repeat="player in game.players"> {{player.username}}<br> </span>  <td>Finished   </table> </div> </tab> </tabset> </div> </div> <!-- Modal for create game --> <script type="text/ng-template" id="createNewGame.html"><div class="modal-header">
     <h3 class="modal-title">Create New Game</h3>
   </div>
   <form name="form" method="post" novalidate="novalidate">
@@ -9,11 +28,14 @@
                aria-describedby="gamenameStatus" aria-hidden="true"
                unique-gamename="unique-gamename" required="required" ng-model="registerCtrl.gamename"
                autofocus class="form-control" minlength="3" ng-minlength="3"/>
-        <span ng-show="busy" class="glyphicon glyphicon-refresh rotateIn form-control-feedback" aria-hidden="true"></span>
+        <span ng-show="busy" class="glyphicon glyphicon-refresh rotateIn form-control-feedback"
+              aria-hidden="true"></span>
+
         <div ng-if="form.gamename.$dirty" id="gamenameStatus" ng-messages="form.gamename.$error">
           <div ng-message="required" class="help-block has-error">Name is required</div>
           <div ng-message="isTaken" class="help-block has-error">Name already taken</div>
-          <div ng-message="invalidChars" class="help-block has-error">Name may not contain any non-url-safe characters</div>
+          <div ng-message="invalidChars" class="help-block has-error">Name may not contain any non-url-safe characters
+          </div>
           <div ng-message="minlength" class="help-block has-error">Name must be 3 or more characters</div>
         </div>
       </div>
@@ -29,9 +51,11 @@
 
       <div class="form-group" ng-class="form.numOfPlayers.$invalid && form.numOfPlayers.$dirty ? 'has-error' : ''">
         <label for="numOfPlayers" class="control-label">Number of Players</label>
-        <input type="number" name="numOfPlayers" id="numOfPlayers" ng-model="registerCtrl.numOfPlayers" placeholder="Number of Players" value="4"
-               required="required" class="form-control" min="2" max="5" />
-        <span ng-if="form.numOfPlayers.$dirty &amp;&amp; form.numOfPlayers.$error.required" class="help-block has-error">Enter number of players</span>
+        <input type="number" name="numOfPlayers" id="numOfPlayers" ng-model="registerCtrl.numOfPlayers"
+               placeholder="Number of Players" value="4"
+               required="required" class="form-control" min="2" max="5"/>
+        <span ng-if="form.numOfPlayers.$dirty &amp;&amp; form.numOfPlayers.$error.required"
+              class="help-block has-error">Enter number of players</span>
       </div>
 
       <div class="form-group has-feedback" ng-class="form.color.$invalid && form.color.$dirty  ? 'has-error' : ''">
@@ -65,7 +89,8 @@
         </ol>
         <span id="colorStatus" ng-if="form.color.$dirty &amp;&amp; form.color.$invalid" class="help-block has-error">Color is required</span>
       </div>
-    </div> <!-- modal body -->
+    </div>
+    <!-- modal body -->
     <div class="modal-footer">
       <input type="submit" ng-click="createGameOk()" value="Create new game" ng-disabled="form.$invalid"
              class="btn btn-primary"/>
