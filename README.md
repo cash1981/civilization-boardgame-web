@@ -5,7 +5,7 @@ Civlization boardgame (Fantasy Flight Games)
 [![Coverage Status](https://coveralls.io/repos/cash1981/civilization-boardgame/badge.svg)](https://coveralls.io/r/cash1981/civilization-boardgame)
 
 ##You can find the application 
-Here --> (http://civ.asgari.no)
+Here --> (http://playciv.com)
 
 ##First version
 This is a web application where you can use to play the Civilization boardgame. The first version is targeted for Play By Forums.
