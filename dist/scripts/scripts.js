@@ -1029,10 +1029,33 @@
           });
       };
 
+      var forgotpass = function (forgotpass) {
+        var forgotpassDTO = {
+          "email": forgotpass.email,
+          "newpassword": forgotpass.newpassword
+        };
+
+        var configuration = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        };
+
+        $http.put(url + "/newpassword", forgotpassDTO, configuration)
+          .success(function (response) {
+            growl.success("Email verification is sent");
+            return response;
+          }).error(function (data) {
+            growl.error("Something went wrong! Could not reset password. Please contact cash@playciv.com!");
+            return data;
+          });
+      };
+
       return {
         login: login,
         logout: logout,
-        register: register
+        register: register,
+        forgotpass: forgotpass
       };
     };
   };
@@ -1619,6 +1642,22 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       });
     };
 
+    model.openForgotPassword = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'forgotpassword.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function(forgotpass) {
+        if(forgotpass) {
+          basicauth.forgotpass(forgotpass);
+        }
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
     model.openGeneralInfo = function(size) {
       var modalInstance = $modal.open({
         templateUrl: 'image1.html',
@@ -2081,6 +2120,24 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
   };
 
   $scope.registerCancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+  $scope.newPasswordOk = function() {
+    if(!model.forgotemail || !model.newpassword) {
+      growl.error('Missing email or password');
+      return;
+    }
+
+    var forgotPassword = {
+      'email' : model.forgotemail,
+      'newpassword' : model.newpassword
+    };
+
+    $modalInstance.close(forgotPassword);
+  };
+
+  $scope.newPasswordCancel = function () {
     $modalInstance.dismiss('cancel');
   };
 }]);

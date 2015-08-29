@@ -80,6 +80,22 @@
       });
     };
 
+    model.openForgotPassword = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'forgotpassword.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function(forgotpass) {
+        if(forgotpass) {
+          basicauth.forgotpass(forgotpass);
+        }
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
     model.openGeneralInfo = function(size) {
       var modalInstance = $modal.open({
         templateUrl: 'image1.html',

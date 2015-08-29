@@ -47,12 +47,12 @@
         </div>
         <input class="btn btn-default btn-sm" type="submit" value="Login">
         <input class="btn btn-default btn-sm" type="button" value="Sign up" ng-click="navCtrl.openSignup('md')"/>
+        <input class="btn btn-default btn-sm" type="button" value="Forgot password" ng-click="navCtrl.openForgotPassword('sm')"/>
       </form>
     </div>
   </div>
   <!-- /container-fluid-->
 </nav>
-
 
 <!-- Modal for signup -->
 <script type="text/ng-template" id="signup.html">
@@ -162,5 +162,47 @@
 
   <div class="modal-footer">
     <button ng-click="registerCancel()" class="btn btn-warning">Close</button>
+  </div>
+</script>
+
+<!-- Modal for Forgot password-->
+<script type="text/ng-template" id="forgotpassword.html">
+  <div class="modal-header">
+    <h3 class="modal-title text-capitalize">Forgot password</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong>Enter your email and your new password. An email will be sent with a verification link.</strong>
+    </p>
+
+    <form name="formNewPass" method="post" novalidate="novalidate">
+      <div class="modal-body">
+        <div class="form-group has-feedback"
+             ng-class="formNewPass.forgotemail.$invalid && formNewPass.forgotemail.$dirty  ? 'has-error' : ''">
+          <label for="forgotemail" class="control-label">E-mail</label>
+          <input type="text" ng-model="registerCtrl.forgotemail" name="forgotemail" id="forgotemail" placeholder="Email"
+                 aria-describedby="forgotEmailStatus" aria-hidden="true" ng-pattern="/\S+@\S+\.\S+/"
+                 pattern="/\S+@\S+\.\S+/"
+                 required="required" class="form-control"/>
+        <span id="forgotEmailStatus" ng-if="form.forgotemail.$dirty &amp;&amp; form.forgotemail.$invalid"
+              class="help-block has-error">Email is invalid</span>
+          <span class="help-block" ng-if="!form.forgotemail.$dirty &amp;&amp; !form.forgotemail.$invalid">Enter your existing email address</span>
+        </div>
+
+        <div class="form-group"
+             ng-class="formNewPass.newpassword.$invalid && formNewPass.newpassword.$dirty ? 'has-error' : ''">
+          <label for="newpassword" class="control-label">New password</label>
+          <input type="password" name="newpassword" id="newpassword" ng-model="registerCtrl.newpassword"
+                 required="required" class="form-control"/>
+          <span class="help-block">Enter your new password</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <input type="submit" ng-click="newPasswordOk()" value="Send" ng-disabled="formNewPass.$invalid"
+               class="btn btn-primary"/>
+        <button ng-click="newPasswordCancel()" class="btn btn-warning">Cancel</button>
+      </div>
+    </form>
   </div>
 </script>

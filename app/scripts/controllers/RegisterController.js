@@ -51,4 +51,22 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
   $scope.registerCancel = function () {
     $modalInstance.dismiss('cancel');
   };
+
+  $scope.newPasswordOk = function() {
+    if(!model.forgotemail || !model.newpassword) {
+      growl.error('Missing email or password');
+      return;
+    }
+
+    var forgotPassword = {
+      'email' : model.forgotemail,
+      'newpassword' : model.newpassword
+    };
+
+    $modalInstance.close(forgotPassword);
+  };
+
+  $scope.newPasswordCancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
 }]);

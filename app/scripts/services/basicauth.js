@@ -71,10 +71,33 @@
           });
       };
 
+      var forgotpass = function (forgotpass) {
+        var forgotpassDTO = {
+          "email": forgotpass.email,
+          "newpassword": forgotpass.newpassword
+        };
+
+        var configuration = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        };
+
+        $http.put(url + "/newpassword", forgotpassDTO, configuration)
+          .success(function (response) {
+            growl.success("Email verification is sent");
+            return response;
+          }).error(function (data) {
+            growl.error("Something went wrong! Could not reset password. Please contact cash@playciv.com!");
+            return data;
+          });
+      };
+
       return {
         login: login,
         logout: logout,
-        register: register
+        register: register,
+        forgotpass: forgotpass
       };
     };
   };
