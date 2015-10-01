@@ -3,11 +3,38 @@
   var GameListController = function (games, $log, GameService, currentUser, $modal, $scope, $interval) {
     var model = this;
 
-    model.isUserPlaying = function(players) {
-      if(players) {
-        for(var i = 0; i < players.length; i++) {
+    model.publicChatMessages = [
+      {
+        'username': 'username1',
+        'content': 'Hi!'
+      },
+      {
+        'username': 'username2',
+        'content': 'Hello!'
+      },
+      {
+        'username': 'username2',
+        'content': 'Hello!'
+      },
+      {
+        'username': 'username2',
+        'content': 'Hello!'
+      },
+      {
+        'username': 'username2',
+        'content': 'Hello!'
+      },
+      {
+        'username': 'username2',
+        'content': 'Hello!'
+      }
+    ];
+
+    model.isUserPlaying = function (players) {
+      if (players) {
+        for (var i = 0; i < players.length; i++) {
           var player = players[i];
-          if(player && player.username === model.user.username) {
+          if (player && player.username === model.user.username) {
             return true;
           }
         }
@@ -27,24 +54,24 @@
       return joinPromise;
     };
 
-    model.showMyGames = function() {
+    model.showMyGames = function () {
       //Binding with primitives can break two-way-binding in angular. Must add the a value
-      if($scope.onlyMyGames.value) {
+      if ($scope.onlyMyGames.value) {
         $scope.filterContent = model.user.username;
       } else {
         $scope.filterContent = "";
       }
     };
 
-    model.openCreateNewGame = function(size) {
+    model.openCreateNewGame = function (size) {
       var modalInstance = $modal.open({
         templateUrl: 'createNewGame.html',
         controller: 'RegisterController as registerCtrl',
         size: size
       });
 
-      modalInstance.result.then(function(game) {
-        if(game) {
+      modalInstance.result.then(function (game) {
+        if (game) {
           GameService.createGame(game);
         }
       }, function () {
@@ -52,32 +79,41 @@
       });
     };
 
-    var pollChat = function() {
+    /*var pollChat = function() {
 
-      $timeout(function() {
-        GameService.publicChat
-        pollChat();
-      }, 5000);
+     $timeout(function() {
+     GameService.publicChat
+     pollChat();
+     }, 5000);
+     };
+     poll();
+     */
+
+    model.publicChatSendMessage = function (message, username) {
+      if (message && message !== '' && username) {
+        model.messages.push({
+          'username': username,
+          'content': message
+        });
+      }
     };
-    poll();
 
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
       model.finishedGames = [];
-      model.publicChat = [];
       $scope.onlyMyGames = {};
-      var promise = $interval(pollChat(), 3000);
+      //var promise = $interval(pollChat(), 3000);
       // Cancel interval on page changes
-      $scope.$on('$destroy', function(){
-        if (angular.isDefined(promise)) {
-          $interval.cancel(promise);
-          promise = undefined;
-        }
-      });
+      /*$scope.$on('$destroy', function(){
+       if (angular.isDefined(promise)) {
+       $interval.cancel(promise);
+       promise = undefined;
+       }
+       });*/
       /* jshint ignore:start */
-      _.forEach(games, function(g) {
-        if(g.active) {
+      _.forEach(games, function (g) {
+        if (g.active) {
           model.games.push(g);
         } else {
           model.finishedGames.push(g);

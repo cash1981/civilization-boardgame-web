@@ -12,7 +12,8 @@
     'ab-base64',
     'angular-growl',
     'ngTable',
-    'nya.bootstrap.select'
+    'nya.bootstrap.select',
+    'irontec.simpleChat'
   ]);
 
   application.config(function ($routeProvider) {
@@ -23,9 +24,6 @@
         resolve: {
           games: ["GameService", function(m) {
             return m.getAllGames();
-          }],
-          publicChat: ["GameService", function(m) {
-            return m.getPublicChat();
           }]
         }
       })
@@ -69,7 +67,7 @@
     growlProvider.globalPosition('top-center');
     growlProvider.onlyUniqueMessages(true);
   })
-    .constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
-    //.constant('BASE_URL', 'http://localhost:8080/api');
+    //.constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
+    .constant('BASE_URL', 'http://localhost:8080/api');
 
 }());
