@@ -66,14 +66,6 @@
       model.games = [];
       model.finishedGames = [];
       $scope.onlyMyGames = {};
-      //var promise = $interval(pollChat(), 3000);
-      // Cancel interval on page changes
-      /*$scope.$on('$destroy', function(){
-       if (angular.isDefined(promise)) {
-       $interval.cancel(promise);
-       promise = undefined;
-       }
-       });*/
       /* jshint ignore:start */
       _.forEach(games, function (g) {
         if (g.active) {

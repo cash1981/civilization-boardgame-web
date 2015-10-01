@@ -12,7 +12,8 @@
     'ab-base64',
     'angular-growl',
     'ngTable',
-    'nya.bootstrap.select'
+    'nya.bootstrap.select',
+    'irontec.simpleChat'
   ]);
 
   application.config(function ($routeProvider) {
@@ -241,6 +242,33 @@
             });
         };
 
+        var getPublicChatList = function () {
+          var url = baseUrl + "publicchat/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var publicChat = function (message) {
+          var url = baseUrl + "publicchat/";
+
+          var configuration = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            }
+          };
+
+          var data = formEncode({
+            message: encodeURIComponent(message)
+          });
+
+          return $http.post(url, data, configuration)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         var chat = function (gameid, message) {
           if (!gameid || !message) {
             return $q.reject('No gameid or chat message');
@@ -370,6 +398,8 @@
           voteNo: voteNo,
           getChatList: getChatList,
           chat: chat,
+          publicChat:publicChat,
+          getPublicChatList:getPublicChatList,
           players: players,
           fetchPlayersFromServer: fetchPlayersFromServer,
           endGame: endGame,
@@ -1287,11 +1317,11 @@ angular.module('civApp').directive('match', [function () {
   var GameListController = function (games, $log, GameService, currentUser, $modal, $scope) {
     var model = this;
 
-    model.isUserPlaying = function(players) {
-      if(players) {
-        for(var i = 0; i < players.length; i++) {
+    model.isUserPlaying = function (players) {
+      if (players) {
+        for (var i = 0; i < players.length; i++) {
           var player = players[i];
-          if(player && player.username === model.user.username) {
+          if (player && player.username === model.user.username) {
             return true;
           }
         }
@@ -1311,29 +1341,38 @@ angular.module('civApp').directive('match', [function () {
       return joinPromise;
     };
 
-    model.showMyGames = function() {
+    model.showMyGames = function () {
       //Binding with primitives can break two-way-binding in angular. Must add the a value
-      if($scope.onlyMyGames.value) {
+      if ($scope.onlyMyGames.value) {
         $scope.filterContent = model.user.username;
       } else {
         $scope.filterContent = "";
       }
     };
 
-    model.openCreateNewGame = function(size) {
+    model.openCreateNewGame = function (size) {
       var modalInstance = $modal.open({
         templateUrl: 'createNewGame.html',
         controller: 'RegisterController as registerCtrl',
         size: size
       });
 
-      modalInstance.result.then(function(game) {
-        if(game) {
+      modalInstance.result.then(function (game) {
+        if (game) {
           GameService.createGame(game);
         }
       }, function () {
         //Cancel callback here
       });
+    };
+
+    model.publicChatSendMessage = function (message, username) {
+      if (message && message !== '' && username) {
+        model.messages.push({
+          'username': username,
+          'content': message
+        });
+      }
     };
 
     var initialize = function () {
@@ -1342,8 +1381,8 @@ angular.module('civApp').directive('match', [function () {
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
-      _.forEach(games, function(g) {
-        if(g.active) {
+      _.forEach(games, function (g) {
+        if (g.active) {
           model.games.push(g);
         } else {
           model.finishedGames.push(g);
@@ -1356,7 +1395,7 @@ angular.module('civApp').directive('match', [function () {
   };
 
   module.controller("GameListController",
-    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", GameListController]);
+    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
 
 }(angular.module("civApp")));
 
@@ -2206,3 +2245,59 @@ angular.module('civApp').controller('LootController', ["players", "sheetName", "
     $modalInstance.dismiss('cancel');
   };
 }]);
+
+'use strict';
+(function (module) {
+  var PublicChatController = function (currentUser, growl, GameService, $interval, $scope) {
+    var vm = this;
+    vm.username = currentUser.profile.username;
+    vm.messages = [];
+
+    function getPublicChatList() {
+      chatList.then(function (data) {
+        angular.forEach(data, function(obj) {
+          this.push({
+            'username': obj.username,
+            'content': obj.message
+          });
+        }, vm.messages);
+      });
+    }
+
+    var chatList = GameService.getPublicChatList();
+    getPublicChatList();
+
+    vm.sendMessage = function(message, username) {
+      if(!username && vm.username) {
+        username = vm.username;
+      }
+      if(!username) {
+        growl.error('You must login to chat');
+      }
+      if(message && $.trim(message) !== '' && username) {
+        GameService.publicChat(message)
+          .then(function() {
+            vm.messages.push({
+              'username': username,
+              'content': message
+            });
+          });
+      }
+    };
+
+    var pollChat = $interval(function() {
+      vm.messages.length = 0;
+      getPublicChatList();
+    }, 5000);
+
+    $scope.$on('$destroy', function() {
+      if (angular.isDefined(pollChat)) {
+        $interval.cancel(pollChat);
+        pollChat = undefined;
+      }
+    });
+  };
+
+  module.controller("PublicChatController", ["currentUser", "growl", "GameService", "$interval", "$scope", PublicChatController]);
+
+}(angular.module("civApp")));

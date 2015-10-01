@@ -5,6 +5,17 @@
     vm.username = currentUser.profile.username;
     vm.messages = [];
 
+    function getPublicChatList() {
+      chatList.then(function (data) {
+        angular.forEach(data, function(obj) {
+          this.push({
+            'username': obj.username,
+            'content': obj.message
+          });
+        }, vm.messages);
+      });
+    }
+
     var chatList = GameService.getPublicChatList();
     getPublicChatList();
 
@@ -17,12 +28,12 @@
       }
       if(message && $.trim(message) !== '' && username) {
         GameService.publicChat(message)
-          .then(function(data) {
+          .then(function() {
             vm.messages.push({
               'username': username,
               'content': message
             });
-          })
+          });
       }
     };
 
@@ -37,18 +48,6 @@
         pollChat = undefined;
       }
     });
-
-    function getPublicChatList() {
-      chatList.then(function (data) {
-        angular.forEach(data, function(obj, index) {
-          this.push({
-            'username': obj.username,
-            'content': obj.message
-          });
-        }, vm.messages);
-      });
-    }
-
   };
 
   module.controller("PublicChatController", ["currentUser", "growl", "GameService", "$interval", "$scope", PublicChatController]);
