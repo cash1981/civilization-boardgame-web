@@ -1,41 +1,40 @@
 'use strict';
 (function (module) {
-  var PublicChatController = function (currentUser) {
+  var PublicChatController = function (currentUser, growl, GameService) {
     var vm = this;
     vm.username = currentUser.profile.username;
-    vm.messages = [
-      {
-        'username': 'Matt',
-        'content': 'Hi!'
-      },
-      {
-        'username': 'Elisa',
-        'content': 'Whats up?'
-      },
-      {
-        'username': 'Matt',
-        'content': 'I found this nice AngularJS Directive'
-      },
-      {
-        'username': 'Elisa',
-        'content': 'Looks Great!'
-      }
-    ];
+    vm.messages = [];
+
+    var chatList = GameService.getPublicChatList();
+    chatList.then(function (data) {
+      angular.forEach(data, function(obj, index) {
+        this.push({
+          'username': obj.username,
+          'content': obj.message
+        });
+      }, vm.messages);
+    });
 
     vm.sendMessage = function(message, username) {
       if(!username && vm.username) {
         username = vm.username;
       }
-      if(message && _.trim(message) !== '' && username) {
-        vm.messages.push({
-          'username': username,
-          'content': message
-        });
+      if(!username) {
+        growl.error('You must login to chat');
+      }
+      if(message && $.trim(message) !== '' && username) {
+        GameService.publicChat(message)
+          .then(function(data) {
+            vm.messages.push({
+              'username': username,
+              'content': message
+            });
+          })
       }
     };
 
   };
 
-  module.controller("PublicChatController", ["currentUser", PublicChatController]);
+  module.controller("PublicChatController", ["currentUser", "growl", "GameService", PublicChatController]);
 
 }(angular.module("civApp")));

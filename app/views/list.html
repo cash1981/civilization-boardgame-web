@@ -60,9 +60,9 @@
   </div>
 
   <div class="padd-top-7 row">
-    <div class="col-xs-12 col-md-8 col-lg-8">
+    <div class="col-xs-12">
       <tabset justified="true" type="pills">
-        <tab heading="Active Games" class="col-xs-6">
+        <tab heading="Active Games" class="col-md-4 col-xs-12">
           <div class="table-responsive padd-top-7">
             <input type="text" ng-model="filterContent" alt="Filter the table" placeholder="Search games"/>
             <label> <input type="checkbox" ng-model="onlyMyGames.value" ng-click="gameListCtrl.showMyGames()"> Show my
@@ -114,8 +114,7 @@
             </table>
           </div>
         </tab>
-
-        <tab heading="Finished Games" class="col-md-6">
+        <tab heading="Finished Games" class="col-md-4 col-xs-12">
           <div class="table-responsive padd-top-7">
             <table class="table table-striped table-hover table-condensed">
               <thead>
@@ -148,49 +147,8 @@
             </table>
           </div>
         </tab>
-      </tabset>
-    </div>
-    <div class="col-xs-12 col-md-4 col-lg-4" ng-controller="PublicChatController as vm">
-      <irontec-simple-chat
-        messages="vm.messages"
-        username="vm.username"
-        input-placeholder-text="You can write here"
-        submit-button-text="Send your message"
-        title="Public Chat"
-        theme="material"
-        submit-function="vm.sendMessage"
-        visible="true">
-      </irontec-simple-chat>
     </div>
   </div>
-
-  <!--<span ng-if="gameListCtrl.user.loggedIn">
-        <form ng-submit="gameListCtrl.publicChat()">
-          <input class="input-lg" style="width: 100%" type="text" ng-model="chatCtrl.chatMessage"
-                 placeholder="Write your chat message here. It supports HTML!" maxlength="500"/>
-          &lt;!&ndash; Hack, will put submit button out of view &ndash;&gt;
-          <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-        </form>
-      </span>
-  <table class="table table-striped table-hover table-condensed">
-    <thead>
-    <tr>
-      <th>Timestamp</th>
-      <th>Username</th>
-      <th>Message</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr ng-repeat="chat in gameListCtrl.publicChat">
-      <td>{{chat.created | date:'dd-MM-yyyy - HH:mm:ss'}}</td>
-      <td><span ng-style="{'color':chat.color}">{{chat.username}}</span></td>
-      <td colspan="3"><span ng-bind-html="chat.message"></span></td>
-    </tr>
-    </tbody>
-  </table>
-</div>-->
-
 
   <!-- Modal for create game -->
   <script type="text/ng-template" id="createNewGame.html">
@@ -277,3 +235,20 @@
       </div>
     </form>
   </script>
+
+  <div class="row col-xs-12 chat-container" ng-controller="PublicChatController as vm">
+    <irontec-simple-chat
+      messages="vm.messages"
+      username="vm.username"
+      input-placeholder-text="You can write here"
+      submit-button-text="Send your message"
+      title="Public Chat - Must be logged in to chat"
+      theme="material"
+      submit-function="vm.sendMessage"
+      visible="true">
+    </irontec-simple-chat>
+  </div>
+
+
+</div>
+

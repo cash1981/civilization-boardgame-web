@@ -168,6 +168,33 @@
             });
         };
 
+        var getPublicChatList = function () {
+          var url = baseUrl + "publicchat/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
+        var publicChat = function (message) {
+          var url = baseUrl + "publicchat/";
+
+          var configuration = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            }
+          };
+
+          var data = formEncode({
+            message: encodeURIComponent(message)
+          });
+
+          return $http.post(url, data, configuration)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         var chat = function (gameid, message) {
           if (!gameid || !message) {
             return $q.reject('No gameid or chat message');
@@ -297,6 +324,8 @@
           voteNo: voteNo,
           getChatList: getChatList,
           chat: chat,
+          publicChat:publicChat,
+          getPublicChatList:getPublicChatList,
           players: players,
           fetchPlayersFromServer: fetchPlayersFromServer,
           endGame: endGame,

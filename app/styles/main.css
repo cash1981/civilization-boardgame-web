@@ -181,3 +181,9 @@ input:-webkit-autofill {
 .red {
   color: #FF0000;
 }
+
+.chat-container {
+  width: 100%;
+  height: 600px;
+  margin: 0 auto;
+}
