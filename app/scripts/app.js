@@ -23,6 +23,9 @@
         resolve: {
           games: ["GameService", function(m) {
             return m.getAllGames();
+          }],
+          publicChat: ["GameService", function(m) {
+            return m.getPublicChat();
           }]
         }
       })

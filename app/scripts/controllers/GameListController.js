@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope) {
+  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope, $interval) {
     var model = this;
 
     model.isUserPlaying = function(players) {
@@ -52,11 +52,29 @@
       });
     };
 
+    var pollChat = function() {
+
+      $timeout(function() {
+        GameService.publicChat
+        pollChat();
+      }, 5000);
+    };
+    poll();
+
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
       model.finishedGames = [];
+      model.publicChat = [];
       $scope.onlyMyGames = {};
+      var promise = $interval(pollChat(), 3000);
+      // Cancel interval on page changes
+      $scope.$on('$destroy', function(){
+        if (angular.isDefined(promise)) {
+          $interval.cancel(promise);
+          promise = undefined;
+        }
+      });
       /* jshint ignore:start */
       _.forEach(games, function(g) {
         if(g.active) {
@@ -72,6 +90,6 @@
   };
 
   module.controller("GameListController",
-    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", GameListController]);
+    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
 
 }(angular.module("civApp")));

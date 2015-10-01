@@ -285,6 +285,14 @@
             });
         };
 
+        var getAllGames = function () {
+          //return $http.get(baseUrl, {cache: true})
+          return $http.get(baseUrl + "/chat")
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         return {
           getAllGames: getAllGames,
           getGameById: getGameById,
@@ -302,7 +310,8 @@
           endGame: endGame,
           withdrawFromGame: withdrawFromGame,
           updateMapLink: updateMapLink,
-          updateAssetLink: updateAssetLink
+          updateAssetLink: updateAssetLink,
+          getPublicChat: getPublicChat
         };
       }];
 
