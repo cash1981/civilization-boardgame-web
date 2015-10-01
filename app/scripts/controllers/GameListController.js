@@ -1,34 +1,7 @@
 'use strict';
 (function (module) {
-  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope, $interval) {
+  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope) {
     var model = this;
-
-    model.publicChatMessages = [
-      {
-        'username': 'username1',
-        'content': 'Hi!'
-      },
-      {
-        'username': 'username2',
-        'content': 'Hello!'
-      },
-      {
-        'username': 'username2',
-        'content': 'Hello!'
-      },
-      {
-        'username': 'username2',
-        'content': 'Hello!'
-      },
-      {
-        'username': 'username2',
-        'content': 'Hello!'
-      },
-      {
-        'username': 'username2',
-        'content': 'Hello!'
-      }
-    ];
 
     model.isUserPlaying = function (players) {
       if (players) {
@@ -78,16 +51,6 @@
         //Cancel callback here
       });
     };
-
-    /*var pollChat = function() {
-
-     $timeout(function() {
-     GameService.publicChat
-     pollChat();
-     }, 5000);
-     };
-     poll();
-     */
 
     model.publicChatSendMessage = function (message, username) {
       if (message && message !== '' && username) {
