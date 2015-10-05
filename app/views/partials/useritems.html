@@ -148,6 +148,10 @@
                 <span><i>{{userCtrl.nextElement(item).name}}</i></span>
               </p>
 
+              <p class="text-justify">
+                {{userCtrl.nextElement(item).description}}
+              </p>
+
               <p class="text-center">
                 <button ng-really-message="This will discard your item. Are you sure?"
                         ng-really-click="userCtrl.discardItem(item)"
