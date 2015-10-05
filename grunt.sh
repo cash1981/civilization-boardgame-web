@@ -6,6 +6,6 @@ cp bower_components/angular-bootstrap-simple-chat/src/scripts/index.js dist/scri
 mkdir -p dist/styles/simplechat
 cp bower_components/angular-bootstrap-simple-chat/src/css/style.css dist/styles/simplechat/
 cp bower_components/angular-bootstrap-simple-chat/src/css/themes.css dist/styles/simplechat/
-cp bower_components/bootstrap/dist/css/bootstrap.min.css dist/styles/
+cp bower_components/bootstrap/dist/css/bootstrap.min.css dist/styles/bootstrap.css
 
 exit 0;
