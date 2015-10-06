@@ -101,4 +101,4 @@
                class="btn btn-primary"/>
         <button ng-click="registerCancel()" class="btn btn-warning">Cancel</button>
       </div>
-    </form></script> <div class="row col-xs-12 chat-container" ng-controller="PublicChatController as vm"> <irontec-simple-chat messages="vm.messages" username="vm.username" input-placeholder-text="You can write here" submit-button-text="Send your message" title="Public Chat - Must be logged in to chat" theme="material" submit-function="vm.sendMessage" visible> </irontec-simple-chat> </div> </div>
+    </form></script> <div class="row col-xs-12 chat-container" ng-controller="PublicChatController as pc"> <irontec-simple-chat messages="pc.messages" username="pc.username" input-placeholder-text="You can write here" submit-button-text="Send your message" title="Public Chat - Must be logged in to chat" theme="material" submit-function="pc.sendMessage"> </irontec-simple-chat> </div> </div>

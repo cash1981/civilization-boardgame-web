@@ -14,6 +14,7 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/ng-table/ng-table.css" />
   <link rel="stylesheet" href="bower_components/angular-growl-v2/build/angular-growl.css" />
   <link rel="stylesheet" href="bower_components/nya-bootstrap-select/dist/css/nya-bs-select.css" />
@@ -23,11 +24,9 @@
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/techtree.css">
-  <!-- endbuild -->
-
-  <link rel="stylesheet" href="styles/bootstrap.css"/>
   <link rel="stylesheet" href="styles/simplechat/style.css">
   <link rel="stylesheet" href="styles/simplechat/themes.css">
+  <!-- endbuild -->
 
 </head>
 <body ng-app="civApp" ng-cloak>
@@ -117,8 +116,6 @@
 <!-- endbower -->
 <!-- endbuild -->
 
-<script src="scripts/irontec-simplechat.js"></script>
-
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
 <script src="scripts/providers/GameService.js"></script>
@@ -149,6 +146,7 @@
 <script src="scripts/controllers/TradeController.js"></script>
 <script src="scripts/controllers/LootController.js"></script>
 <script src="scripts/controllers/PublicChatController.js"></script>
+<script src="scripts/irontech-simplechat.js"></script>
 <!-- endbuild -->
 </body>
 </html>

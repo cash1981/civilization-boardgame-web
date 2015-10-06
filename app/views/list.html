@@ -236,20 +236,17 @@
     </form>
   </script>
 
-  <!--
-  FIXME Until I fix this, I will remove it
-  <div class="row col-xs-12 chat-container" ng-controller="PublicChatController as vm">
+  <div class="row col-xs-12 chat-container" ng-controller="PublicChatController as pc">
     <irontec-simple-chat
-      messages="vm.messages"
-      username="vm.username"
+      messages="pc.messages"
+      username="pc.username"
       input-placeholder-text="You can write here"
       submit-button-text="Send your message"
       title="Public Chat - Must be logged in to chat"
       theme="material"
-      submit-function="vm.sendMessage"
-      visible="true">
+      submit-function="pc.sendMessage">
     </irontec-simple-chat>
-  </div>-->
+  </div>
 
 
 </div>
