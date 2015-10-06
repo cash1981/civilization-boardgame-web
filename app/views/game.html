@@ -84,7 +84,7 @@
     <tab heading="Chat" class="col-md-2">
       <ng-include src="'views/partials/chat.html'"></ng-include>
     </tab>
-    <tab ng-if="userHasAccess && currentGame.whosTurnIsIt" heading="My Items" active="currentGame.active" class="col-md-2">
+    <tab ng-if="userHasAccess && currentGame.whosTurnIsIt" heading="My Items" active="true" class="col-md-2">
       <ng-include src="'views/partials/useritems.html'"></ng-include>
     </tab>
     <tab ng-if="userHasAccess && currentGame.whosTurnIsIt" heading="Battle" class="col-md-2">
