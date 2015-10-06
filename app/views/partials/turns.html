@@ -1,0 +1,36 @@
+<div ng-controller="TurnsController as turnCtrl">
+  <div class="row">
+    <!--<carousel>
+      <slide ng-repeat="turn in turnCtrl.turns">
+        <div class="carousel-caption">Turn {{turn.turnnr}}</div>
+      </slide>
+    </carousel>-->
+
+    <fieldset class="turn-border" ng-repeat="turn in turnCtrl.turns">
+      <legend class="turn-border">Turn {{turn.turnnr}}</legend>
+
+      <div class="form-group">
+        <label for="sot">Start of turn:</label>
+        <textarea id="sot" class="form-control" placeholder="Start of turn..." ng-model="turn.sot"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="trade">Trade:</label>
+        <textarea id="trade" class="form-control" placeholder="Trade..." ng-model="turn.trade"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="cm">City management:</label>
+        <textarea id="cm" class="form-control" placeholder="City management..." ng-model="turn.cm"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="movement">Movement:</label>
+        <textarea id="movement" class="form-control" placeholder="Movement..." ng-model="turn.movement"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="research">Research:</label>
+        <textarea id="research" class="form-control" placeholder="Research..." ng-model="turn.research"></textarea>
+      </div>
+    </fieldset>
+
+  </div>
+
+</div>
