@@ -556,217 +556,233 @@
 'use strict';
 (function (civApp) {
 
-    civApp.factory('PlayerService', ["$http", "$q", "$log", "growl", "currentUser", "BASE_URL", "GameService", "Util", function ($http, $q, $log, growl, currentUser, BASE_URL, GameService, Util) {
-        var baseUrl = BASE_URL + "/player/";
+  civApp.factory('PlayerService', ["$http", "$q", "$log", "growl", "currentUser", "BASE_URL", "GameService", "Util", function ($http, $q, $log, growl, currentUser, BASE_URL, GameService, Util) {
+    var baseUrl = BASE_URL + "/player/";
 
-        var revealItem = function (gameId, item) {
-            if(!gameId || !item) {
-                return $q.reject("No gameId or logid");
-            }
-            var url = baseUrl + gameId + "/item/reveal";
+    var revealItem = function (gameId, item) {
+      if (!gameId || !item) {
+        return $q.reject("No gameId or logid");
+      }
+      var url = baseUrl + gameId + "/item/reveal";
 
-            var itemDTO = {
-                "name": Util.nextElement(item).name,
-                "ownerId": Util.nextElement(item).ownerId,
-                "sheetName": Util.nextElement(item).sheetName,
-                "pbfId": gameId
-            };
+      var itemDTO = {
+        "name": Util.nextElement(item).name,
+        "ownerId": Util.nextElement(item).ownerId,
+        "sheetName": Util.nextElement(item).sheetName,
+        "pbfId": gameId
+      };
 
-            var configuration = {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            };
+      var configuration = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
 
-            return $http.put(url, itemDTO, configuration)
-                .success(function (response) {
-                    growl.success("Item revealed");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                })
-                .error(function () {
-                    growl.error("Item could not be revealed");
-                });
-        };
+      return $http.put(url, itemDTO, configuration)
+        .success(function (response) {
+          growl.success("Item revealed");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function () {
+          growl.error("Item could not be revealed");
+        });
+    };
 
-        var revealTech = function (gameId, logid) {
-            if(!gameId || !logid) {
-                return $q.reject("No gameId or logid");
-            }
-            var url = baseUrl + gameId + "/tech/reveal/" + logid;
-            $http.put(url)
-                .success(function (response) {
-                    growl.success("Research revealed!");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                })
-                .error(function (data) {
-                    growl.error("Could not reveal tech");
-                    return data;
-                });
-        };
+    var revealTech = function (gameId, logid) {
+      if (!gameId || !logid) {
+        return $q.reject("No gameId or logid");
+      }
+      var url = baseUrl + gameId + "/tech/reveal/" + logid;
+      $http.put(url)
+        .success(function (response) {
+          growl.success("Research revealed!");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function (data) {
+          growl.error("Could not reveal tech");
+          return data;
+        });
+    };
 
-        var discardItem = function (gameId, item) {
-            if(!gameId || !item) {
-                return $q.reject("No gameId or item");
-            }
-            var url = baseUrl + gameId + "/item/discard";
+    var discardItem = function (gameId, item) {
+      if (!gameId || !item) {
+        return $q.reject("No gameId or item");
+      }
+      var url = baseUrl + gameId + "/item/discard";
 
-            var itemDTO = {
-                "name": Util.nextElement(item).name,
-                "ownerId": Util.nextElement(item).ownerId,
-                "sheetName": Util.nextElement(item).sheetName,
-                "pbfId": gameId
-            };
+      var itemDTO = {
+        "name": Util.nextElement(item).name,
+        "ownerId": Util.nextElement(item).ownerId,
+        "sheetName": Util.nextElement(item).sheetName,
+        "pbfId": gameId
+      };
 
-            var configuration = {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            };
+      var configuration = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
 
-            $http.post(url, itemDTO, configuration)
-                .success(function (response) {
-                    growl.success("Item discarded");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                }).error(function (data) {
-                    growl.error("Item could not be discarded");
-                    return data;
-                });
-        };
+      $http.post(url, itemDTO, configuration)
+        .success(function (response) {
+          growl.success("Item discarded");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        }).error(function (data) {
+          growl.error("Item could not be discarded");
+          return data;
+        });
+    };
 
-        var endTurn = function (gameId) {
-            if(!gameId) {
-                return $q.reject("No gameId");
-            }
-            var url = baseUrl + gameId + "/endturn";
-            return $http.post(url)
-                .success(function (response) {
-                    growl.success("Turn ended");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                })
-                .error(function (data) {
-                    growl.error("Could not end turn");
-                    return data;
-                });
-        };
+    var endTurn = function (gameId) {
+      if (!gameId) {
+        return $q.reject("No gameId");
+      }
+      var url = baseUrl + gameId + "/endturn";
+      return $http.post(url)
+        .success(function (response) {
+          growl.success("Turn ended");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function (data) {
+          growl.error("Could not end turn");
+          return data;
+        });
+    };
 
-        var getChosenTechs = function (gameId) {
-            if(!gameId) {
-                return $q.reject("No gameId");
-            }
-            var url = baseUrl + gameId + "/tech/" + currentUser.profile.id;
-            return $http.get(url)
-                .then(function (response) {
-                    return response.data;
-                }, function (data) {
-                    $log.error(data);
-                    growl.error("Could not get chosen techs");
-                    return $q.reject();
-                });
-        };
+    var getChosenTechs = function (gameId) {
+      if (!gameId) {
+        return $q.reject("No gameId");
+      }
+      var url = baseUrl + gameId + "/tech/" + currentUser.profile.id;
+      return $http.get(url)
+        .then(function (response) {
+          return response.data;
+        }, function (data) {
+          $log.error(data);
+          growl.error("Could not get chosen techs");
+          return $q.reject();
+        });
+    };
 
-        var selectTech = function (gameId, selectedTech) {
-            if(!gameId || !selectedTech) {
-                return $q.reject("No gameId or tech");
-            }
-            var url = baseUrl + gameId + "/tech/choose";
+    var selectTech = function (gameId, selectedTech) {
+      if (!gameId || !selectedTech) {
+        return $q.reject("No gameId or tech");
+      }
+      var url = baseUrl + gameId + "/tech/choose";
 
-            return $http({
-                url: url,
-                method: "POST",
-                params: {name: selectedTech.tech.name}
-            })
-                .success(function (response) {
-                    growl.success("Tech chosen successfully");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                }).error(function (data) {
-                    growl.error("Could not choose tech");
-                    return data;
-                });
-        };
+      return $http({
+        url: url,
+        method: "POST",
+        params: {name: selectedTech.tech.name}
+      })
+        .success(function (response) {
+          growl.success("Tech chosen successfully");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        }).error(function (data) {
+          growl.error("Could not choose tech");
+          return data;
+        });
+    };
 
-        var removeTech = function (gameId, techName) {
-            if(!gameId || !techName) {
-                return $q.reject("No gameId or tech");
-            }
-            var url = baseUrl + gameId + "/tech/remove";
+    var removeTech = function (gameId, techName) {
+      if (!gameId || !techName) {
+        return $q.reject("No gameId or tech");
+      }
+      var url = baseUrl + gameId + "/tech/remove";
 
-            return $http({
-                url: url,
-                method: "DELETE",
-                params: {name: techName}
-            })
-                .success(function (response) {
-                    growl.success("Tech removed successfully");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                }).error(function (data) {
-                    $log.error(data);
-                    growl.error("Could not remove tech");
-                    return data;
-                });
-        };
+      return $http({
+        url: url,
+        method: "DELETE",
+        params: {name: techName}
+      })
+        .success(function (response) {
+          growl.success("Tech removed successfully");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        }).error(function (data) {
+          $log.error(data);
+          growl.error("Could not remove tech");
+          return data;
+        });
+    };
 
-        var trade = function (gameId, item) {
-            if (!gameId || !item) {
-                return $q.reject("Couldn't get gameId or item");
-            }
-            var url = baseUrl + gameId + "/trade/";
+    var trade = function (gameId, item) {
+      if (!gameId || !item) {
+        return $q.reject("Couldn't get gameId or item");
+      }
+      var url = baseUrl + gameId + "/trade/";
 
-            var itemDTO = {
-                "name": item.name,
-                "sheetName": item.sheetName,
-                "pbfId": gameId,
-                "ownerId": item.ownerId
-            };
+      var itemDTO = {
+        "name": item.name,
+        "sheetName": item.sheetName,
+        "pbfId": gameId,
+        "ownerId": item.ownerId
+      };
 
-            var configuration = {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            };
+      var configuration = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
 
-            $http.post(url, itemDTO, configuration)
-                .success(function (response) {
-                    growl.success("Item sent to another player");
-                    return response;
-                }).success(function (response) {
-                    GameService.fetchGameByIdFromServer(gameId);
-                    return response;
-                }).error(function (data) {
-                    growl.error("Item could not be sent to another player");
-                    return data;
-                });
-        };
+      $http.post(url, itemDTO, configuration)
+        .success(function (response) {
+          growl.success("Item sent to another player");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        }).error(function (data) {
+          growl.error("Item could not be sent to another player");
+          return data;
+        });
+    };
 
-        return {
-            revealItem: revealItem,
-            revealTech: revealTech,
-            discardItem: discardItem,
-            endTurn: endTurn,
-            selectTech: selectTech,
-            getChosenTechs: getChosenTechs,
-            removeTech: removeTech,
-            trade: trade
-        };
+    var getTechsForAllPlayers = function (gameId) {
+      if (!gameId) {
+        return $q.reject("No gameId");
+      }
+      var url = baseUrl + gameId + "/tech/all/";
+      return $http.get(url)
+        .success(function (response) {
+          return response.data;
+        })
+        .error(function (response) {
+          growl.error("Could not get techs for all players");
+          return response;
+        })
+    };
 
-    }]);
+    return {
+      revealItem: revealItem,
+      revealTech: revealTech,
+      discardItem: discardItem,
+      endTurn: endTurn,
+      selectTech: selectTech,
+      getChosenTechs: getChosenTechs,
+      removeTech: removeTech,
+      trade: trade,
+      getTechsForAllPlayers: getTechsForAllPlayers
+    };
+
+  }]);
 
 }(angular.module("civApp")));
 
@@ -2284,6 +2300,66 @@ angular.module('civApp').controller('LootController', ["players", "sheetName", "
   };
 
   module.controller("PublicChatController", ["currentUser", "growl", "GameService", "$interval", PublicChatController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+  var TechController = function ($log, $routeParams, GameService, currentUser, Util, $scope, PlayerService) {
+    var model = this;
+
+    var playerTechs = PlayerService.getTechsForAllPlayers($routeParams.id);
+    model.allTechs = [];
+
+    playerTechs.then(function(response) {
+      var techs = response.data;
+      if(techs) {
+        model.allTechs = techs;
+      }
+    });
+
+    model.getChosenTech = function(techs, level) {
+      var returnval = [];
+      _.forIn(techs, function(value, key) {
+        if(value.level === level) {
+          returnval.push(value);
+        }
+      });
+      return returnval;
+    };
+
+    model.getAvailableTech = function(techs, level) {
+      var totalTechPerLevel = 0;
+      if(level === 1) {
+        totalTechPerLevel = 5;
+      } else if(level === 2) {
+        totalTechPerLevel = 4;
+      } else if(level === 3) {
+        totalTechPerLevel = 3;
+      } else if(level === 4) {
+        totalTechPerLevel = 2;
+      } else if(level === 5) {
+        totalTechPerLevel = 1;
+      }
+
+      var chosenTechsForLevel = [];
+      _.forIn(techs, function(value, key) {
+        if(value.level === level) {
+          chosenTechsForLevel.push(value);
+        }
+      });
+
+      var returnval = [];
+      for(var i = 0; i < (totalTechPerLevel-chosenTechsForLevel.length); i++) {
+        returnval.push(i);
+      }
+      return returnval;
+    };
+
+  };
+
+  module.controller("TechController",
+    ["$log", "$routeParams", "GameService", "currentUser", "Util", "$scope", "PlayerService", TechController]);
 
 }(angular.module("civApp")));
 
