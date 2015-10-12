@@ -67,8 +67,8 @@
     growlProvider.globalPosition('top-center');
     growlProvider.onlyUniqueMessages(true);
   })
-    .constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
-    //.constant('BASE_URL', 'http://localhost:8080/api');
+    //.constant('BASE_URL', 'https://civilization-boardgame.herokuapp.com/api');
+    .constant('BASE_URL', 'http://localhost:8080/api');
 
 }());
 
@@ -767,7 +767,7 @@
         .error(function (response) {
           growl.error("Could not get techs for all players");
           return response;
-        })
+        });
     };
 
     return {
@@ -2300,6 +2300,46 @@ angular.module('civApp').controller('LootController', ["players", "sheetName", "
   };
 
   module.controller("PublicChatController", ["currentUser", "growl", "GameService", "$interval", PublicChatController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+  var TurnsController = function ($log, GameService, DrawService, currentUser, Util, growl, $routeParams, $scope) {
+    var viewModel = this;
+
+    var turns = [{
+      turnnr: 1,
+      disabled: true,
+      sot: "Scout to city F2, Create city @ A5",
+      trade: 14,
+      cm: "Harvest silk",
+      movement: "",
+      research: ""
+    },
+      {
+        turnnr: 2,
+        disabled: false,
+        sot: "Nothing",
+        trade: 23,
+        cm: "Devote capital",
+        movement: "",
+        research: ""
+      }
+    ];
+
+    viewModel.turns = turns;
+
+    viewModel.disableForm = function (turnIndex) {
+      console.log('disabled set to true');
+      var turn = viewModel.turns[turnIndex];
+      console.log("turn is ", turn);
+      turn.disabled = true;
+    }
+  };
+
+  module.controller("TurnsController",
+    ["$log", "GameService", "DrawService", "currentUser", "Util", "growl", "$routeParams", "$scope", TurnsController]);
 
 }(angular.module("civApp")));
 

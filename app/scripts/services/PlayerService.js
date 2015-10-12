@@ -212,7 +212,7 @@
         .error(function (response) {
           growl.error("Could not get techs for all players");
           return response;
-        })
+        });
     };
 
     return {
