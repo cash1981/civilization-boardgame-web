@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope) {
+  var GameListController = function (games, winners, $log, GameService, currentUser, $modal, $scope) {
     var model = this;
 
     model.isUserPlaying = function (players) {
@@ -64,6 +64,7 @@
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
+      model.winners = [];
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
@@ -74,6 +75,10 @@
           model.finishedGames.push(g);
         }
       });
+
+      _.forEach(winners, function (w) {
+          model.winners.push(w);
+      });
       /* jshint ignore:end */
     };
 
@@ -81,6 +86,6 @@
   };
 
   module.controller("GameListController",
-    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
+    ["games", "winners", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
 
 }(angular.module("civApp")));

@@ -218,7 +218,7 @@
             });
         };
 
-        var players = function (gameid) {
+        var playersExceptLoggedIn = function (gameid) {
           var cacheid = gameid + currentUser.profile.id;
           if (playerLoading[cacheid]) {
             return;
@@ -229,6 +229,14 @@
           }
 
           return fetchPlayersFromServer(gameid);
+        };
+
+        var allPlayers = function (gameid) {
+          var url = baseUrl + gameid + "/players/all";
+          return $http.get(url, {cache: true})
+            .then(function (response) {
+              return response.data;
+            });
         };
 
         var fetchPlayersFromServer = function (gameid) {
@@ -246,11 +254,11 @@
             });
         };
 
-        var endGame = function (gameid) {
+        var endGame = function (gameid, winner) {
           if (!gameid) {
             return $q.reject("No gameid");
           }
-          return $http.delete(baseUrl + gameid + "/end")
+          return $http.delete(baseUrl + gameid + "/end", {params: {winner: winner}})
             .then(function (response) {
               growl.info("Game has ended");
               return response.data;
@@ -312,6 +320,14 @@
             });
         };
 
+        var winners = function () {
+          var url = baseUrl + "winners/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         return {
           getAllGames: getAllGames,
           getGameById: getGameById,
@@ -326,12 +342,14 @@
           chat: chat,
           publicChat:publicChat,
           getPublicChatList:getPublicChatList,
-          players: players,
+          players: playersExceptLoggedIn,
+          allPlayers: allPlayers,
           fetchPlayersFromServer: fetchPlayersFromServer,
           endGame: endGame,
           withdrawFromGame: withdrawFromGame,
           updateMapLink: updateMapLink,
-          updateAssetLink: updateAssetLink
+          updateAssetLink: updateAssetLink,
+          winners: winners
         };
       }];
 

@@ -24,6 +24,9 @@
         resolve: {
           games: ["GameService", function(m) {
             return m.getAllGames();
+          }],
+          winners: ["GameService", function(m) {
+            return m.winners();
           }]
         }
       })
@@ -292,7 +295,7 @@
             });
         };
 
-        var players = function (gameid) {
+        var playersExceptLoggedIn = function (gameid) {
           var cacheid = gameid + currentUser.profile.id;
           if (playerLoading[cacheid]) {
             return;
@@ -303,6 +306,14 @@
           }
 
           return fetchPlayersFromServer(gameid);
+        };
+
+        var allPlayers = function (gameid) {
+          var url = baseUrl + gameid + "/players/all";
+          return $http.get(url, {cache: true})
+            .then(function (response) {
+              return response.data;
+            });
         };
 
         var fetchPlayersFromServer = function (gameid) {
@@ -320,11 +331,11 @@
             });
         };
 
-        var endGame = function (gameid) {
+        var endGame = function (gameid, winner) {
           if (!gameid) {
             return $q.reject("No gameid");
           }
-          return $http.delete(baseUrl + gameid + "/end")
+          return $http.delete(baseUrl + gameid + "/end", {params: {winner: winner}})
             .then(function (response) {
               growl.info("Game has ended");
               return response.data;
@@ -386,6 +397,14 @@
             });
         };
 
+        var winners = function () {
+          var url = baseUrl + "winners/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         return {
           getAllGames: getAllGames,
           getGameById: getGameById,
@@ -400,12 +419,14 @@
           chat: chat,
           publicChat:publicChat,
           getPublicChatList:getPublicChatList,
-          players: players,
+          players: playersExceptLoggedIn,
+          allPlayers: allPlayers,
           fetchPlayersFromServer: fetchPlayersFromServer,
           endGame: endGame,
           withdrawFromGame: withdrawFromGame,
           updateMapLink: updateMapLink,
-          updateAssetLink: updateAssetLink
+          updateAssetLink: updateAssetLink,
+          winners: winners
         };
       }];
 
@@ -1330,7 +1351,7 @@ angular.module('civApp').directive('match', [function () {
 
 'use strict';
 (function (module) {
-  var GameListController = function (games, $log, GameService, currentUser, $modal, $scope) {
+  var GameListController = function (games, winners, $log, GameService, currentUser, $modal, $scope) {
     var model = this;
 
     model.isUserPlaying = function (players) {
@@ -1394,6 +1415,7 @@ angular.module('civApp').directive('match', [function () {
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
+      model.winners = [];
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
@@ -1404,6 +1426,10 @@ angular.module('civApp').directive('match', [function () {
           model.finishedGames.push(g);
         }
       });
+
+      _.forEach(winners, function (w) {
+          model.winners.push(w);
+      });
       /* jshint ignore:end */
     };
 
@@ -1411,7 +1437,7 @@ angular.module('civApp').directive('match', [function () {
   };
 
   module.controller("GameListController",
-    ["games", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
+    ["games", "winners", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
 
 }(angular.module("civApp")));
 
@@ -1631,18 +1657,19 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     model.registerEmail = null;
     model.registerPassword = null;
     model.registerVerification = null;
+    model.winner = null;
 
     model.clearOptions = function() {
       GameOption.setShowValue(false);
       GameOption.setShowEndGameValue(false);
     };
 
-    model.endGame = function() {
-      var game = GameService.getGameById($routeParams.id);
+    model.endGame = function(winner) {
+      var game = GameService.getGameById(winner.pbfId);
 
       if(game && game.player && game.player.gameCreator) {
         model.clearOptions();
-        GameService.endGame($routeParams.id);
+        GameService.endGame(winner.pbfId, winner.username);
       } else {
         growl.error('Only the game creator can end a game!');
       }
@@ -1739,7 +1766,25 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       });
     };
 
+    model.openEndGame = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'endGame.html',
+        controller: 'TradeController as tradeCtrl',
+        size: size,
+        resolve: {
+          players: function() {
+            return GameService.allPlayers($routeParams.id);
+          },
+          item : undefined
+        }
+      });
 
+      modalInstance.result.then(function(winner) {
+        model.endGame(winner);
+      }, function () {
+        //Cancel callback here
+      });
+    };
   };
 
   module.controller("NavController", ['GameService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
@@ -2240,6 +2285,18 @@ angular.module('civApp').controller('TradeController', ["players", "item", "curr
   };
 
   model.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+  model.endGameWinner = function() {
+    $modalInstance.close(model.winner);
+  };
+
+  model.endGameNoWinner = function() {
+    $modalInstance.close(undefined);
+  };
+
+  model.endGameCancel = function () {
     $modalInstance.dismiss('cancel');
   };
 }]);

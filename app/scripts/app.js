@@ -24,6 +24,9 @@
         resolve: {
           games: ["GameService", function(m) {
             return m.getAllGames();
+          }],
+          winners: ["GameService", function(m) {
+            return m.winners();
           }]
         }
       })

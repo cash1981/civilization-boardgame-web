@@ -14,18 +14,19 @@
     model.registerEmail = null;
     model.registerPassword = null;
     model.registerVerification = null;
+    model.winner = null;
 
     model.clearOptions = function() {
       GameOption.setShowValue(false);
       GameOption.setShowEndGameValue(false);
     };
 
-    model.endGame = function() {
-      var game = GameService.getGameById($routeParams.id);
+    model.endGame = function(winner) {
+      var game = GameService.getGameById(winner.pbfId);
 
       if(game && game.player && game.player.gameCreator) {
         model.clearOptions();
-        GameService.endGame($routeParams.id);
+        GameService.endGame(winner.pbfId, winner.username);
       } else {
         growl.error('Only the game creator can end a game!');
       }
@@ -122,7 +123,25 @@
       });
     };
 
+    model.openEndGame = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'endGame.html',
+        controller: 'TradeController as tradeCtrl',
+        size: size,
+        resolve: {
+          players: function() {
+            return GameService.allPlayers($routeParams.id);
+          },
+          item : undefined
+        }
+      });
 
+      modalInstance.result.then(function(winner) {
+        model.endGame(winner);
+      }, function () {
+        //Cancel callback here
+      });
+    };
   };
 
   module.controller("NavController", ['GameService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);

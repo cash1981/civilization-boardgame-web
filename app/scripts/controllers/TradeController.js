@@ -12,4 +12,16 @@ angular.module('civApp').controller('TradeController', ["players", "item", "curr
   model.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+
+  model.endGameWinner = function() {
+    $modalInstance.close(model.winner);
+  };
+
+  model.endGameNoWinner = function() {
+    $modalInstance.close(undefined);
+  };
+
+  model.endGameCancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
 }]);
