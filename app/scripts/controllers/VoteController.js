@@ -1,11 +1,11 @@
 'use strict';
-angular.module('civApp').controller('VoteController', ["$scope", "$modalInstance", "$log", "logToUndo", function ($scope, $modalInstance, $log, logToUndo) {
+angular.module('civApp').controller('VoteController', ["$scope", "$uibModalInstance", "$log", "logToUndo", function ($scope, $uibModalInstance, $log, logToUndo) {
   $scope.voteOk = function () {
     var vote = {
       id: logToUndo.id,
       vote: true
     };
-    $modalInstance.close(vote);
+    $uibModalInstance.close(vote);
   };
 
   $scope.voteNok = function () {
@@ -13,10 +13,10 @@ angular.module('civApp').controller('VoteController', ["$scope", "$modalInstance
       id: logToUndo.id,
       vote: false
     };
-    $modalInstance.close(vote);
+    $uibModalInstance.close(vote);
   };
 
   $scope.voteCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);

@@ -1,5 +1,5 @@
 'use strict';
-angular.module('civApp').controller('RegisterController', ["$scope", "$modalInstance", "$log", "growl", function ($scope, $modalInstance, $log, growl) {
+angular.module('civApp').controller('RegisterController', ["$scope", "$uibModalInstance", "$log", "growl", function ($scope, $uibModalInstance, $log, growl) {
   var model = this;
 
   //Can also request this from the backend
@@ -25,7 +25,7 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
       'color' : model.color
     };
 
-    $modalInstance.close(createNewGame);
+    $uibModalInstance.close(createNewGame);
   };
 
   $scope.registerOk = function() {
@@ -45,11 +45,11 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
       'password' : $scope.password
     };
 
-    $modalInstance.close(register);
+    $uibModalInstance.close(register);
   };
 
   $scope.registerCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.newPasswordOk = function() {
@@ -63,10 +63,10 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
       'newpassword' : model.newpassword
     };
 
-    $modalInstance.close(forgotPassword);
+    $uibModalInstance.close(forgotPassword);
   };
 
   $scope.newPasswordCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);

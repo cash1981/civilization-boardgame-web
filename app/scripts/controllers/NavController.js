@@ -1,7 +1,7 @@
 ﻿'use strict';
 (function (module) {
 
-  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
+  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $uibModal) {
     var model = this;
     model.GameOption = GameOption;
     model.user = currentUser.profile;
@@ -72,7 +72,7 @@
     };
 
     model.openSignup = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'signup.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -92,7 +92,7 @@
     };
 
     model.openForgotPassword = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'forgotpassword.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -108,7 +108,7 @@
     };
 
     model.openGeneralInfo = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'image1.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -121,7 +121,7 @@
     };
 
     model.openTechOverview = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'image2.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -134,7 +134,7 @@
     };
 
     model.openEndGame = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'endGame.html',
         controller: 'TradeController as tradeCtrl',
         size: size,
@@ -154,6 +154,6 @@
     };
   };
 
-  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
+  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$uibModal', NavController]);
 
 }(angular.module("civApp")));

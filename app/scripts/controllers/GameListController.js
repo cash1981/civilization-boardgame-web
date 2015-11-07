@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var GameListController = function (games, winners, $log, GameService, currentUser, $modal, $scope) {
+  var GameListController = function (games, winners, $log, GameService, currentUser, $uibModal, $scope) {
     var model = this;
 
     model.isUserPlaying = function (players) {
@@ -37,7 +37,7 @@
     };
 
     model.openCreateNewGame = function (size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'createNewGame.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -86,6 +86,6 @@
   };
 
   module.controller("GameListController",
-    ["games", "winners", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
+    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", "$interval", GameListController]);
 
 }(angular.module("civApp")));

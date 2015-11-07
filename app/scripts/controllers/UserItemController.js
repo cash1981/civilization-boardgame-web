@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $modal) {
+  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $uibModal) {
     var model = this;
 
     model.nextElement = function(obj) {
@@ -43,12 +43,10 @@
       model.units = [];
       model.items = [];
       readKeysFromItems(game.player.items);
-      model.tablePrivateLog.reload();
       return game;
     });
 
     function readKeysFromItems(items) {
-      //TODO refactor to lodash _forEach
       items.forEach(function (item) {
         var itemKey = Object.keys(item)[0];
         if ("cultureI" === itemKey || "cultureII" === itemKey || "cultureIII" === itemKey) {
@@ -82,7 +80,6 @@
       model.availableTech3 = [];
       model.availableTech4 = [];
 
-      //TODO refactor to lodash _forEach
       techs.forEach(function (tech) {
         var chosenTech = tech.tech || tech;
         if(!chosenTech) {
@@ -145,10 +142,6 @@
         });
     };
 
-    model.canRevealTech = function(log) {
-      return $scope.userHasAccess && log && log.draw && log.draw.hidden && log.log.indexOf("researched") > -1;
-    };
-
     model.revealTechFromLog = function(logid) {
       PlayerService.revealTech($routeParams.id, logid);
     };
@@ -173,7 +166,7 @@
         return;
       }
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'modalTrade.html',
         controller: 'TradeController as tradeCtrl',
         size: size,
@@ -199,7 +192,7 @@
         return;
       }
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'modalLoot.html',
         controller: 'LootController as lootCtrl',
         size: size,
@@ -218,31 +211,6 @@
       }, function () {
       });
     };
-
-    /* jshint ignore:start */
-    model.tablePrivateLog = new ngTableParams({
-      page: 1,            // show first page
-      count: 10,          // count per page
-      sorting: {
-        created: 'desc'     // initial sorting
-      }
-    }, {
-      total: 0, // length of data
-      getData: function ($defer, params) {
-        // use build-in angular filter
-        // update table params
-        if (!$scope.currentGame) {
-          $defer.reject("No game yet");
-          return;
-        }
-        var game = $scope.currentGame;
-        var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
-        params.total(game.privateLogs.length);
-        $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-      },
-      $scope: { $data: {}, $emit: function () {}}
-    });
-    /* jshint ignore:end */
 
     var initialize = function() {
       model.user = currentUser.profile;
@@ -278,6 +246,6 @@
   };
 
   module.controller("UserItemController",
-    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$modal", UserItemController]);
+    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$uibModal", UserItemController]);
 
 }(angular.module("civApp")));

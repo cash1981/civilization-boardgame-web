@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $modal, $sce) {
+var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $uibModal, $sce) {
   var model = this;
 
   $scope.$watch(function () {
@@ -49,6 +49,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
 
     model.tableParams.reload();
+    model.tablePrivateLog.reload();
     return game;
   });
 
@@ -88,7 +89,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   $scope.openModalVote = function(size, log) {
-    var modalInstance = $modal.open({
+    var modalInstance = $uibModal.open({
       templateUrl: 'modalVote.html',
       controller: 'VoteController',
       size: size,
@@ -143,6 +144,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     return assetPromise;
   };
 
+  model.canRevealTech = function(log) {
+    return $scope.userHasAccess && log && log.draw && log.draw.hidden && log.log.indexOf("researched") > -1;
+  };
+
   /* jshint ignore:start */
   model.tableParams = new ngTableParams({
     page: 1,            // show first page
@@ -173,6 +178,31 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   });
   /* jshint ignore:end */
 
+  /* jshint ignore:start */
+  model.tablePrivateLog = new ngTableParams({
+    page: 1,            // show first page
+    count: 10,          // count per page
+    sorting: {
+      created: 'desc'     // initial sorting
+    }
+  }, {
+    total: 0, // length of data
+    getData: function ($defer, params) {
+      // use build-in angular filter
+      // update table params
+      if (!$scope.currentGame) {
+        $defer.reject("No game yet");
+        return;
+      }
+      var game = $scope.currentGame;
+      var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
+      params.total(game.privateLogs.length);
+      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    },
+    $scope: { $data: {}, $emit: function () {}}
+  });
+  /* jshint ignore:end */
+
   /**
    * Returns the next element in the object
    * @param obj
@@ -195,6 +225,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 };
 
   module.controller("GameController",
-    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$modal", "$sce", GameController]);
+    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
 
 }(angular.module("civApp")));

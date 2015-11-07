@@ -1,20 +1,20 @@
 'use strict';
-angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$modalInstance", function (players, item, currentUser, $scope, $modalInstance) {
+angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$uibModalInstance", function (players, item, currentUser, $scope, $uibModalInstance) {
   var model = this;
   model.players = players;
   model.item = item;
 
   model.ok = function() {
     item.ownerId = model.playerTradeChosen.playerId;
-    $modalInstance.close(item);
+    $uibModalInstance.close(item);
   };
 
   model.cancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   model.endGameWinner = function() {
-    $modalInstance.close(model.winner);
+    $uibModalInstance.close(model.winner);
   };
 
   model.endGameNoWinner = function() {
@@ -22,10 +22,10 @@ angular.module('civApp').controller('TradeController', ["players", "item", "curr
       pbfId: model.players[0].pbfId,
       username: null
     };
-    $modalInstance.close(winner);
+    $uibModalInstance.close(winner);
   };
 
   model.endGameCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);

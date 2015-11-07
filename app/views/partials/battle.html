@@ -39,7 +39,7 @@
   <div class="row padd-top-7">
     <div ng-repeat="unit in drawCtrl.battlehand" class="col-md-2 col-xs-12 padd-top-7">
       <img ng-src="/images/useritems/{{drawCtrl.nextElement(unit).image}}"
-           tooltip="{{drawCtrl.nextElement(unit).name}}"/>
+           uib-tooltip="{{drawCtrl.nextElement(unit).name}}" tooltip-trigger="mouseenter"/>
     </div>
   </div>
 
@@ -49,7 +49,7 @@
       <button type="button" class="btn btn-info"
               ng-really-message="Are you sure you want to reveal and discard your units? \nThis will not delete the units, merely discard from your hand."
               ng-really-click="drawCtrl.revealBattlehand()"
-              tooltip="This will reveal and discard your battlehand">
+              uib-tooltip="This will reveal and discard your battlehand" tooltip-trigger="mouseenter">
         Reveal and discard
       </button>
     </div>
@@ -60,7 +60,7 @@
       <button type="button" class="btn btn-default"
               ng-really-message="This will draw 3 barbarian units. Are you sure?"
               ng-really-click="drawCtrl.drawBarbarians()"
-              tooltip="This will draw 3 barbarian units">
+              uib-tooltip="This will draw 3 barbarian units" tooltip-trigger="mouseenter">
         Draw barbarian units <span class="badge">3</span>
       </button>
     </div>
@@ -69,7 +69,7 @@
   <div class="row padd-top-7">
     <div ng-repeat="unit in drawCtrl.barbarians" class="col-md-2 col-xs-12">
       <img ng-src="/images/useritems/{{drawCtrl.nextElement(unit).image}}"
-           tooltip="{{drawCtrl.nextElement(unit).name}}"/>
+           uib-tooltip="{{drawCtrl.nextElement(unit).name}}" tooltip-trigger="mouseenter"/>
     </div>
   </div>
 
@@ -78,7 +78,7 @@
       <button ng-really-message="This will discard the barbarian units. Are you sure?"
               ng-really-click="drawCtrl.discardBarbarians()"
               class="btn btn-info"
-              tooltip="Discard the barbarian units. This will make an entry in the game log">
+              uib-tooltip="Discard the barbarian units. This will make an entry in the game log" tooltip-trigger="mouseenter">
         Discard Barbarians
       </button>
     </div>

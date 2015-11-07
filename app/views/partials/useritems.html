@@ -1,40 +1,6 @@
 <div ng-controller="UserItemController as userCtrl" ng-cloak>
   <div class="row">
-    <div class="col-md-7">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title panel-primary">
-            <button class="btn btn-info" ng-click="privateLogCollapse = !privateLogCollapse">Toggle Private log</button>
-          </h3>
-        </div>
-        <div class="panel-body" collapse="privateLogCollapse">
-          <table ng-table="userCtrl.tablePrivateLog" ng-show="$data.length > 0"
-                 class="table table-bordered table-hover table-condensed text-center table-responsive">
-            <tr ng-repeat="log in $data" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
-              <td data-title="'Date'" sortable="'created'">{{log.created | date:'dd-MM-yyyy - HH:mm:ss'}}</td>
-              <td data-title="'Log'" sortable="'log'">{{log.log}}</td>
-              <td data-title="'Action'">
-                <button ng-if="canInitiateUndo(log)"
-                        ng-really-message="This will initiate vote for Undo. Are you sure?"
-                        ng-really-click="initiateUndo(log.id)"
-                        class="btn btn-sm btn-warning" tooltip="Press undo button to request a vote for undo. All players must vote yes for undo to be made.
-                    Once all players have voted yes, the item will be put back in the deck and reshuffled">
-                  Undo
-                </button>
-                <button ng-if="userCtrl.canRevealTech(log)"
-                        ng-really-message="This will reveal your tech. Are you sure?"
-                        ng-really-click="userCtrl.revealTechFromLog(log.id)"
-                        class="btn btn-sm btn-warning"
-                        tooltip="Reveal your tech. This will make an entry in the game log and display the hidden information">
-                  Reveal Tech
-                </button>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-5" ng-if="gameCtrl.yourTurn">
+    <div class="col-xs-12 col-lg-5 col-md-5" ng-if="gameCtrl.yourTurn">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Draw items</h3>
@@ -46,7 +12,7 @@
             </button>
 
             <ul class="dropdown-menu" role="menu">
-              <li><a ng-click="itemToDraw = 'CIV'" tooltip="Draw a civilization, for instance America">Civs</a></li>
+              <li><a ng-click="itemToDraw = 'CIV'" uib-tooltip="Draw a civilization, for instance America" tooltip-trigger="mouseenter">Civs</a></li>
               <li class="divider"></li>
               <li><a ng-click="itemToDraw = 'Culture I'">Culture I</a></li>
               <li><a ng-click="itemToDraw = 'Culture II'">Culture II</a></li>

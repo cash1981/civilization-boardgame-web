@@ -1,17 +1,17 @@
 'use strict';
-angular.module('civApp').controller('LootController', ["players", "sheetName", "currentUser", "$scope", "$modalInstance", function (players, sheetName, currentUser, $scope, $modalInstance) {
+angular.module('civApp').controller('LootController', ["players", "sheetName", "currentUser", "$scope", "$uibModalInstance", function (players, sheetName, currentUser, $scope, $uibModalInstance) {
   var model = this;
   model.players = players;
   model.sheetName = sheetName;
 
   model.ok = function() {
-    $modalInstance.close({
+    $uibModalInstance.close({
       playerId: model.playerLootChosen.playerId,
       sheetName: sheetName
     });
   };
 
   model.cancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);
