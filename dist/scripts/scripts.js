@@ -1186,7 +1186,8 @@
   var options = function() {
     this.value = {
       show: false,
-      showEndGame: false
+      showEndGame: false,
+      admin: false
     };
 
     this.getValue = function() {
@@ -1200,9 +1201,43 @@
     this.setShowEndGameValue = function(val) {
       this.value.showEndGame = val;
     };
+
+    this.setShowAdminValue = function(val) {
+      this.value.admin = val;
+    };
   };
 
   module.service("GameOption", options);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (civApp) {
+
+  civApp.factory('AdminService', ["$http", "$q", "$log", "growl", "currentUser", "BASE_URL", function ($http, $q, $log, growl, currentUser, BASE_URL) {
+    var baseUrl = BASE_URL + "/admin/";
+
+    var deleteGame = function (gameId) {
+      var url = baseUrl + "deletegame";
+
+      return $http({
+        url: url,
+        method: "POST",
+        params: {gameid: gameId}
+      })
+        .success(function (response) {
+          growl.success("Game deleted!");
+          return response;
+        }).error(function (data) {
+          growl.error("Could not delete game");
+          return data;
+        });
+    };
+    return {
+      deleteGame: deleteGame
+    };
+
+  }]);
 
 }(angular.module("civApp")));
 
@@ -1469,8 +1504,9 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
     var hasAccess = game.player && game.player.username === model.user.username && game.active;
     $scope.userHasAccess = hasAccess;
-    GameOption.setShowValue(hasAccess);
-    GameOption.setShowEndGameValue(hasAccess && game.player.gameCreator);
+    GameOption.setShowValue(hasAccess || model.user.username === 'admin');
+    GameOption.setShowEndGameValue((hasAccess && game.player.gameCreator) || model.user.username === 'admin');
+    GameOption.setShowAdminValue(model.user.username === 'admin');
 
     if(game.active) {
       //Check votes
@@ -1644,7 +1680,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 'use strict';
 (function (module) {
 
-  var NavController = function (GameService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
+  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
     var model = this;
     model.GameOption = GameOption;
     model.user = currentUser.profile;
@@ -1662,12 +1698,13 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     model.clearOptions = function() {
       GameOption.setShowValue(false);
       GameOption.setShowEndGameValue(false);
+      GameOption.setShowAdminValue(false);
     };
 
     model.endGame = function(winner) {
       var game = GameService.getGameById(winner.pbfId);
 
-      if(game && game.player && game.player.gameCreator) {
+      if((game && game.player && game.player.gameCreator) || model.user.username === 'admin') {
         model.clearOptions();
         GameService.endGame(winner.pbfId, winner.username);
       } else {
@@ -1689,6 +1726,15 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         } else {
           growl.error('Only player playing the game can withdraw from it!');
         }
+      }
+    };
+
+    model.deleteGame = function() {
+      if("admin" === model.user.username) {
+        model.clearOptions();
+        AdminService.deleteGame($routeParams.id);
+      } else {
+        growl.error('Only admin can delete game!');
       }
     };
 
@@ -1787,7 +1833,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
   };
 
-  module.controller("NavController", ['GameService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
+  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
 
 }(angular.module("civApp")));
 
@@ -2293,7 +2339,11 @@ angular.module('civApp').controller('TradeController', ["players", "item", "curr
   };
 
   model.endGameNoWinner = function() {
-    $modalInstance.close(undefined);
+    var winner = {
+      pbfId: model.players[0].pbfId,
+      username: null
+    };
+    $modalInstance.close(winner);
   };
 
   model.endGameCancel = function () {

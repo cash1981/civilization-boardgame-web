@@ -18,7 +18,11 @@ angular.module('civApp').controller('TradeController', ["players", "item", "curr
   };
 
   model.endGameNoWinner = function() {
-    $modalInstance.close(undefined);
+    var winner = {
+      pbfId: model.players[0].pbfId,
+      username: null
+    };
+    $modalInstance.close(winner);
   };
 
   model.endGameCancel = function () {

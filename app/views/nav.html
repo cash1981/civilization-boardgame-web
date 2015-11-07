@@ -28,7 +28,16 @@
             <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">End Game</a></li>
         </ul>
       </li>
-
+      <li dropdown ng-if="navCtrl.GameOption.value.admin">
+        <a href class="dropdown-toggle" dropdown-toggle>
+          Admin settings <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#/endgame"
+                 ng-really-message="This will delete the game. Are you sure?"
+                 ng-really-click="navCtrl.deleteGame()">Delete Game</a></li>
+        </ul>
+      </li>
     </ul>
     <div class="padd-right-5">
       <div ng-show="navCtrl.user.loggedIn" class="navbar-text navbar-right">

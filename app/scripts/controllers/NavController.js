@@ -1,7 +1,7 @@
 ﻿'use strict';
 (function (module) {
 
-  var NavController = function (GameService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
+  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
     var model = this;
     model.GameOption = GameOption;
     model.user = currentUser.profile;
@@ -19,12 +19,13 @@
     model.clearOptions = function() {
       GameOption.setShowValue(false);
       GameOption.setShowEndGameValue(false);
+      GameOption.setShowAdminValue(false);
     };
 
     model.endGame = function(winner) {
       var game = GameService.getGameById(winner.pbfId);
 
-      if(game && game.player && game.player.gameCreator) {
+      if((game && game.player && game.player.gameCreator) || model.user.username === 'admin') {
         model.clearOptions();
         GameService.endGame(winner.pbfId, winner.username);
       } else {
@@ -46,6 +47,15 @@
         } else {
           growl.error('Only player playing the game can withdraw from it!');
         }
+      }
+    };
+
+    model.deleteGame = function() {
+      if("admin" === model.user.username) {
+        model.clearOptions();
+        AdminService.deleteGame($routeParams.id);
+      } else {
+        growl.error('Only admin can delete game!');
       }
     };
 
@@ -144,6 +154,6 @@
     };
   };
 
-  module.controller("NavController", ['GameService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
+  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
 
 }(angular.module("civApp")));

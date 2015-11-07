@@ -26,8 +26,9 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
     var hasAccess = game.player && game.player.username === model.user.username && game.active;
     $scope.userHasAccess = hasAccess;
-    GameOption.setShowValue(hasAccess);
-    GameOption.setShowEndGameValue(hasAccess && game.player.gameCreator);
+    GameOption.setShowValue(hasAccess || model.user.username === 'admin');
+    GameOption.setShowEndGameValue((hasAccess && game.player.gameCreator) || model.user.username === 'admin');
+    GameOption.setShowAdminValue(model.user.username === 'admin');
 
     if(game.active) {
       //Check votes

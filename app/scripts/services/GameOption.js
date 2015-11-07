@@ -4,7 +4,8 @@
   var options = function() {
     this.value = {
       show: false,
-      showEndGame: false
+      showEndGame: false,
+      admin: false
     };
 
     this.getValue = function() {
@@ -17,6 +18,10 @@
 
     this.setShowEndGameValue = function(val) {
       this.value.showEndGame = val;
+    };
+
+    this.setShowAdminValue = function(val) {
+      this.value.admin = val;
     };
   };
 
