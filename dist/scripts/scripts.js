@@ -1386,7 +1386,7 @@ angular.module('civApp').directive('match', [function () {
 
 'use strict';
 (function (module) {
-  var GameListController = function (games, winners, $log, GameService, currentUser, $modal, $scope) {
+  var GameListController = function (games, winners, $log, GameService, currentUser, $uibModal, $scope) {
     var model = this;
 
     model.isUserPlaying = function (players) {
@@ -1423,7 +1423,7 @@ angular.module('civApp').directive('match', [function () {
     };
 
     model.openCreateNewGame = function (size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'createNewGame.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -1472,13 +1472,13 @@ angular.module('civApp').directive('match', [function () {
   };
 
   module.controller("GameListController",
-    ["games", "winners", "$log", "GameService", "currentUser", "$modal", "$scope", "$interval", GameListController]);
+    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", "$interval", GameListController]);
 
 }(angular.module("civApp")));
 
 'use strict';
 (function (module) {
-var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $modal, $sce) {
+var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $uibModal, $sce) {
   var model = this;
 
   $scope.$watch(function () {
@@ -1527,6 +1527,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
 
     model.tableParams.reload();
+    model.tablePrivateLog.reload();
     return game;
   });
 
@@ -1566,7 +1567,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   $scope.openModalVote = function(size, log) {
-    var modalInstance = $modal.open({
+    var modalInstance = $uibModal.open({
       templateUrl: 'modalVote.html',
       controller: 'VoteController',
       size: size,
@@ -1621,6 +1622,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     return assetPromise;
   };
 
+  model.canRevealTech = function(log) {
+    return $scope.userHasAccess && log && log.draw && log.draw.hidden && log.log.indexOf("researched") > -1;
+  };
+
   /* jshint ignore:start */
   model.tableParams = new ngTableParams({
     page: 1,            // show first page
@@ -1651,6 +1656,31 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   });
   /* jshint ignore:end */
 
+  /* jshint ignore:start */
+  model.tablePrivateLog = new ngTableParams({
+    page: 1,            // show first page
+    count: 10,          // count per page
+    sorting: {
+      created: 'desc'     // initial sorting
+    }
+  }, {
+    total: 0, // length of data
+    getData: function ($defer, params) {
+      // use build-in angular filter
+      // update table params
+      if (!$scope.currentGame) {
+        $defer.reject("No game yet");
+        return;
+      }
+      var game = $scope.currentGame;
+      var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
+      params.total(game.privateLogs.length);
+      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    },
+    $scope: { $data: {}, $emit: function () {}}
+  });
+  /* jshint ignore:end */
+
   /**
    * Returns the next element in the object
    * @param obj
@@ -1673,14 +1703,14 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 };
 
   module.controller("GameController",
-    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$modal", "$sce", GameController]);
+    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
 
 }(angular.module("civApp")));
 
 'use strict';
 (function (module) {
 
-  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $modal) {
+  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $uibModal) {
     var model = this;
     model.GameOption = GameOption;
     model.user = currentUser.profile;
@@ -1751,7 +1781,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.openSignup = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'signup.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -1771,7 +1801,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.openForgotPassword = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'forgotpassword.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -1787,7 +1817,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.openGeneralInfo = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'image1.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -1800,7 +1830,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.openTechOverview = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'image2.html',
         controller: 'RegisterController as registerCtrl',
         size: size
@@ -1813,7 +1843,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
 
     model.openEndGame = function(size) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'endGame.html',
         controller: 'TradeController as tradeCtrl',
         size: size,
@@ -1833,7 +1863,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
   };
 
-  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$modal', NavController]);
+  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$uibModal', NavController]);
 
 }(angular.module("civApp")));
 
@@ -1910,7 +1940,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
 'use strict';
 (function (module) {
-  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $modal) {
+  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $uibModal) {
     var model = this;
 
     model.nextElement = function(obj) {
@@ -1953,12 +1983,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       model.units = [];
       model.items = [];
       readKeysFromItems(game.player.items);
-      model.tablePrivateLog.reload();
       return game;
     });
 
     function readKeysFromItems(items) {
-      //TODO refactor to lodash _forEach
       items.forEach(function (item) {
         var itemKey = Object.keys(item)[0];
         if ("cultureI" === itemKey || "cultureII" === itemKey || "cultureIII" === itemKey) {
@@ -1992,7 +2020,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       model.availableTech3 = [];
       model.availableTech4 = [];
 
-      //TODO refactor to lodash _forEach
       techs.forEach(function (tech) {
         var chosenTech = tech.tech || tech;
         if(!chosenTech) {
@@ -2055,10 +2082,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         });
     };
 
-    model.canRevealTech = function(log) {
-      return $scope.userHasAccess && log && log.draw && log.draw.hidden && log.log.indexOf("researched") > -1;
-    };
-
     model.revealTechFromLog = function(logid) {
       PlayerService.revealTech($routeParams.id, logid);
     };
@@ -2083,7 +2106,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         return;
       }
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'modalTrade.html',
         controller: 'TradeController as tradeCtrl',
         size: size,
@@ -2109,7 +2132,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         return;
       }
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'modalLoot.html',
         controller: 'LootController as lootCtrl',
         size: size,
@@ -2128,31 +2151,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       }, function () {
       });
     };
-
-    /* jshint ignore:start */
-    model.tablePrivateLog = new ngTableParams({
-      page: 1,            // show first page
-      count: 10,          // count per page
-      sorting: {
-        created: 'desc'     // initial sorting
-      }
-    }, {
-      total: 0, // length of data
-      getData: function ($defer, params) {
-        // use build-in angular filter
-        // update table params
-        if (!$scope.currentGame) {
-          $defer.reject("No game yet");
-          return;
-        }
-        var game = $scope.currentGame;
-        var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
-        params.total(game.privateLogs.length);
-        $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-      },
-      $scope: { $data: {}, $emit: function () {}}
-    });
-    /* jshint ignore:end */
 
     var initialize = function() {
       model.user = currentUser.profile;
@@ -2188,18 +2186,18 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   module.controller("UserItemController",
-    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$modal", UserItemController]);
+    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$uibModal", UserItemController]);
 
 }(angular.module("civApp")));
 
 'use strict';
-angular.module('civApp').controller('VoteController', ["$scope", "$modalInstance", "$log", "logToUndo", function ($scope, $modalInstance, $log, logToUndo) {
+angular.module('civApp').controller('VoteController', ["$scope", "$uibModalInstance", "$log", "logToUndo", function ($scope, $uibModalInstance, $log, logToUndo) {
   $scope.voteOk = function () {
     var vote = {
       id: logToUndo.id,
       vote: true
     };
-    $modalInstance.close(vote);
+    $uibModalInstance.close(vote);
   };
 
   $scope.voteNok = function () {
@@ -2207,16 +2205,16 @@ angular.module('civApp').controller('VoteController', ["$scope", "$modalInstance
       id: logToUndo.id,
       vote: false
     };
-    $modalInstance.close(vote);
+    $uibModalInstance.close(vote);
   };
 
   $scope.voteCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);
 
 'use strict';
-angular.module('civApp').controller('RegisterController', ["$scope", "$modalInstance", "$log", "growl", function ($scope, $modalInstance, $log, growl) {
+angular.module('civApp').controller('RegisterController', ["$scope", "$uibModalInstance", "$log", "growl", function ($scope, $uibModalInstance, $log, growl) {
   var model = this;
 
   //Can also request this from the backend
@@ -2242,7 +2240,7 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
       'color' : model.color
     };
 
-    $modalInstance.close(createNewGame);
+    $uibModalInstance.close(createNewGame);
   };
 
   $scope.registerOk = function() {
@@ -2262,11 +2260,11 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
       'password' : $scope.password
     };
 
-    $modalInstance.close(register);
+    $uibModalInstance.close(register);
   };
 
   $scope.registerCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.newPasswordOk = function() {
@@ -2280,11 +2278,11 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
       'newpassword' : model.newpassword
     };
 
-    $modalInstance.close(forgotPassword);
+    $uibModalInstance.close(forgotPassword);
   };
 
   $scope.newPasswordCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);
 
@@ -2320,22 +2318,22 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$modalInst
 }(angular.module("civApp")));
 
 'use strict';
-angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$modalInstance", function (players, item, currentUser, $scope, $modalInstance) {
+angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$uibModalInstance", function (players, item, currentUser, $scope, $uibModalInstance) {
   var model = this;
   model.players = players;
   model.item = item;
 
   model.ok = function() {
     item.ownerId = model.playerTradeChosen.playerId;
-    $modalInstance.close(item);
+    $uibModalInstance.close(item);
   };
 
   model.cancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   model.endGameWinner = function() {
-    $modalInstance.close(model.winner);
+    $uibModalInstance.close(model.winner);
   };
 
   model.endGameNoWinner = function() {
@@ -2343,29 +2341,29 @@ angular.module('civApp').controller('TradeController', ["players", "item", "curr
       pbfId: model.players[0].pbfId,
       username: null
     };
-    $modalInstance.close(winner);
+    $uibModalInstance.close(winner);
   };
 
   model.endGameCancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);
 
 'use strict';
-angular.module('civApp').controller('LootController', ["players", "sheetName", "currentUser", "$scope", "$modalInstance", function (players, sheetName, currentUser, $scope, $modalInstance) {
+angular.module('civApp').controller('LootController', ["players", "sheetName", "currentUser", "$scope", "$uibModalInstance", function (players, sheetName, currentUser, $scope, $uibModalInstance) {
   var model = this;
   model.players = players;
   model.sheetName = sheetName;
 
   model.ok = function() {
-    $modalInstance.close({
+    $uibModalInstance.close({
       playerId: model.playerLootChosen.playerId,
       sheetName: sheetName
     });
   };
 
   model.cancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 }]);
 
@@ -2507,6 +2505,94 @@ angular.module('civApp').controller('LootController', ["players", "sheetName", "
 
   module.controller("TechController",
     ["$log", "$routeParams", "GameService", "currentUser", "Util", "$scope", "PlayerService", TechController]);
+
+}(angular.module("civApp")));
+
+'use strict';
+(function (module) {
+  var RevealedController = function ($routeParams, GameService, currentUser, Util, $scope) {
+    var model = this;
+
+    function initialize() {
+      $scope.privateLogCollapse = false;
+      $scope.itemCollapse = false;
+      $scope.gpCollapse = false;
+      $scope.unitCollapse = false;
+      $scope.cultureCardsCollapse = false;
+      $scope.civCollapse = false;
+      $scope.hutsCollapse = false;
+      $scope.villagesCollapse = false;
+      model.civs = [];
+      model.cultureCards = [];
+      model.greatPersons = [];
+      model.huts = [];
+      model.villages = [];
+      model.tiles = [];
+      model.units = [];
+    }
+
+    initialize();
+
+    $scope.$watch(function () {
+      return GameService.getGameById($routeParams.id);
+    }, function (newVal) {
+      if (!newVal) {
+        return;
+      }
+      var game = newVal;
+      model.civs = [];
+      model.cultureCards = [];
+      model.greatPersons = [];
+      model.huts = [];
+      model.villages = [];
+      model.tiles = [];
+      model.units = [];
+      model.items = [];
+      readKeysFromItems(game.revealedItems);
+      return game;
+    });
+
+    model.nextElement = function(obj) {
+      return Util.nextElement(obj);
+    };
+
+    model.itemName = function(item) {
+      var key = Object.keys(item);
+      if(key && key.length > -1) {
+        /* jshint ignore:start */
+        return _.capitalize(key[0]);
+        /* jshint ignore:end */
+      }
+      return item;
+    };
+
+    function readKeysFromItems(items) {
+      items.forEach(function (item) {
+        var itemKey = Object.keys(item)[0];
+        if ("cultureI" === itemKey || "cultureII" === itemKey || "cultureIII" === itemKey) {
+          model.cultureCards.push(item);
+        } else if ("greatperson" === itemKey) {
+          model.greatPersons.push(item);
+        } else if ("hut" === itemKey) {
+          model.huts.push(item);
+        } else if ("village" === itemKey) {
+          model.villages.push(item);
+        } else if ("tile" === itemKey) {
+          model.tiles.push(item);
+        } else if ("civ" === itemKey) {
+          model.civs.push(item);
+        } else if ("aircraft" === itemKey || "mounted" === itemKey || "infantry" === itemKey || "artillery" === itemKey) {
+          model.units.push(item);
+        } else {
+          model.items.push(item);
+        }
+      });
+    }
+
+  };
+
+  module.controller("RevealedController",
+    ["$routeParams", "GameService", "currentUser", "Util", "$scope", "PlayerService", RevealedController]);
 
 }(angular.module("civApp")));
 
