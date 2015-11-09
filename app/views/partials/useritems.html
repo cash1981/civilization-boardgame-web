@@ -314,7 +314,7 @@
 
   <div class="row padd-top-7" ng-show="userCtrl.huts.length > 0">
     <div collapse="hutsCollapse">
-      <div ng-repeat="item in userCtrl.huts" class="thumbnail col-md-3">
+      <div ng-repeat="item in userCtrl.huts" class="thumbnail col-md-3" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.hut.image}}" tooltip="{{item.hut.name}}"/>
 
         <div class="caption">
@@ -359,7 +359,7 @@
 
   <div class="row padd-top-7" ng-show="userCtrl.villages.length > 0">
     <div collapse="villagesCollapse">
-      <div ng-repeat="item in userCtrl.villages" class="thumbnail col-md-3">
+      <div ng-repeat="item in userCtrl.villages" class="thumbnail col-md-3" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.village.image}}"
              tooltip="{{item.village.name}}"/>
 

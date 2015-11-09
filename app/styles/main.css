@@ -204,3 +204,7 @@ legend.turn-border {
   padding:0 10px;
   border-bottom:none;
 }
+.thumbnail {
+  height: 320px;
+  border: 0;
+}

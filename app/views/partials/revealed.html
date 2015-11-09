@@ -8,7 +8,7 @@
 
   <div class="row" ng-show="revealedCtrl.civs.length > 0">
     <div collapse="civCollapse">
-      <div ng-repeat="item in revealedCtrl.civs" class="col-md-3">
+      <div ng-repeat="item in revealedCtrl.civs track by $index" class="col-xs-12 col-md-3">
         <div class="well well-sm">
           <ul class="list-unstyled">
             <li>
@@ -37,7 +37,8 @@
 
   <div class="row" ng-show="revealedCtrl.items.length > 0">
     <div collapse="itemCollapse">
-      <div ng-repeat="item in revealedCtrl.items" class="col-md-2">
+      <div ng-repeat="item in revealedCtrl.items" class="col-xs-12 col-md-3">
+        <div ng-if="$index % 4 == 0" class="clearfix"></div>
         <div class="well well-sm">
           <ul class="list-unstyled">
             <li>
@@ -89,7 +90,7 @@
   <div class="row" ng-show="revealedCtrl.units.length > 0">
     <div collapse="unitCollapse">
 
-      <div ng-repeat="item in revealedCtrl.units" class="thumbnail col-md-2">
+      <div ng-repeat="item in revealedCtrl.units" class="thumbnail col-md-2 thumbnailFixedHight">
         <img ng-src="/images/useritems/{{revealedCtrl.nextElement(item).image}}"
              tooltip="{{revealedCtrl.nextElement(item).name}}"/>
 
@@ -109,7 +110,7 @@
 
   <div class="row" ng-show="revealedCtrl.tiles.length > 0">
     <div collapse="tilesCollapse">
-      <div ng-repeat="item in revealedCtrl.tiles" class="thumbnail col-md-3">
+      <div ng-repeat="item in revealedCtrl.tiles" class="thumbnail col-md-3 thumbnailFixedHight">
         <img ng-src="/images/useritems/{{revealedCtrl.nextElement(item).image}}" width="200px" height="200px"
              tooltip="{{revealedCtrl.nextElement(item).name}}"/>
 
@@ -145,7 +146,7 @@
       </div>
     </div>
     <div class="row padd-top-7" ng-show="revealedCtrl.cultureCards.length > 0">
-      <div ng-repeat="item in revealedCtrl.cultureCards" class="thumbnail col-md-3">
+      <div ng-repeat="item in revealedCtrl.cultureCards" class="thumbnail col-md-3 thumbnailFixedHight">
         <img ng-src="/images/useritems/{{revealedCtrl.nextElement(item).image}}"
              tooltip="{{revealedCtrl.nextElement(item).name}}"/>
 
@@ -169,7 +170,7 @@
 
   <div class="row padd-top-7" ng-show="revealedCtrl.huts.length > 0">
     <div collapse="hutsCollapse">
-      <div ng-repeat="item in revealedCtrl.huts" class="thumbnail col-md-3">
+      <div ng-repeat="item in revealedCtrl.huts" class="thumbnail col-md-2" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.hut.image}}" tooltip="{{item.hut.name}}"/>
 
         <div class="caption">
@@ -188,7 +189,7 @@
 
   <div class="row padd-top-7" ng-show="revealedCtrl.villages.length > 0">
     <div collapse="villagesCollapse">
-      <div ng-repeat="item in revealedCtrl.villages" class="thumbnail col-md-3">
+      <div ng-repeat="item in revealedCtrl.villages" class="thumbnail col-md-2" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.village.image}}"
              tooltip="{{item.village.name}}"/>
 
