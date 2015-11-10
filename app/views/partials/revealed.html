@@ -8,7 +8,7 @@
 
   <div class="row" ng-show="revealedCtrl.civs.length > 0">
     <div collapse="civCollapse">
-      <div ng-repeat="item in revealedCtrl.civs track by $index" class="col-xs-12 col-md-3">
+      <div ng-repeat="item in revealedCtrl.civs" class="col-xs-12 col-md-3">
         <div class="well well-sm">
           <ul class="list-unstyled">
             <li>
@@ -38,7 +38,6 @@
   <div class="row" ng-show="revealedCtrl.items.length > 0">
     <div collapse="itemCollapse">
       <div ng-repeat="item in revealedCtrl.items" class="col-xs-12 col-md-3">
-        <div ng-if="$index % 4 == 0" class="clearfix"></div>
         <div class="well well-sm">
           <ul class="list-unstyled">
             <li>
@@ -67,7 +66,7 @@
   <div class="row" ng-show="revealedCtrl.greatPersons.length > 0">
     <div collapse="gpCollapse">
       <div ng-repeat="item in revealedCtrl.greatPersons" class="thumbnail col-md-3">
-        <img ng-src="/images/useritems/{{item.greatperson.image}}" tooltip="{{item.greatperson.name}}"/>
+        <img ng-src="/images/useritems/{{item.greatperson.image}}" uib-tooltip="{{item.greatperson.name}}" tooltip-trigger="mouseenter"/>
 
         <div class="caption">
           <h3 class="text-center">{{item.greatperson.name}}</h3>
@@ -90,9 +89,9 @@
   <div class="row" ng-show="revealedCtrl.units.length > 0">
     <div collapse="unitCollapse">
 
-      <div ng-repeat="item in revealedCtrl.units" class="thumbnail col-md-2 thumbnailFixedHight">
+      <div ng-repeat="item in revealedCtrl.units" class="thumbnail col-md-2">
         <img ng-src="/images/useritems/{{revealedCtrl.nextElement(item).image}}"
-             tooltip="{{revealedCtrl.nextElement(item).name}}"/>
+             uib-tooltip="{{revealedCtrl.nextElement(item).name}}"/>
 
         <div class="caption">
           <h3 class="text-center">{{revealedCtrl.nextElement(item).name}}</h3>
@@ -110,9 +109,9 @@
 
   <div class="row" ng-show="revealedCtrl.tiles.length > 0">
     <div collapse="tilesCollapse">
-      <div ng-repeat="item in revealedCtrl.tiles" class="thumbnail col-md-3 thumbnailFixedHight">
+      <div ng-repeat="item in revealedCtrl.tiles" class="thumbnail col-md-3">
         <img ng-src="/images/useritems/{{revealedCtrl.nextElement(item).image}}" width="200px" height="200px"
-             tooltip="{{revealedCtrl.nextElement(item).name}}"/>
+             uib-tooltip="{{revealedCtrl.nextElement(item).name}}"/>
 
         <div class="caption">
           <h3 class="text-center">Tile {{revealedCtrl.nextElement(item).name}}</h3>
@@ -146,9 +145,9 @@
       </div>
     </div>
     <div class="row padd-top-7" ng-show="revealedCtrl.cultureCards.length > 0">
-      <div ng-repeat="item in revealedCtrl.cultureCards" class="thumbnail col-md-3 thumbnailFixedHight">
+      <div ng-repeat="item in revealedCtrl.cultureCards" class="thumbnail col-md-3">
         <img ng-src="/images/useritems/{{revealedCtrl.nextElement(item).image}}"
-             tooltip="{{revealedCtrl.nextElement(item).name}}"/>
+             uib-tooltip="{{revealedCtrl.nextElement(item).name}}"/>
 
         <div class="caption">
           <h3 class="text-center">{{revealedCtrl.nextElement(item).name}}</h3>
@@ -171,7 +170,7 @@
   <div class="row padd-top-7" ng-show="revealedCtrl.huts.length > 0">
     <div collapse="hutsCollapse">
       <div ng-repeat="item in revealedCtrl.huts" class="thumbnail col-md-2" style="height: 150px;">
-        <img ng-src="/images/useritems/{{item.hut.image}}" tooltip="{{item.hut.name}}"/>
+        <img ng-src="/images/useritems/{{item.hut.image}}" uib-tooltip="{{item.hut.name}}"/>
 
         <div class="caption">
           <h3 class="text-center">{{item.hut.name}}</h3>
@@ -191,7 +190,7 @@
     <div collapse="villagesCollapse">
       <div ng-repeat="item in revealedCtrl.villages" class="thumbnail col-md-2" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.village.image}}"
-             tooltip="{{item.village.name}}"/>
+             uib-tooltip="{{item.village.name}}"/>
 
         <div class="caption">
           <h3 class="text-center">{{item.village.name}}</h3>

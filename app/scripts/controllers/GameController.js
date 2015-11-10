@@ -57,6 +57,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     PlayerService.endTurn(model.gameId);
   };
 
+  model.revealTechFromLog = function(logid) {
+    PlayerService.revealTech($routeParams.id, logid);
+  };
+
   //In scope so that we can use it from another view which is included
   $scope.canInitiateUndo = function(log) {
     return checkPermissionForVote(log) && !log.draw.undo;

@@ -142,10 +142,6 @@
         });
     };
 
-    model.revealTechFromLog = function(logid) {
-      PlayerService.revealTech($routeParams.id, logid);
-    };
-
     /* jshint ignore:start */
     var getAvailableTechs = GameService.getAvailableTechs($routeParams.id)
       .then(function(techs) {

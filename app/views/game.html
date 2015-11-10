@@ -115,7 +115,7 @@
                 </button>
                 <button ng-if="gameCtrl.canRevealTech(log)"
                         ng-really-message="This will reveal your tech. Are you sure?"
-                        ng-really-click="userCtrl.revealTechFromLog(log.id)"
+                        ng-really-click="gameCtrl.revealTechFromLog(log.id)"
                         class="btn btn-sm btn-warning"
                         uib-tooltip="Reveal your tech. This will make an entry in the game log and display the hidden information" tooltip-trigger="mouseenter">
                   Reveal Tech
