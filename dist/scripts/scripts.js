@@ -441,7 +441,7 @@
   civApp.factory('DrawService', ["$http", "$q", "$log", "growl", "currentUser", "BASE_URL", "GameService", "Util", function ($http, $q, $log, growl, currentUser, BASE_URL, GameService, Util) {
     var baseUrl = BASE_URL + "/draw/";
 
-    var drawUnitsFromHand = function(gameId, numOfUnits) {
+    var drawUnitsFromHand = function (gameId, numOfUnits) {
       var url = baseUrl + gameId + "/battle";
 
       return $http({
@@ -450,7 +450,7 @@
         params: {numOfUnits: numOfUnits}
       })
         .success(function (response) {
-          if(response.length > 0) {
+          if (response.length > 0) {
             growl.success("Units added to battlehand");
           } else {
             growl.warning("You have no units to draw");
@@ -480,10 +480,12 @@
           GameService.fetchGameByIdFromServer(gameId);
           return response;
         })
-        .error(function (data) {
+        .error(function (data, status) {
           $log.error(data);
-          if(data.status === 412) {
+          if (status === 412) {
             growl.error("Cannot draw more barbarians until the others are discarded");
+          } else if (status === 410) {
+            growl.error(data.entity.msg);
           } else {
             growl.error("Unable to draw barbarian units");
           }
@@ -491,7 +493,7 @@
         });
     };
 
-    var discardBarbarians = function(gameId) {
+    var discardBarbarians = function (gameId) {
       var url = baseUrl + gameId + "/battle/discard/barbarians";
 
       return $http.post(url)
@@ -508,7 +510,7 @@
         });
     };
 
-    var revealHand = function(gameId) {
+    var revealHand = function (gameId) {
       var url = baseUrl + gameId + "/battlehand/reveal";
       return $http.put(url)
         .success(function (response) {
@@ -553,9 +555,9 @@
           GameService.fetchGameByIdFromServer(gameId);
           return response;
         })
-        .error(function(data) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
+        .error(function (data) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
           growl.error("Item could not be lootet");
           return data;
         });
