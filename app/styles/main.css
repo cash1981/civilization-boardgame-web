@@ -208,3 +208,11 @@ legend.turn-border {
   height: 320px;
   border: 0;
 }
+
+.fixedHeightLow {
+  height: 170px;
+}
+
+.fixedHeightBig {
+  height: 260px;
+}

@@ -9,7 +9,7 @@
   <div class="row" ng-show="revealedCtrl.civs.length > 0">
     <div collapse="civCollapse">
       <div ng-repeat="item in revealedCtrl.civs" class="col-xs-12 col-md-3">
-        <div class="well well-sm">
+        <div class="well well-sm fixedHeightBig">
           <ul class="list-unstyled">
             <li>
               <h3 class="text-center">{{revealedCtrl.nextElement(item).name}}</h3>
@@ -38,7 +38,7 @@
   <div class="row" ng-show="revealedCtrl.items.length > 0">
     <div collapse="itemCollapse">
       <div ng-repeat="item in revealedCtrl.items" class="col-xs-12 col-md-3">
-        <div class="well well-sm">
+        <div class="well well-sm fixedHeightLow">
           <ul class="list-unstyled">
             <li>
               <p class="text-justify">
