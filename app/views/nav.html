@@ -1,7 +1,10 @@
 ﻿<nav class="navbar navbar-inverse" role="navigation" ng-controller="NavController as navCtrl">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()">PlayCiv</a>
+      <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()" rel="home" title="PlayCiv">
+        <img style="max-width:100px; margin-top: -7px; height: 27px; width: 27px;" src="./images/icons/coin.png">
+      </a>
+      <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()" rel="home">PlayCiv</a>
     </div>
     <ul class="nav navbar-nav">
       <li><a href="#/faq">FAQ <span class="glyphicon glyphicon-question-sign"></span></a></li>
