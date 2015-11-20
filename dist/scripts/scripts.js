@@ -13,7 +13,8 @@
     'angular-growl',
     'ngTable',
     'nya.bootstrap.select',
-    'irontec.simpleChat'
+    'irontec.simpleChat',
+    'angularUtils.directives.dirPagination'
   ]);
 
   application.config(function ($routeProvider) {
@@ -1452,7 +1453,7 @@ angular.module('civApp').directive('match', [function () {
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
-      model.winners = [];
+      model.winners = winners;
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
@@ -1464,9 +1465,6 @@ angular.module('civApp').directive('match', [function () {
         }
       });
 
-      _.forEach(winners, function (w) {
-          model.winners.push(w);
-      });
       /* jshint ignore:end */
     };
 
@@ -1474,7 +1472,7 @@ angular.module('civApp').directive('match', [function () {
   };
 
   module.controller("GameListController",
-    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", "$interval", GameListController]);
+    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
 
 }(angular.module("civApp")));
 

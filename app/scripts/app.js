@@ -13,7 +13,8 @@
     'angular-growl',
     'ngTable',
     'nya.bootstrap.select',
-    'irontec.simpleChat'
+    'irontec.simpleChat',
+    'angularUtils.directives.dirPagination'
   ]);
 
   application.config(function ($routeProvider) {

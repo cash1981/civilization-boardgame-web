@@ -62,7 +62,7 @@
   <div class="padd-top-7 row">
     <div class="col-xs-12">
       <uib-tabset justified="true" type="pills">
-        <uib-tab heading="Active Games" class="col-md-3 col-xs-12">
+        <uib-tab heading="Active Games" class="col-md-4 col-xs-12">
           <div class="table-responsive padd-top-7">
             <input type="text" ng-model="filterContent" alt="Filter the table" placeholder="Search games"/>
             <label> <input type="checkbox" ng-model="onlyMyGames.value" ng-click="gameListCtrl.showMyGames()"> Show my
@@ -114,7 +114,7 @@
             </table>
           </div>
         </uib-tab>
-        <uib-tab heading="Highscore" class="col-md-3 col-xs-12">
+        <uib-tab heading="All players" class="col-md-4 col-xs-12">
           <table class="table table-striped table-hover table-condensed">
             <thead>
             <tr>
@@ -123,15 +123,20 @@
             </tr>
             </thead>
 
+            <caption>
+              <strong><label style="font-size: 1.5em;">Total number of players: {{gameListCtrl.winners.length}}</label></strong>
+            </caption>
             <tbody>
-            <tr ng-repeat="winner in gameListCtrl.winners | orderBy:'-totalWins'" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+
+            <tr dir-paginate="winner in gameListCtrl.winners | orderBy:['-totalWins','username'] | itemsPerPage: 20" pagination-id="allPlayers" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
               <td>{{winner.username}}</td>
               <td>{{winner.totalWins}}</td>
             </tr>
             </tbody>
           </table>
+          <dir-pagination-controls pagination-id="allPlayers"></dir-pagination-controls>
         </uib-tab>
-        <uib-tab heading="Finished Games" class="col-md-3 col-xs-12">
+        <uib-tab heading="Finished Games" class="col-md-4 col-xs-12">
           <div class="table-responsive padd-top-7">
             <table class="table table-striped table-hover table-condensed">
               <thead>
@@ -147,7 +152,8 @@
               </thead>
 
               <tbody>
-              <tr ng-repeat="game in gameListCtrl.finishedGames" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+
+              <tr dir-paginate="game in gameListCtrl.finishedGames | itemsPerPage: 20" pagination-id="finished" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
                 <td>{{$index+1}}</td>
                 <td>{{game.created | date}}</td>
                 <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a></td>
@@ -162,6 +168,7 @@
               </tr>
               </tbody>
             </table>
+            <dir-pagination-controls pagination-id="finished"></dir-pagination-controls>
           </div>
         </uib-tab>
       </uib-tabset>

@@ -64,7 +64,7 @@
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
-      model.winners = [];
+      model.winners = winners;
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
@@ -76,9 +76,6 @@
         }
       });
 
-      _.forEach(winners, function (w) {
-          model.winners.push(w);
-      });
       /* jshint ignore:end */
     };
 
@@ -86,6 +83,6 @@
   };
 
   module.controller("GameListController",
-    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", "$interval", GameListController]);
+    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
 
 }(angular.module("civApp")));
