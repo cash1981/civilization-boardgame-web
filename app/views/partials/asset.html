@@ -3,7 +3,7 @@
     <div class="panel panel-default col-xs-12">
       <div class="panel-heading"><h3>Below is a read-only version of the asset file. <a ng-href="{{currentGame.assetLink}}" target="_blank">LINK TO ASSET</a></h3></div>
       <div class="panel-body">
-        <iframe class="col-xs-12" ng-src="{{currentGame.assetLink}}" frameborder="0" height="555"></iframe>
+        <iframe id="assetFrame" class="col-xs-12" ng-src="{{currentGame.assetLink}}" frameborder="0" height="555"></iframe>
       </div>
     </div>
   </div>
@@ -31,17 +31,28 @@
         <h1><a href="https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/edit?usp=sharing" target="_blank">Asset template</a></h1>
 
         <p class="padd-top-7">
-
-        <form name="assetForm" ng-submit="gameCtrl.updateAssetLink()">
-          <div class="form-group">
-            <label for="inputAssetLink">Link to copy of your asset file</label>
-            <input type="text" class="form-control" id="inputAssetLink" ng-model="currentGame.newAssetLink" name="inputAssetLink"
-                   placeholder="Insert link to copy of your asset file" />
-          </div>
-          <button type="submit" class="btn btn-success">Update link!</button>
-        </form>
+          <form name="assetForm" ng-submit="gameCtrl.updateAssetLink()">
+            <div class="form-group">
+              <label for="inputAssetLink">Link to copy of your asset file</label>
+              <input type="text" class="form-control" id="inputAssetLink" ng-model="currentGame.newAssetLink" name="inputAssetLink"
+                     placeholder="Insert link to copy of your asset file" />
+            </div>
+            <button type="submit" class="btn btn-success">Update link!</button>
+          </form>
         </p>
       </div>
     </div>
   </div>
 </div>
+<script>
+  // update with the desired time to refresh the presentation (in seconds)
+  var refreshSeconds = 10;
+
+  var timer=setInterval(function(){refreshFrame()}, refreshSeconds*1000);
+  function refreshFrame()
+  {
+    var iframe = document.getElementById('assetFrame');
+    var iframeURL = iframe.src;
+    iframe.src = iframeURL;
+  }
+</script>

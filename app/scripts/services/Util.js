@@ -23,7 +23,7 @@
 
     var mapLink = function(id) {
       var base = "https://docs.google.com/presentation/d/";
-      var end = "/embed?start=false&loop=false&delayms=3000";
+      var end = "/embed?start=true&loop=true&delayms=3000";
       return base + id + end;
     };
 
