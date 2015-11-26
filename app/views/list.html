@@ -104,7 +104,6 @@
                 <td>
                   <a ng-href="#/game/{{game.id}}" id="btnJoinGame"
                      ng-if="(game.numOfPlayers > game.players.length) && gameListCtrl.user.loggedIn && !gameListCtrl.isUserPlaying(game.players)"
-                     type="button"
                      class="btn btn-info" ng-click="gameListCtrl.joinGame(game)">
                     Join
                   </a>
