@@ -20,8 +20,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
     if(!$scope.currentGame.assetLink) {
       $scope.currentGame.assetLink = $sce.trustAsResourceUrl("https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/pubhtml?widget=true&amp;headers=false");
+      $scope.currentGame.assetEditLink = $sce.trustAsResourceUrl("https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/pubhtml?widget=true&amp;headers=false");
     } else {
       $scope.currentGame.assetLink = $sce.trustAsResourceUrl(Util.assetLink($scope.currentGame.assetLink));
+      $scope.currentGame.assetEditLink = $sce.trustAsResourceUrl(Util.assetEditLink($scope.currentGame.assetLink));
     }
 
     var hasAccess = game.player && game.player.username === model.user.username && game.active;

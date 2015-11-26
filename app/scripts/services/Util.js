@@ -33,10 +33,17 @@
       return base + id + end;
     };
 
+    var assetEditLink = function(id) {
+      var base = "https://docs.google.com/spreadsheets/d/";
+      var end = "/edit?widget=true&amp;headers=false";
+      return base + id + end;
+    };
+
     return {
       nextElement: nextElement,
       mapLink: mapLink,
-      assetLink: assetLink
+      assetLink: assetLink,
+      assetEditLink: assetEditLink
     };
   };
 
