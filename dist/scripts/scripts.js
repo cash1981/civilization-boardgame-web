@@ -1172,10 +1172,17 @@
       return base + id + end;
     };
 
+    var assetEditLink = function(id) {
+      var base = "https://docs.google.com/spreadsheets/d/";
+      var end = "/edit?widget=true&amp;headers=false";
+      return base + id + end;
+    };
+
     return {
       nextElement: nextElement,
       mapLink: mapLink,
-      assetLink: assetLink
+      assetLink: assetLink,
+      assetEditLink: assetEditLink
     };
   };
 
@@ -1458,8 +1465,11 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
     if(!$scope.currentGame.assetLink) {
       $scope.currentGame.assetLink = $sce.trustAsResourceUrl("https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/pubhtml?widget=true&amp;headers=false");
+      $scope.currentGame.assetEditLink = $sce.trustAsResourceUrl("https://docs.google.com/spreadsheets/d/10-syTLb2i2NdB8T_alH9KeyzT8FTlBK6Csmc_Hjjir8/pubhtml?widget=true&amp;headers=false");
     } else {
-      $scope.currentGame.assetLink = $sce.trustAsResourceUrl(Util.assetLink($scope.currentGame.assetLink));
+      var link = $scope.currentGame.assetLink;
+      $scope.currentGame.assetLink = $sce.trustAsResourceUrl(Util.assetLink(link));
+      $scope.currentGame.assetEditLink = $sce.trustAsResourceUrl(Util.assetEditLink(link));
     }
 
     var hasAccess = game.player && game.player.username === model.user.username && game.active;
