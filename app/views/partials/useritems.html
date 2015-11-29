@@ -222,7 +222,7 @@
 
   <div class="row" ng-show="userCtrl.tiles.length > 0">
     <div collapse="tilesCollapse">
-      <div ng-repeat="item in userCtrl.tiles" class="thumbnail col-md-3">
+      <div ng-repeat="item in userCtrl.tiles" class="thumbnail col-md-3" style="height: 400px;">
         <img ng-src="/images/useritems/{{userCtrl.nextElement(item).image}}" width="300px" height="300px"
              uib-tooltip="{{userCtrl.nextElement(item).name}}"/>
 
