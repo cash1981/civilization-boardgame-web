@@ -70,7 +70,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   function checkPermissionForVote(log) {
-    return $scope.userHasAccess && log && log.draw && (log.log.indexOf("drew") > -1 || log.log.indexOf("discarded") > -1);
+    return $scope.userHasAccess && log && log.draw && (log.log.indexOf("drew") > -1 || log.log.indexOf("discarded") > -1) && log.log.indexOf("withdrew") < 0;
   }
 
   //In scope so that we can use it from another view which is included
