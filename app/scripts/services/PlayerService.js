@@ -87,6 +87,38 @@
         });
     };
 
+    var backInDeck = function (gameId, item) {
+      if (!gameId || !item) {
+        return $q.reject("No gameId or item");
+      }
+      var url = baseUrl + gameId + "/item/backtodeck";
+
+      var itemDTO = {
+        "name": Util.nextElement(item).name,
+        "ownerId": Util.nextElement(item).ownerId,
+        "sheetName": Util.nextElement(item).sheetName,
+        "pbfId": gameId
+      };
+
+      var configuration = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
+
+      $http.post(url, itemDTO, configuration)
+        .success(function (response) {
+          growl.success("Item put back in deck. Deck reshuffled");
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        }).error(function (data) {
+          growl.error("Item could not be put back in deck");
+          return data;
+        });
+    };
+
     var endTurn = function (gameId) {
       if (!gameId) {
         return $q.reject("No gameId");
@@ -224,7 +256,8 @@
       getChosenTechs: getChosenTechs,
       removeTech: removeTech,
       trade: trade,
-      getTechsForAllPlayers: getTechsForAllPlayers
+      getTechsForAllPlayers: getTechsForAllPlayers,
+      backInDeck: backInDeck
     };
 
   }]);

@@ -25,6 +25,10 @@
       PlayerService.discardItem($routeParams.id, item);
     };
 
+    model.backInDeck = function (item) {
+      PlayerService.backInDeck($routeParams.id, item);
+    };
+
     $scope.$watch(function () {
       return GameService.getGameById($routeParams.id);
     }, function (newVal) {
