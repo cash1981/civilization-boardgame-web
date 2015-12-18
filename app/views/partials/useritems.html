@@ -60,7 +60,7 @@
 
   <div class="row" ng-show="userCtrl.civs.length > 0">
     <div collapse="civCollapse">
-      <div ng-repeat="item in userCtrl.civs" class="col-md-6 col-xs-12 col-lg-4" style="height: 600px;">
+      <div ng-repeat="item in userCtrl.civs track by $index" class="col-md-6 col-xs-12 col-lg-4" style="height: 600px;">
         <div class="well well-sm">
           <ul class="list-unstyled">
             <li>
@@ -109,7 +109,7 @@
 
   <div class="row" ng-show="userCtrl.items.length > 0">
     <div collapse="itemCollapse">
-      <div ng-repeat="item in userCtrl.items" class="col-md-2">
+      <div ng-repeat="item in userCtrl.items track by $index" class="col-md-2">
         <div class="well well-sm fixedHeightLow">
           <ul class="list-unstyled">
             <li>
@@ -153,7 +153,7 @@
 
   <div class="row" ng-show="userCtrl.greatPersons.length > 0">
     <div collapse="gpCollapse">
-      <div ng-repeat="item in userCtrl.greatPersons" class="thumbnail col-md-3">
+      <div ng-repeat="item in userCtrl.greatPersons track by $index" class="thumbnail col-md-3">
         <img ng-src="/images/useritems/{{item.greatperson.image}}"  uib-tooltip="{{item.greatperson.name}}"/>
 
         <div class="caption">
@@ -193,7 +193,7 @@
   <div class="row" ng-show="userCtrl.units.length > 0">
     <div collapse="unitCollapse">
 
-      <div ng-repeat="item in userCtrl.units" class="thumbnail col-md-2">
+      <div ng-repeat="item in userCtrl.units track by $index" class="thumbnail col-md-2">
         <img ng-src="/images/useritems/{{userCtrl.nextElement(item).image}}"
              uib-tooltip="{{userCtrl.nextElement(item).name}}"/>
 
@@ -222,7 +222,7 @@
 
   <div class="row" ng-show="userCtrl.tiles.length > 0">
     <div collapse="tilesCollapse">
-      <div ng-repeat="item in userCtrl.tiles" class="thumbnail col-md-3" style="height: 400px;">
+      <div ng-repeat="item in userCtrl.tiles track by $index" class="thumbnail col-md-3" style="height: 400px;">
         <img ng-src="/images/useritems/{{userCtrl.nextElement(item).image}}" width="300px" height="300px"
              uib-tooltip="{{userCtrl.nextElement(item).name}}"/>
 
@@ -267,7 +267,7 @@
       </div>
     </div>
     <div class="row padd-top-7" ng-show="userCtrl.cultureCards.length > 0">
-      <div ng-repeat="item in userCtrl.cultureCards" class="thumbnail col-md-3">
+      <div ng-repeat="item in userCtrl.cultureCards track by $index" class="thumbnail col-md-3">
         <img ng-src="/images/useritems/{{userCtrl.nextElement(item).image}}"
              uib-tooltip="{{userCtrl.nextElement(item).name}}"/>
 
@@ -318,7 +318,7 @@
 
   <div class="row padd-top-7" ng-show="userCtrl.huts.length > 0">
     <div collapse="hutsCollapse">
-      <div ng-repeat="item in userCtrl.huts" class="thumbnail col-md-3" style="height: 150px;">
+      <div ng-repeat="item in userCtrl.huts track by $index" class="thumbnail col-md-3" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.hut.image}}" uib-tooltip="{{item.hut.name}}"/>
 
         <div class="caption">
@@ -363,7 +363,7 @@
 
   <div class="row padd-top-7" ng-show="userCtrl.villages.length > 0">
     <div collapse="villagesCollapse">
-      <div ng-repeat="item in userCtrl.villages" class="thumbnail col-md-3" style="height: 150px;">
+      <div ng-repeat="item in userCtrl.villages track by $index" class="thumbnail col-md-3" style="height: 150px;">
         <img ng-src="/images/useritems/{{item.village.image}}"
              uib-tooltip="{{item.village.name}}"/>
 
