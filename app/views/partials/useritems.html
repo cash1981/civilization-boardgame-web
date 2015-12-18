@@ -154,7 +154,31 @@
   <div class="row" ng-show="userCtrl.greatPersons.length > 0">
     <div collapse="gpCollapse">
       <div ng-repeat="item in userCtrl.greatPersons track by $index" class="thumbnail col-md-3">
-        <ng-include src="'views/partials/actionbuttons_sm.html'"></ng-include>
+        <img ng-src="/images/useritems/{{item.greatperson.image}}"  uib-tooltip="{{item.greatperson.name}}"/>
+
+        <div class="caption">
+          <h3 class="text-center">{{item.greatperson.name}}</h3>
+
+          <p class="text-justify">
+            {{item.greatperson.description}}
+          </p>
+
+          <p class="text-center">
+            <button ng-really-message="This will discard your item. Are you sure?"
+                    ng-really-click="userCtrl.discardItem(item)"
+                    class="btn btn-sm btn-warning"
+                    uib-tooltip="Discard your item. This will make an entry in the game log">
+              Discard Great Person
+            </button>
+            <button ng-really-message="This will reveal your item. Are you sure?"
+                    ng-really-click="userCtrl.revealItem(item)"
+                    ng-disabled="item.greatperson.hidden == false"
+                    class="btn btn-sm btn-warning"
+                    uib-tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
+              Reveal Great Person
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   </div>
