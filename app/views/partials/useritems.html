@@ -88,7 +88,7 @@
                 <button ng-really-message="This will choose your civilization. Are you sure?"
                         ng-really-click="userCtrl.revealItem(item)"
                         ng-disabled="userCtrl.nextElement(item).hidden == false"
-                        class="btn btn-sm btn-warning"
+                        class="btn btn-sm btn-success"
                         uib-tooltip="This will choose your civilzation and make an entry in the game log. Appropriate tech will also be chosen. Once civilization is chosen, you cannot rechoose">
                   Choose civilization
                 </button>
@@ -132,7 +132,7 @@
                 <button ng-really-message="This will reveal your item. Are you sure?"
                         ng-really-click="userCtrl.revealItem(item)"
                         ng-disabled="userCtrl.nextElement(item).hidden == false"
-                        class="btn btn-sm btn-warning"
+                        class="btn btn-sm btn-success"
                         uib-tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
                   Reveal Item
                 </button>
@@ -173,7 +173,7 @@
             <button ng-really-message="This will reveal your item. Are you sure?"
                     ng-really-click="userCtrl.revealItem(item)"
                     ng-disabled="item.greatperson.hidden == false"
-                    class="btn btn-sm btn-warning"
+                    class="btn btn-sm btn-success"
                     uib-tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
               Reveal Great Person
             </button>
