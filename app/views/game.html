@@ -24,7 +24,7 @@
     <div class="col-md-6">
       <div class="jumbotron">
         <h1 ng-bind-html="latestLog"></h1>
-        <span ng-if="userHasAccess">
+        <span ng-if="gameCtrl.user.loggedIn">
           <form ng-submit="chatCtrl.chat()">
             <input class="input-lg" style="width: 100%" type="text" ng-model="chatCtrl.chatMessage" placeholder="Write your chat message here. It supports HTML!" maxlength="500"/>
             <!-- Hack, will put submit button out of view -->
