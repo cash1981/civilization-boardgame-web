@@ -59,6 +59,26 @@
       }
     };
 
+    model.openNotes = function(size) {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'gamenotes.html',
+        controller: 'RegisterController as registerCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function(register) {
+        if(register) {
+          basicauth.register(register);
+          model.registerUsername = null;
+          model.registerEmail = null;
+          model.registerPassword = null;
+          model.registerVerification = null;
+        }
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
     model.login = function (form) {
       if (form.$valid) {
         basicauth.login(model.username, model.password)
@@ -72,6 +92,7 @@
     };
 
     model.openSignup = function(size) {
+      console.log("routeparams er", $routeParams.id);
       var modalInstance = $uibModal.open({
         templateUrl: 'signup.html',
         controller: 'RegisterController as registerCtrl',
@@ -80,11 +101,7 @@
 
       modalInstance.result.then(function(register) {
         if(register) {
-          basicauth.register(register);
-          model.registerUsername = null;
-          model.registerEmail = null;
-          model.registerPassword = null;
-          model.registerVerification = null;
+          //basicauth.register(register);
         }
       }, function () {
         //Cancel callback here

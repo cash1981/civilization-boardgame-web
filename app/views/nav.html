@@ -21,14 +21,26 @@
       </li>
       <li ng-if="navCtrl.GameOption.value.show" dropdown>
         <a href class="dropdown-toggle" dropdown-toggle>
-          Game Options <span class="caret"></span>
+          Game options <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="#/endgame"
                  ng-really-message="This will withdraw you from the current game. Are you sure?"
-                 ng-really-click="navCtrl.withdrawGame()">Withdraw from Game</a></li>
+                 ng-really-click="navCtrl.withdrawGame()">Withdraw from game</a></li>
           <li ng-if="navCtrl.GameOption.value.showEndGame">
-            <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">End Game</a></li>
+            <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">End game</a></li>
+        </ul>
+      </li>
+      <li ng-if="navCtrl.GameOption.value.show">
+        <a href ng-click="navCtrl.openNotes('lg')" class="dropdown-toggle" title="Personal and hidden notes for your games" popover="Personal and hidden notes for your games">
+          Personal game notes <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#/endgame"
+                 ng-really-message="This will withdraw you from the current game. Are you sure?"
+                 ng-really-click="navCtrl.withdrawGame()">Withdraw from game</a></li>
+          <li ng-if="navCtrl.GameOption.value.showEndGame">
+            <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">end game</a></li>
         </ul>
       </li>
       <li dropdown ng-if="navCtrl.GameOption.value.admin">
@@ -38,7 +50,7 @@
         <ul class="dropdown-menu">
           <li><a href="#/endgame"
                  ng-really-message="This will delete the game. Are you sure?"
-                 ng-really-click="navCtrl.deleteGame()">Delete Game</a></li>
+                 ng-really-click="navCtrl.deleteGame()">Delete game</a></li>
         </ul>
       </li>
     </ul>
@@ -241,6 +253,20 @@
       <button class="btn btn-primary" ng-disabled="!tradeCtrl.winner" ng-click="tradeCtrl.endGameWinner()">Ok</button>
       <button class="btn btn-warning" ng-click="tradeCtrl.endGameNoWinner()">No Winner</button>
       <button class="btn btn-warning" ng-click="tradeCtrl.endGameCancel()">Cancel</button>
+    </div>
+  </script>
+
+  <!-- Modal for game notes -->
+  <script type="text/ng-template" id="gamenotes.html">
+    <div class="modal-header">
+      <h3 class="modal-title">Personal and hidden game notes</h3>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="">Save</button>
+      <button class="btn btn-warning" ng-click="">Cancel</button>
     </div>
   </script>
 

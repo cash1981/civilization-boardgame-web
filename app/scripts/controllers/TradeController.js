@@ -1,5 +1,5 @@
 'use strict';
-angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$uibModalInstance", function (players, item, currentUser, $scope, $uibModalInstance) {
+angular.module('civApp').controller('TradeController', ["players", "item", "$scope", "$uibModalInstance", function (players, item, $scope, $uibModalInstance) {
   var model = this;
   model.players = players;
   model.item = item;
