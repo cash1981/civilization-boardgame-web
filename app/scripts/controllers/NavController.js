@@ -1,7 +1,7 @@
 ﻿'use strict';
 (function (module) {
 
-  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $uibModal) {
+  var NavController = function (PlayerService, GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $uibModal) {
     var model = this;
     model.GameOption = GameOption;
     model.user = currentUser.profile;
@@ -62,17 +62,13 @@
     model.openNotes = function(size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'gamenotes.html',
-        controller: 'RegisterController as registerCtrl',
+        controller: 'NoteController as noteCtrl',
         size: size
       });
 
-      modalInstance.result.then(function(register) {
-        if(register) {
-          basicauth.register(register);
-          model.registerUsername = null;
-          model.registerEmail = null;
-          model.registerPassword = null;
-          model.registerVerification = null;
+      modalInstance.result.then(function(note) {
+        if(note) {
+          PlayerService.saveNote($routeParams.id, note);
         }
       }, function () {
         //Cancel callback here
@@ -92,7 +88,6 @@
     };
 
     model.openSignup = function(size) {
-      console.log("routeparams er", $routeParams.id);
       var modalInstance = $uibModal.open({
         templateUrl: 'signup.html',
         controller: 'RegisterController as registerCtrl',
@@ -171,6 +166,6 @@
     };
   };
 
-  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$uibModal', NavController]);
+  module.controller("NavController", ['PlayerService', 'GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$uibModal', NavController]);
 
 }(angular.module("civApp")));

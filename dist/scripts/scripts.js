@@ -826,6 +826,43 @@
         });
     };
 
+    var getNote = function (gameId) {
+      if (!gameId) {
+        return $q.reject("No gameId");
+      }
+      var url = baseUrl + gameId + "/note/";
+      return $http.get(url)
+        .success(function (data) {
+          return data;
+        })
+        .error(function (response) {
+          growl.error("Could not get personal notes");
+          return response;
+        });
+    };
+
+    var saveNote = function (gameId, note) {
+      if (!gameId || !note) {
+        return $q.reject("Couldn't get gameId or note");
+      }
+      var url = baseUrl + gameId + "/note/save";
+
+      var configuration = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
+
+      $http.put(url, note, configuration)
+        .success(function (response) {
+          growl.success("Note saved");
+          return response;
+        }).error(function (data) {
+          growl.error("Note could not be saved");
+          return data;
+        });
+    };
+
     return {
       revealItem: revealItem,
       revealTech: revealTech,
@@ -836,7 +873,9 @@
       removeTech: removeTech,
       trade: trade,
       getTechsForAllPlayers: getTechsForAllPlayers,
-      backInDeck: backInDeck
+      backInDeck: backInDeck,
+      getNote: getNote,
+      saveNote: saveNote
     };
 
   }]);
@@ -1717,7 +1756,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 'use strict';
 (function (module) {
 
-  var NavController = function (GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $uibModal) {
+  var NavController = function (PlayerService, GameService, AdminService, $routeParams, basicauth, currentUser, growl, loginRedirect, GameOption, $uibModal) {
     var model = this;
     model.GameOption = GameOption;
     model.user = currentUser.profile;
@@ -1775,6 +1814,22 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
       }
     };
 
+    model.openNotes = function(size) {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'gamenotes.html',
+        controller: 'NoteController as noteCtrl',
+        size: size
+      });
+
+      modalInstance.result.then(function(note) {
+        if(note) {
+          PlayerService.saveNote($routeParams.id, note);
+        }
+      }, function () {
+        //Cancel callback here
+      });
+    };
+
     model.login = function (form) {
       if (form.$valid) {
         basicauth.login(model.username, model.password)
@@ -1796,11 +1851,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
       modalInstance.result.then(function(register) {
         if(register) {
-          basicauth.register(register);
-          model.registerUsername = null;
-          model.registerEmail = null;
-          model.registerPassword = null;
-          model.registerVerification = null;
+          //basicauth.register(register);
         }
       }, function () {
         //Cancel callback here
@@ -1870,7 +1921,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     };
   };
 
-  module.controller("NavController", ['GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$uibModal', NavController]);
+  module.controller("NavController", ['PlayerService', 'GameService', 'AdminService', '$routeParams', 'basicauth', 'currentUser', 'growl', 'loginRedirect', 'GameOption', '$uibModal', NavController]);
 
 }(angular.module("civApp")));
 
@@ -2325,7 +2376,7 @@ angular.module('civApp').controller('RegisterController', ["$scope", "$uibModalI
 }(angular.module("civApp")));
 
 'use strict';
-angular.module('civApp').controller('TradeController', ["players", "item", "currentUser", "$scope", "$uibModalInstance", function (players, item, currentUser, $scope, $uibModalInstance) {
+angular.module('civApp').controller('TradeController', ["players", "item", "$scope", "$uibModalInstance", function (players, item, $scope, $uibModalInstance) {
   var model = this;
   model.players = players;
   model.item = item;
@@ -2602,6 +2653,31 @@ angular.module('civApp').controller('LootController', ["players", "sheetName", "
     ["$routeParams", "GameService", "currentUser", "Util", "$scope", "PlayerService", RevealedController]);
 
 }(angular.module("civApp")));
+
+'use strict';
+angular.module('civApp').controller('NoteController', ["$scope", "$uibModalInstance", "PlayerService", "$routeParams", function ($scope, $uibModalInstance, PlayerService, $routeParams) {
+  var model = this;
+
+  function init() {
+    PlayerService.getNote($routeParams.id)
+      .then(function(response) {
+        if(response && response.data && response.data.msg) {
+          model.message = response.data.msg;
+        }
+      });
+  }
+
+  model.ok = function() {
+    $uibModalInstance.close({msg: model.message});
+  };
+
+  model.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+
+  init();
+
+}]);
 
 (function() {
 	'use strict';

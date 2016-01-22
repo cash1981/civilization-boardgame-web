@@ -247,6 +247,43 @@
         });
     };
 
+    var getNote = function (gameId) {
+      if (!gameId) {
+        return $q.reject("No gameId");
+      }
+      var url = baseUrl + gameId + "/note/";
+      return $http.get(url)
+        .success(function (data) {
+          return data;
+        })
+        .error(function (response) {
+          growl.error("Could not get personal notes");
+          return response;
+        });
+    };
+
+    var saveNote = function (gameId, note) {
+      if (!gameId || !note) {
+        return $q.reject("Couldn't get gameId or note");
+      }
+      var url = baseUrl + gameId + "/note/save";
+
+      var configuration = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
+
+      $http.put(url, note, configuration)
+        .success(function (response) {
+          growl.success("Note saved");
+          return response;
+        }).error(function (data) {
+          growl.error("Note could not be saved");
+          return data;
+        });
+    };
+
     return {
       revealItem: revealItem,
       revealTech: revealTech,
@@ -257,7 +294,9 @@
       removeTech: removeTech,
       trade: trade,
       getTechsForAllPlayers: getTechsForAllPlayers,
-      backInDeck: backInDeck
+      backInDeck: backInDeck,
+      getNote: getNote,
+      saveNote: saveNote
     };
 
   }]);

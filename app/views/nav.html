@@ -24,23 +24,15 @@
           Game options <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
+          <li>
+            <a ng-click="navCtrl.openNotes('lg')">Personal game notes</a></li>
+          <li role="separator" class="divider"></li>
           <li><a href="#/endgame"
                  ng-really-message="This will withdraw you from the current game. Are you sure?"
                  ng-really-click="navCtrl.withdrawGame()">Withdraw from game</a></li>
           <li ng-if="navCtrl.GameOption.value.showEndGame">
             <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">End game</a></li>
-        </ul>
-      </li>
-      <li ng-if="navCtrl.GameOption.value.show">
-        <a href ng-click="navCtrl.openNotes('lg')" class="dropdown-toggle" title="Personal and hidden notes for your games" popover="Personal and hidden notes for your games">
-          Personal game notes <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#/endgame"
-                 ng-really-message="This will withdraw you from the current game. Are you sure?"
-                 ng-really-click="navCtrl.withdrawGame()">Withdraw from game</a></li>
-          <li ng-if="navCtrl.GameOption.value.showEndGame">
-            <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">end game</a></li>
+
         </ul>
       </li>
       <li dropdown ng-if="navCtrl.GameOption.value.admin">
@@ -262,11 +254,11 @@
       <h3 class="modal-title">Personal and hidden game notes</h3>
     </div>
     <div class="modal-body">
-
+      <textarea class="form-control" style="width: 100%;" rows="15" ng-model="noteCtrl.message"></textarea>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" ng-click="">Save</button>
-      <button class="btn btn-warning" ng-click="">Cancel</button>
+      <button class="btn btn-primary" ng-click="noteCtrl.ok()">Save</button>
+      <button class="btn btn-warning" ng-click="noteCtrl.cancel()">Cancel</button>
     </div>
   </script>
 
