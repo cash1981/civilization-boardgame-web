@@ -1389,6 +1389,13 @@ angular.module('civApp').directive('uniqueUsername', ['$http', 'BASE_URL', funct
           return;
         }
 
+        //Checks for whitespace and tab
+        if(/\s/g.test(value)) {
+          ctrl.$setValidity('space', false);
+          scope.busy = false;
+          return;
+        }
+
         var url = BASE_URL + '/auth/register/check/username';
         scope.busy = true;
         $http.post(url, {name: value})
@@ -1402,6 +1409,8 @@ angular.module('civApp').directive('uniqueUsername', ['$http', 'BASE_URL', funct
               ctrl.$setValidity('isTaken', false);
             } else if (data.invalidChars) {
               ctrl.$setValidity('invalidChars', false);
+            } else if(data.space) {
+              ctrl.$setValidity('space', false);
             }
             scope.busy = false;
           });
