@@ -1860,7 +1860,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
       modalInstance.result.then(function(register) {
         if(register) {
-          //basicauth.register(register);
+          basicauth.register(register);
         }
       }, function () {
         //Cancel callback here
