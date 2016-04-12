@@ -328,6 +328,14 @@
             });
         };
 
+        var civhighscores = function () {
+          var url = baseUrl + "civhighscore/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         return {
           getAllGames: getAllGames,
           getGameById: getGameById,
@@ -349,7 +357,8 @@
           withdrawFromGame: withdrawFromGame,
           updateMapLink: updateMapLink,
           updateAssetLink: updateAssetLink,
-          winners: winners
+          winners: winners,
+          civhighscores: civhighscores
         };
       }];
 

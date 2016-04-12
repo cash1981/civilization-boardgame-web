@@ -28,6 +28,9 @@
           }],
           winners: ["GameService", function(m) {
             return m.winners();
+          }],
+          civhighscores: ["GameService", function(m) {
+            return m.civhighscores();
           }]
         }
       })
@@ -406,6 +409,14 @@
             });
         };
 
+        var civhighscores = function () {
+          var url = baseUrl + "civhighscore/";
+          return $http.get(url)
+            .then(function (response) {
+              return response.data;
+            });
+        };
+
         return {
           getAllGames: getAllGames,
           getGameById: getGameById,
@@ -427,7 +438,8 @@
           withdrawFromGame: withdrawFromGame,
           updateMapLink: updateMapLink,
           updateAssetLink: updateAssetLink,
-          winners: winners
+          winners: winners,
+          civhighscores: civhighscores
         };
       }];
 
@@ -1437,7 +1449,7 @@ angular.module('civApp').directive('match', [function () {
 
 'use strict';
 (function (module) {
-  var GameListController = function (games, winners, $log, GameService, currentUser, $uibModal, $scope) {
+  var GameListController = function (games, winners, civhighscores, $log, GameService, currentUser, $uibModal, $scope) {
     var model = this;
 
     model.isUserPlaying = function (players) {
@@ -1502,6 +1514,7 @@ angular.module('civApp').directive('match', [function () {
       model.user = currentUser.profile;
       model.games = [];
       model.winners = winners;
+      model.civhighscores = civhighscores;
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
@@ -1520,7 +1533,7 @@ angular.module('civApp').directive('match', [function () {
   };
 
   module.controller("GameListController",
-    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
+    ["games", "winners", "civhighscores", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
 
 }(angular.module("civApp")));
 

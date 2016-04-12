@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var GameListController = function (games, winners, $log, GameService, currentUser, $uibModal, $scope) {
+  var GameListController = function (games, winners, civhighscores, $log, GameService, currentUser, $uibModal, $scope) {
     var model = this;
 
     model.isUserPlaying = function (players) {
@@ -65,6 +65,7 @@
       model.user = currentUser.profile;
       model.games = [];
       model.winners = winners;
+      model.civhighscores = civhighscores;
       model.finishedGames = [];
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
@@ -83,6 +84,6 @@
   };
 
   module.controller("GameListController",
-    ["games", "winners", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
+    ["games", "winners", "civhighscores", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
 
 }(angular.module("civApp")));
