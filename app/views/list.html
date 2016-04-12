@@ -32,6 +32,19 @@
             allowfullscreen></iframe>
   </div>
 
+  <div class="row col-xs-12">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Test -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-6375020735571940"
+         data-ad-slot="8361307005"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+
   <!-- Social media content -->
   <div class="row">
     <h4>Share this site with your friends</h4>
@@ -87,7 +100,8 @@
 
               <tbody>
               <!-- Games that are not active anymore should have a light grey background -->
-              <tr  dir-paginate="game in gameListCtrl.games | filter: filterContent | itemsPerPage: 30" pagination-id="activeGames"
+              <tr dir-paginate="game in gameListCtrl.games | filter: filterContent | itemsPerPage: 30"
+                  pagination-id="activeGames"
                   class="{{game.active ? 'active' : ''}} fadeIn"
                   ng-class-even="'row-even'" ng-class-odd="'row-odd'">
                 <td>{{$index+1}}</td>
@@ -128,7 +142,8 @@
             </caption>
             <tbody>
 
-            <tr dir-paginate="winner in gameListCtrl.winners | orderBy:['-totalWins','username'] | itemsPerPage: 15" pagination-id="allPlayers" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+            <tr dir-paginate="winner in gameListCtrl.winners | orderBy:['-totalWins','username'] | itemsPerPage: 15"
+                pagination-id="allPlayers" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
               <td>{{winner.username}}</td>
               <td>{{winner.totalWins}}</td>
             </tr>
@@ -153,7 +168,8 @@
 
               <tbody>
 
-              <tr dir-paginate="game in gameListCtrl.finishedGames | itemsPerPage: 15" pagination-id="finished" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+              <tr dir-paginate="game in gameListCtrl.finishedGames | itemsPerPage: 15" pagination-id="finished"
+                  ng-class-even="'row-even'" ng-class-odd="'row-odd'">
                 <td>{{$index+1}}</td>
                 <td>{{game.created | date}}</td>
                 <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a></td>
