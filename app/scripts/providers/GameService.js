@@ -322,7 +322,7 @@
 
         var winners = function () {
           var url = baseUrl + "winners/";
-          return $http.get(url)
+          return $http.get(url, {cache: true})
             .then(function (response) {
               return response.data;
             });
@@ -330,7 +330,7 @@
 
         var civhighscores = function () {
           var url = baseUrl + "civhighscore/";
-          return $http.get(url)
+          return $http.get(url, {cache: true})
             .then(function (response) {
               return response.data;
             });
