@@ -1741,6 +1741,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         return;
       }
       var game = $scope.currentGame;
+      if(!game.privateLogs || game.privateLogs.length) {
+        return;
+      }
+
       var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
       params.total(game.privateLogs.length);
       $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
