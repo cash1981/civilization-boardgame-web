@@ -202,7 +202,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
         return;
       }
       var game = $scope.currentGame;
-      if(!game.privateLogs || game.privateLogs.length) {
+      if(!game.privateLogs || !game.privateLogs.length) {
         return;
       }
 
