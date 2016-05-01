@@ -1,7 +1,26 @@
 'use strict';
 (function (module) {
-  var GameListController = function (games, winners, civhighscores, $log, GameService, currentUser, $uibModal, $scope) {
+  var GameListController = function (games, winners, civhighscores, NgTableParams, GameService, currentUser, $uibModal, $scope, $filter) {
     var model = this;
+
+    var initialize = function () {
+      model.user = currentUser.profile;
+      model.games = [];
+      model.finishedGames = [];
+      $scope.onlyMyGames = {};
+      /* jshint ignore:start */
+      _.forEach(games, function (g) {
+        if (g.active) {
+          model.games.push(g);
+        } else {
+          model.finishedGames.push(g);
+        }
+      });
+
+      /* jshint ignore:end */
+    };
+
+    initialize();
 
     model.isUserPlaying = function (players) {
       if (players) {
@@ -61,29 +80,71 @@
       }
     };
 
-    var initialize = function () {
-      model.user = currentUser.profile;
-      model.games = [];
-      model.winners = winners;
-      model.civhighscores = civhighscores;
-      model.finishedGames = [];
-      $scope.onlyMyGames = {};
-      /* jshint ignore:start */
-      _.forEach(games, function (g) {
-        if (g.active) {
-          model.games.push(g);
-        } else {
-          model.finishedGames.push(g);
-        }
-      });
+    /* jshint ignore:start */
+    model.winnersList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(winners, params.orderBy()) : winners;
+        params.total(winners.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: { $data: {}, $emit: function () {}}
+    });
 
-      /* jshint ignore:end */
-    };
+    /* jshint ignore:start */
+    model.civhighscores = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(civhighscores, params.orderBy()) : civhighscores;
+        params.total(civhighscores.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: { $data: {}, $emit: function () {}}
+    });
 
-    initialize();
+    /* jshint ignore:start */
+    model.finishedGamesList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(model.finishedGames, params.orderBy()) : model.finishedGames;
+        params.total(model.finishedGames.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: { $data: {}, $emit: function () {}}
+    });
+
+    model.getFinishedGamesIndex = function(item){
+      return model.finishedGames.indexOf(item);
+    }
+
+
   };
 
   module.controller("GameListController",
-    ["games", "winners", "civhighscores", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
+    ["games", "winners", "civhighscores", "NgTableParams", "GameService", "currentUser", "$uibModal", "$scope", "$filter", GameListController]);
 
 }(angular.module("civApp")));

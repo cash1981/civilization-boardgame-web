@@ -1449,8 +1449,9 @@ angular.module('civApp').directive('match', [function () {
 
 'use strict';
 (function (module) {
-  var GameListController = function (games, winners, civhighscores, $log, GameService, currentUser, $uibModal, $scope) {
+  var GameListController = function (games, winners, civhighscores, NgTableParams, GameService, currentUser, $uibModal, $scope, $filter) {
     var model = this;
+
 
     model.isUserPlaying = function (players) {
       if (players) {
@@ -1510,6 +1511,25 @@ angular.module('civApp').directive('match', [function () {
       }
     };
 
+    /* jshint ignore:start */
+    model.winnersList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(winners, params.orderBy()) : winners;
+        params.total(winners.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: { $data: {}, $emit: function () {}}
+    });
+
     var initialize = function () {
       model.user = currentUser.profile;
       model.games = [];
@@ -1533,13 +1553,13 @@ angular.module('civApp').directive('match', [function () {
   };
 
   module.controller("GameListController",
-    ["games", "winners", "civhighscores", "$log", "GameService", "currentUser", "$uibModal", "$scope", GameListController]);
+    ["games", "winners", "civhighscores", "NgTableParams", "GameService", "currentUser", "$uibModal", "$scope", "$filter", GameListController]);
 
 }(angular.module("civApp")));
 
 'use strict';
 (function (module) {
-var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $uibModal, $sce) {
+var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, NgTableParams, $scope, growl, $uibModal, $sce) {
   var model = this;
 
   $scope.$watch(function () {
@@ -1695,7 +1715,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   /* jshint ignore:start */
-  model.tableParams = new ngTableParams({
+  model.tableParams = new NgTableParams({
     page: 1,            // show first page
     count: 10,          // count per page
     sorting: {
@@ -1703,11 +1723,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
   }, {
     total: 0, // length of data
-    getData: function ($defer, params) {
+    getData: function (params) {
       // use build-in angular filter
       // update table params
       if (!$scope.currentGame) {
-        $defer.reject("No game yet");
         return;
       }
       var game = $scope.currentGame;
@@ -1718,14 +1737,14 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
       var orderedData = params.sorting() ? $filter('orderBy')(game.publicLogs, params.orderBy()) : game.publicLogs;
       params.total(game.publicLogs.length);
-      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
     },
     $scope: { $data: {}, $emit: function () {}}
   });
   /* jshint ignore:end */
 
   /* jshint ignore:start */
-  model.tablePrivateLog = new ngTableParams({
+  model.tablePrivateLog = new NgTableParams({
     page: 1,            // show first page
     count: 10,          // count per page
     sorting: {
@@ -1733,11 +1752,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
   }, {
     total: 0, // length of data
-    getData: function ($defer, params) {
+    getData: function (params) {
       // use build-in angular filter
       // update table params
       if (!$scope.currentGame) {
-        $defer.reject("No game yet");
         return;
       }
       var game = $scope.currentGame;
@@ -1747,7 +1765,8 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
       var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
       params.total(game.privateLogs.length);
-      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      //$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
     },
     $scope: { $data: {}, $emit: function () {}}
   });
@@ -1775,7 +1794,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 };
 
   module.controller("GameController",
-    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
+    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "NgTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
 
 }(angular.module("civApp")));
 
@@ -2024,7 +2043,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
 'use strict';
 (function (module) {
-  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $uibModal) {
+  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, NgTableParams, $scope, PlayerService, $uibModal) {
     var model = this;
 
     model.nextElement = function(obj) {
@@ -2270,7 +2289,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   module.controller("UserItemController",
-    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$uibModal", UserItemController]);
+    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "NgTableParams", "$scope", "PlayerService", "$uibModal", UserItemController]);
 
 }(angular.module("civApp")));
 

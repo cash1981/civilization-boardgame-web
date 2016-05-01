@@ -82,17 +82,16 @@
             <button class="btn btn-lg btn-success pull-right" ng-click="gameListCtrl.openCreateNewGame('md')"
                     ng-show="gameListCtrl.user.loggedIn">Create New Game
             </button>
-            <table class="table table-striped table-hover table-condensed">
+            <table class="table table-striped table-hover table-condensed text-center">
               <thead>
               <tr>
-                <th>#</th>
-                <th>Created</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Number of players</th>
-                <th>Players</th>
-                <th>Active</th>
-                <th>Action</th>
+                <th class="text-center">#</th>
+                <th class="text-center">Created</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Number of players</th>
+                <th class="text-center">Players</th>
+                <th class="text-center">Action</th>
               </tr>
               </thead>
 
@@ -112,7 +111,6 @@
                 {{player.username}}<br/>
             </span>
                 </td>
-                <td>{{game.active ? 'Active' : 'Finished'}}</td>
                 <td>
                   <a ng-href="#/game/{{game.id}}" id="btnJoinGame"
                      ng-if="(game.numOfPlayers > game.players.length) && gameListCtrl.user.loggedIn && !gameListCtrl.isUserPlaying(game.players)"
@@ -127,85 +125,47 @@
           </div>
         </uib-tab>
         <uib-tab heading="Most wins" class="col-md-3 col-xs-12">
-          <table class="table table-striped table-hover table-condensed">
-            <thead>
-            <tr>
-              <th>Username</th>
-              <th>Number of wins</th>
-              <th>Number of attempts</th>
-            </tr>
-            </thead>
 
+
+          <table ng-table="gameListCtrl.winnersList" class="table table-condensed table-hover table-striped  text-center">
             <caption>
               <strong><label style="font-size: 1.5em;">Total number of players: {{gameListCtrl.winners.length}}</label></strong>
             </caption>
-            <tbody>
-
-            <tr dir-paginate="winner in gameListCtrl.winners | orderBy:['-totalWins','username'] | itemsPerPage: 15"
-                pagination-id="allPlayers" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
-              <td>{{winner.username}}</td>
-              <td>{{winner.totalWins}}</td>
-              <td>{{winner.attempts}}</td>
+            <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+              <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
+              <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+              <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
+              <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
             </tr>
-            </tbody>
           </table>
-          <dir-pagination-controls pagination-id="allPlayers"></dir-pagination-controls>
+
         </uib-tab>
         <uib-tab heading="Civilization highscore" class="col-md-3 col-xs-12">
-          <table class="table table-striped table-hover table-condensed">
-            <thead>
-            <tr>
-              <th>Civilization</th>
-              <th>Number of wins</th>
-              <th>Number of attempts</th>
+          <table ng-table="gameListCtrl.civhighscores" class="table table-condensed table-hover table-striped  text-center">
+            <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+              <td data-title="'Civilization'" sortable="'civ'">{{row.civ}}</td>
+              <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+              <td data-title="'Number of attempts'" sortable="'totalAttempt'">{{row.totalAttempt}}</td>
+              <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
             </tr>
-            </thead>
-
-            <tbody>
-
-            <tr ng-repeat="civhighscore in gameListCtrl.civhighscores | orderBy:['-totalWins','civ']"
-                ng-class-even="'row-even'" ng-class-odd="'row-odd'">
-              <td>{{civhighscore.civ}}</td>
-              <td>{{civhighscore.totalWins}}</td>
-              <td>{{civhighscore.totalAttempt}}</td>
-            </tr>
-            </tbody>
           </table>
         </uib-tab>
         <uib-tab heading="Finished Games" class="col-md-4 col-xs-12">
           <div class="table-responsive padd-top-7">
-            <table class="table table-striped table-hover table-condensed">
-              <thead>
-              <tr>
-                <th>#</th>
-                <th>Created</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Number of players</th>
-                <th>Players</th>
-                <th>Active</th>
-              </tr>
-              </thead>
-
-              <tbody>
-
-              <tr dir-paginate="game in gameListCtrl.finishedGames | itemsPerPage: 15" pagination-id="finished"
-                  ng-class-even="'row-even'" ng-class-odd="'row-odd'">
-                <td>{{$index+1}}</td>
-                <td>{{game.created | date}}</td>
-                <td><a ng-href="#/game/{{game.id}}">{{game.name}}</a></td>
-                <td>{{game.type }}</td>
-                <td>{{game.numOfPlayers}}</td>
-                <td>
-            <span ng-repeat="player in game.players">
-                {{player.username}}<br/>
-            </span>
+            <table ng-table="gameListCtrl.finishedGamesList" class="table table-condensed table-hover table-striped  text-center">
+              <tr ng-repeat="game in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+                <td data-title="'#'">{{gameListCtrl.getFinishedGamesIndex(game)+1}}</td>
+                <td data-title="'Created'" sortable="'created'">{{game.created | date}}</td>
+                <td data-title="'Name'" sortable="'name'"><a ng-href="#/game/{{game.id}}">{{game.name}}</a></td>
+                <td data-title="'Type'">{{game.type}}</td>
+                <td data-title="'Number of players'" sortable="'numOfPlayers'">{{game.numOfPlayers}}</td>
+                <td data-title="'Players'">
+                   <span ng-repeat="player in game.players">
+                      {{player.username}}<br/>
+                   </span>
                 </td>
-                <td>Finished</td>
               </tr>
-              </tbody>
             </table>
-            <dir-pagination-controls pagination-id="finished"></dir-pagination-controls>
           </div>
         </uib-tab>
       </uib-tabset>

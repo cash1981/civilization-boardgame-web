@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, ngTableParams, $scope, PlayerService, $uibModal) {
+  var UserItemController = function ($log, $routeParams, GameService, DrawService, currentUser, Util, $filter, NgTableParams, $scope, PlayerService, $uibModal) {
     var model = this;
 
     model.nextElement = function(obj) {
@@ -246,6 +246,6 @@
   };
 
   module.controller("UserItemController",
-    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "ngTableParams", "$scope", "PlayerService", "$uibModal", UserItemController]);
+    ["$log", "$routeParams", "GameService", "DrawService", "currentUser", "Util", "$filter", "NgTableParams", "$scope", "PlayerService", "$uibModal", UserItemController]);
 
 }(angular.module("civApp")));
