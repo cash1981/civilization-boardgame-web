@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, ngTableParams, $scope, growl, $uibModal, $sce) {
+var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, NgTableParams, $scope, growl, $uibModal, $sce) {
   var model = this;
 
   $scope.$watch(function () {
@@ -156,7 +156,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
   };
 
   /* jshint ignore:start */
-  model.tableParams = new ngTableParams({
+  model.tableParams = new NgTableParams({
     page: 1,            // show first page
     count: 10,          // count per page
     sorting: {
@@ -164,11 +164,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
   }, {
     total: 0, // length of data
-    getData: function ($defer, params) {
+    getData: function (params) {
       // use build-in angular filter
       // update table params
       if (!$scope.currentGame) {
-        $defer.reject("No game yet");
         return;
       }
       var game = $scope.currentGame;
@@ -179,14 +178,14 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
       var orderedData = params.sorting() ? $filter('orderBy')(game.publicLogs, params.orderBy()) : game.publicLogs;
       params.total(game.publicLogs.length);
-      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
     },
     $scope: { $data: {}, $emit: function () {}}
   });
   /* jshint ignore:end */
 
   /* jshint ignore:start */
-  model.tablePrivateLog = new ngTableParams({
+  model.tablePrivateLog = new NgTableParams({
     page: 1,            // show first page
     count: 10,          // count per page
     sorting: {
@@ -194,11 +193,10 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
   }, {
     total: 0, // length of data
-    getData: function ($defer, params) {
+    getData: function (params) {
       // use build-in angular filter
       // update table params
       if (!$scope.currentGame) {
-        $defer.reject("No game yet");
         return;
       }
       var game = $scope.currentGame;
@@ -208,7 +206,8 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
       var orderedData = params.sorting() ? $filter('orderBy')(game.privateLogs, params.orderBy()) : game.privateLogs;
       params.total(game.privateLogs.length);
-      $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      //$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
     },
     $scope: { $data: {}, $emit: function () {}}
   });
@@ -236,6 +235,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 };
 
   module.controller("GameController",
-    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "ngTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
+    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "NgTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
 
 }(angular.module("civApp")));

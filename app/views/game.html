@@ -55,7 +55,7 @@
       <uib-tabset justified="true" type="pills">
         <uib-tab heading="Gamelog" class="col-xs-12 col-md-2 col-lg-2 padd-top-7">
           <table ng-table="gameCtrl.tableParams" ng-show="$data.length > 0"
-                 class="table table-bordered table-hover table-condensed text-center table-responsive">
+                 class="table table-bordered table-hover table-condensed text-center table-responsive text-center">
 
             <tr ng-repeat="log in $data" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
               <td data-title="'Date'" sortable="'created'">{{log.created | date:'dd-MM-yyyy - HH:mm:ss'}}</td>
@@ -114,7 +114,7 @@
       <uib-tabset justified="true" type="pills">
         <uib-tab heading="Private Log" class="col-xs-12 col-md-4 col-lg-4 padd-top-7">
           <table ng-table="gameCtrl.tablePrivateLog" ng-show="$data.length > 0"
-                 class="table table-bordered table-hover table-condensed text-center table-responsive">
+                 class="table table-bordered table-hover table-condensed text-center table-responsive text-center">
             <tr ng-repeat="log in $data" class="active" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
               <td data-title="'Date'" sortable="'created'">{{log.created | date:'dd-MM-yyyy - HH:mm:ss'}}</td>
               <td data-title="'Log'" sortable="'log'">{{log.log}}</td>
