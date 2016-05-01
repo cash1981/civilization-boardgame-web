@@ -149,7 +149,7 @@
     model.getFinishedGamesIndex = function (item) {
       return model.finishedGames.indexOf(item);
     }
-    
+
   };
 
   module.controller("GameListController",

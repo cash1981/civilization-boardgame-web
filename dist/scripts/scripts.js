@@ -1599,7 +1599,6 @@ angular.module('civApp').directive('match', [function () {
       return model.finishedGames.indexOf(item);
     }
 
-
   };
 
   module.controller("GameListController",
