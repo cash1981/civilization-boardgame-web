@@ -129,7 +129,7 @@
 
           <table ng-table="gameListCtrl.winnersList" class="table table-condensed table-hover table-striped  text-center">
             <caption>
-              <strong><label style="font-size: 1.5em;">Total number of players: {{gameListCtrl.winners.length}}</label></strong>
+              <strong><label style="font-size: 1.5em;">Total number of players: {{gameListCtrl.totalNumberOfPlayers}}</label></strong>
             </caption>
             <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
               <td data-title="'Username'" sortable="'username'">{{row.username}}</td>

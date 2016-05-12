@@ -1456,6 +1456,7 @@ angular.module('civApp').directive('match', [function () {
       model.user = currentUser.profile;
       model.games = [];
       model.finishedGames = [];
+      model.totalNumberOfPlayers = winners.length;
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
       _.forEach(games, function (g) {
