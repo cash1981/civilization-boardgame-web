@@ -27,6 +27,12 @@
       return base + id + end;
     };
 
+    var mapEditLink = function(id) {
+      var base = "https://docs.google.com/presentation/d/";
+      var end = "/edit";
+      return base + id + end;
+    };
+
     var assetLink = function(id) {
       var base = "https://docs.google.com/spreadsheets/d/";
       var end = "/pubhtml?widget=true&amp;headers=false";
@@ -42,6 +48,7 @@
     return {
       nextElement: nextElement,
       mapLink: mapLink,
+      mapEditLink: mapEditLink,
       assetLink: assetLink,
       assetEditLink: assetEditLink
     };

@@ -14,8 +14,11 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 
     if(!$scope.currentGame.mapLink) {
       $scope.currentGame.mapLink = $sce.trustAsResourceUrl("https://docs.google.com/presentation/d/1hgP0f6hj4-lU6ysdOb02gd7oC5gXo8zAAke4RhgIt54/embed?start=true&loop=true&delayms=3000");
+      $scope.currentGame.mapEditLink = $sce.trustAsResourceUrl("https://docs.google.com/presentation/d/1hgP0f6hj4-lU6ysdOb02gd7oC5gXo8zAAke4RhgIt54/embed?start=true&loop=true&delayms=3000");
     } else {
-      $scope.currentGame.mapLink = $sce.trustAsResourceUrl(Util.mapLink($scope.currentGame.mapLink));
+      var maplink = $scope.currentGame.mapLink;
+      $scope.currentGame.mapLink = $sce.trustAsResourceUrl(Util.mapLink(maplink));
+      $scope.currentGame.mapEditLink = $sce.trustAsResourceUrl(Util.mapEditLink(maplink));
     }
 
     if(!$scope.currentGame.assetLink) {
