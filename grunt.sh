@@ -1,6 +1,6 @@
 #!/bin/bash
 
-grunt -f
-cp web.js dist/
+rm -rf dist/*
+cp -r app/* dist/
 
 exit 0;
