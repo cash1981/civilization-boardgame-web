@@ -1,4 +1,77 @@
-<nav class="navbar navbar-inverse" role="navigation" ng-controller="NavController as navCtrl"> <div class="container-fluid"> <div class="navbar-header"> <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()" rel="home" title="PlayCiv"> <img style="max-width:100px; margin-top: -7px; height: 27px; width: 27px" src="./images/icons/coin.png"> </a> <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()" rel="home">PlayCiv</a> </div> <ul class="nav navbar-nav"> <li><a href="#/faq">FAQ <span class="glyphicon glyphicon-question-sign"></span></a></li> <li><a href="#/about">About <span class="glyphicon glyphicon-exclamation-sign"></span></a></li> <li dropdown> <a href class="dropdown-toggle" dropdown-toggle> Game overview <span class="caret"></span> </a> <ul class="dropdown-menu"> <li><a ng-click="navCtrl.openGeneralInfo('md')">General info</a></li> <li><a ng-click="navCtrl.openTechOverview('md')">Tech overview (FaF/WaW)</a></li> </ul> </li> <li ng-if="navCtrl.GameOption.value.show" dropdown> <a href class="dropdown-toggle" dropdown-toggle> Game options <span class="caret"></span> </a> <ul class="dropdown-menu"> <li> <a ng-click="navCtrl.openNotes('lg')">Personal game notes</a></li> <li role="separator" class="divider"></li> <li><a href="#/endgame" ng-really-message="This will withdraw you from the current game. Are you sure?" ng-really-click="navCtrl.withdrawGame()">Withdraw from game</a></li> <li ng-if="navCtrl.GameOption.value.showEndGame"> <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">End game</a></li> </ul> </li> <li dropdown ng-if="navCtrl.GameOption.value.admin"> <a href class="dropdown-toggle" dropdown-toggle> Admin settings <span class="caret"></span> </a> <ul class="dropdown-menu"> <li><a href="#/endgame" ng-really-message="This will delete the game. Are you sure?" ng-really-click="navCtrl.deleteGame()">Delete game</a></li> </ul> </li> </ul> <div class="padd-right-5"> <div ng-show="navCtrl.user.loggedIn" class="navbar-text navbar-right"> <span class="padd-right-5">Hello {{ navCtrl.user.username }}!</span> <a href="#/logout" class="btn btn-default btn-sm" ng-click="navCtrl.signOut()">Sign Out</a> </div> <form ng-if="!navCtrl.user.loggedIn" name="loginForm" class="navbar-form navbar-right" ng-submit="navCtrl.login(loginForm)" novalidate> <div class="form-group"> <input name="username" type="text" placeholder="Username" ng-model="navCtrl.username" required> </div> <div class="form-group"> <input name="password" type="password" placeholder="Password" ng-model="navCtrl.password" required> </div> <input class="btn btn-default btn-sm" type="submit" value="Login"> <input class="btn btn-default btn-sm" type="button" value="Sign up" ng-click="navCtrl.openSignup('md')"> <input class="btn btn-default btn-sm" type="button" value="Forgot password" ng-click="navCtrl.openForgotPassword('sm')"> </form> </div> </div> <!-- /container-fluid--> <!-- Modal for signup --> <script type="text/ng-template" id="signup.html"><div class="modal-header">
+﻿<nav class="navbar navbar-inverse" role="navigation" ng-controller="NavController as navCtrl">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()" rel="home" title="PlayCiv">
+        <img style="max-width:100px; margin-top: -7px; height: 27px; width: 27px;" src="./images/icons/coin.png">
+      </a>
+      <a class="navbar-brand" href="#/" ng-click="navCtrl.clearOptions()" rel="home">PlayCiv</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="#/faq">FAQ <span class="glyphicon glyphicon-question-sign"></span></a></li>
+      <li><a href="#/about">About <span class="glyphicon glyphicon-exclamation-sign"></span></a></li>
+
+      <li dropdown>
+        <a href class="dropdown-toggle" dropdown-toggle>
+          Game overview <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a ng-click="navCtrl.openGeneralInfo('md')">General info</a></li>
+          <li><a ng-click="navCtrl.openTechOverview('md')">Tech overview (FaF/WaW)</a></li>
+        </ul>
+      </li>
+      <li ng-if="navCtrl.GameOption.value.show" dropdown>
+        <a href class="dropdown-toggle" dropdown-toggle>
+          Game options <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a ng-click="navCtrl.openNotes('lg')">Personal game notes</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#/endgame"
+                 ng-really-message="This will withdraw you from the current game. Are you sure?"
+                 ng-really-click="navCtrl.withdrawGame()">Withdraw from game</a></li>
+          <li ng-if="navCtrl.GameOption.value.showEndGame">
+            <a href="#/endgame" ng-click="navCtrl.openEndGame('md')">End game</a></li>
+
+        </ul>
+      </li>
+      <li dropdown ng-if="navCtrl.GameOption.value.admin">
+        <a href class="dropdown-toggle" dropdown-toggle>
+          Admin settings <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#/endgame"
+                 ng-really-message="This will delete the game. Are you sure?"
+                 ng-really-click="navCtrl.deleteGame()">Delete game</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="padd-right-5">
+      <div ng-show="navCtrl.user.loggedIn" class="navbar-text navbar-right">
+        <span class="padd-right-5">Hello {{ navCtrl.user.username }}!</span>
+        <a href="#/logout" class="btn btn-default btn-sm" ng-click="navCtrl.signOut()">Sign Out</a>
+      </div>
+      <form ng-if="!navCtrl.user.loggedIn" name="loginForm" class="navbar-form navbar-right"
+            ng-submit="navCtrl.login(loginForm)" novalidate>
+        <div class="form-group">
+          <input name="username" type="text" placeholder="Username" ng-model="navCtrl.username" required/>
+        </div>
+        <div class="form-group">
+          <input name="password" type="password" placeholder="Password" ng-model="navCtrl.password" required/>
+        </div>
+        <input class="btn btn-default btn-sm" type="submit" value="Login">
+        <input class="btn btn-default btn-sm" type="button" value="Sign up" ng-click="navCtrl.openSignup('md')"/>
+        <input class="btn btn-default btn-sm" type="button" value="Forgot password"
+               ng-click="navCtrl.openForgotPassword('sm')"/>
+      </form>
+    </div>
+  </div>
+  <!-- /container-fluid-->
+
+
+  <!-- Modal for signup -->
+  <script type="text/ng-template" id="signup.html">
+    <div class="modal-header">
       <h3 class="modal-title">Sign up</h3>
     </div>
     <form name="form" method="post" novalidate="novalidate">
@@ -75,7 +148,13 @@
                class="btn btn-primary"/>
         <button ng-click="registerCancel()" class="btn btn-warning">Cancel</button>
       </div>
-    </form></script> <!-- Modal for image 1 --> <script type="text/ng-template" id="image1.html"><div class="modal-header">
+    </form>
+  </script>
+
+
+  <!-- Modal for image 1 -->
+  <script type="text/ng-template" id="image1.html">
+    <div class="modal-header">
       <h3 class="modal-title text-capitalize">Fame & Fortune/Wisdom & Warfare Overview</h3>
     </div>
     <div class="modal-body">
@@ -92,7 +171,12 @@
 
     <div class="modal-footer">
       <button ng-click="registerCancel()" class="btn btn-warning">Close</button>
-    </div></script> <!-- Modal for image 2 --> <script type="text/ng-template" id="image2.html"><div class="modal-header">
+    </div>
+  </script>
+
+  <!-- Modal for image 2 -->
+  <script type="text/ng-template" id="image2.html">
+    <div class="modal-header">
       <h3 class="modal-title text-capitalize">Fame & Fortune/Wisdom & Warfare Tech Overview</h3>
     </div>
     <div class="modal-body">
@@ -102,7 +186,12 @@
 
     <div class="modal-footer">
       <button ng-click="registerCancel()" class="btn btn-warning">Close</button>
-    </div></script> <!-- Modal for Forgot password--> <script type="text/ng-template" id="forgotpassword.html"><div class="modal-header">
+    </div>
+  </script>
+
+  <!-- Modal for Forgot password-->
+  <script type="text/ng-template" id="forgotpassword.html">
+    <div class="modal-header">
       <h3 class="modal-title text-capitalize">Forgot password</h3>
     </div>
     <div class="modal-body">
@@ -140,7 +229,13 @@
           <button ng-click="newPasswordCancel()" class="btn btn-warning">Cancel</button>
         </div>
       </form>
-    </div></script> <!-- Modal for end game--> <script type="text/ng-template" id="endGame.html"><div class="modal-header">
+    </div>
+  </script>
+
+
+  <!-- Modal for end game-->
+  <script type="text/ng-template" id="endGame.html">
+    <div class="modal-header">
       <h3 class="modal-title">Choose winner, or no winner!</h3>
     </div>
     <div class="modal-body">
@@ -158,7 +253,12 @@
       <button class="btn btn-primary" ng-disabled="!tradeCtrl.winner" ng-click="tradeCtrl.endGameWinner()">Ok</button>
       <button class="btn btn-warning" ng-click="tradeCtrl.endGameNoWinner()">No Winner</button>
       <button class="btn btn-warning" ng-click="tradeCtrl.endGameCancel()">Cancel</button>
-    </div></script> <!-- Modal for game notes --> <script type="text/ng-template" id="gamenotes.html"><div class="modal-header">
+    </div>
+  </script>
+
+  <!-- Modal for game notes -->
+  <script type="text/ng-template" id="gamenotes.html">
+    <div class="modal-header">
       <h3 class="modal-title">Personal and hidden game notes</h3>
     </div>
     <div class="modal-body">
@@ -167,4 +267,7 @@
     <div class="modal-footer">
       <button class="btn btn-primary" ng-click="noteCtrl.ok()">Save</button>
       <button class="btn btn-warning" ng-click="noteCtrl.cancel()">Cancel</button>
-    </div></script> </nav>
+    </div>
+  </script>
+
+</nav>
