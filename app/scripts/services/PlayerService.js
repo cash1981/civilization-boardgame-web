@@ -65,6 +65,7 @@
         "name": Util.nextElement(item).name,
         "ownerId": Util.nextElement(item).ownerId,
         "sheetName": Util.nextElement(item).sheetName,
+        "itemNumber": Util.nextElement(item).itemNumber,
         "pbfId": gameId
       };
 
@@ -97,6 +98,7 @@
         "name": Util.nextElement(item).name,
         "ownerId": Util.nextElement(item).ownerId,
         "sheetName": Util.nextElement(item).sheetName,
+        "itemNumber": Util.nextElement(item).itemNumber,
         "pbfId": gameId
       };
 
@@ -210,7 +212,8 @@
         "name": item.name,
         "sheetName": item.sheetName,
         "pbfId": gameId,
-        "ownerId": item.ownerId
+        "ownerId": item.ownerId,
+        "itemNumber": item.itemNumber
       };
 
       var configuration = {
