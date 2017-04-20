@@ -14,6 +14,7 @@
         "name": Util.nextElement(item).name,
         "ownerId": Util.nextElement(item).ownerId,
         "sheetName": Util.nextElement(item).sheetName,
+        "itemNumber": Util.nextElement(item).itemNumber,
         "pbfId": gameId
       };
 
