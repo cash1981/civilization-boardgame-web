@@ -8,6 +8,7 @@
       model.games = [];
       model.finishedGames = [];
       model.totalNumberOfPlayers = winners.length;
+      model.totalNumberOfGames = games.length;
       $scope.onlyMyGames = {};
       /* jshint ignore:start */
       _.forEach(games, function (g) {

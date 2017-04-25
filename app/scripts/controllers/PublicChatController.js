@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-  var PublicChatController = function (currentUser, growl, GameService) {
+  var PublicChatController = function (currentUser, growl, GameService, $filter) {
     var vm = this;
     vm.username = currentUser.profile.username;
     vm.messages = [];
@@ -9,7 +9,7 @@
       .then(function (data) {
         angular.forEach(data, function (obj) {
           this.push({
-            'username': obj.username,
+            'username': $filter('date')(new Date(obj.created), 'yyyy-MM-dd hh:mm:ss') + ' - ' + obj.username,
             'content': obj.message
           });
         }, vm.messages);
@@ -35,6 +35,6 @@
 
   };
 
-  module.controller("PublicChatController", ["currentUser", "growl", "GameService", "$interval", PublicChatController]);
+  module.controller("PublicChatController", ["currentUser", "growl", "GameService", "$filter", PublicChatController]);
 
 }(angular.module("civApp")));

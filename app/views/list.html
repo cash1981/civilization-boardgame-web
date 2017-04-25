@@ -241,8 +241,13 @@
 
         </uib-tab>
         <uib-tab heading="Civilization highscore" class="col-md-3 col-xs-12">
+
           <table ng-table="gameListCtrl.civhighscores"
                  class="table table-condensed table-hover table-striped  text-center">
+            <caption>
+              <strong><label style="font-size: 1.5em;">Total number of games finished:
+                {{gameListCtrl.totalNumberOfGames}}</label></strong>
+            </caption>
             <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
               <td data-title="'Civilization'" sortable="'civ'">{{row.civ}}</td>
               <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
@@ -252,9 +257,14 @@
           </table>
         </uib-tab>
         <uib-tab heading="Finished Games" class="col-md-4 col-xs-12">
+
           <div class="table-responsive padd-top-7">
             <table ng-table="gameListCtrl.finishedGamesList"
                    class="table table-condensed table-hover table-striped  text-center">
+              <caption>
+                <strong><label style="font-size: 1.5em;">Total number of games finished:
+                  {{gameListCtrl.totalNumberOfGames}}</label></strong>
+              </caption>
               <tr ng-repeat="game in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
                 <td data-title="'#'">{{gameListCtrl.getFinishedGamesIndex(game)+1}}</td>
                 <td data-title="'Created'" sortable="'created'">{{game.created | date}}</td>
