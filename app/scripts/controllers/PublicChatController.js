@@ -9,7 +9,7 @@
       .then(function (data) {
         angular.forEach(data, function (obj) {
           this.push({
-            'username': $filter('date')(new Date(obj.created), 'yyyy-MM-dd hh:mm:ss') + ' - ' + obj.username,
+            'username': $filter('date')(new Date(obj.created), 'dd-MM-yyyy hh:mm:ss') + ' - ' + obj.username,
             'content': obj.message
           });
         }, vm.messages);
