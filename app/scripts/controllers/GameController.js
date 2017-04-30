@@ -1,6 +1,6 @@
 'use strict';
 (function (module) {
-var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, NgTableParams, $scope, growl, $uibModal, $sce) {
+var GameController = function ($log, $routeParams, GameService, PlayerService, currentUser, Util, GameOption, $filter, NgTableParams, $scope, growl, $uibModal, $sce, $window) {
   var model = this;
 
   $scope.$watch(function () {
@@ -11,6 +11,7 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
     }
     var game = newVal;
     $scope.currentGame = game;
+    $window.document.title = game.name;
 
     if(!$scope.currentGame.mapLink) {
       $scope.currentGame.mapLink = $sce.trustAsResourceUrl("https://docs.google.com/presentation/d/1hgP0f6hj4-lU6ysdOb02gd7oC5gXo8zAAke4RhgIt54/embed?start=true&loop=true&delayms=3000");
@@ -238,6 +239,6 @@ var GameController = function ($log, $routeParams, GameService, PlayerService, c
 };
 
   module.controller("GameController",
-    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "NgTableParams", "$scope", "growl", "$uibModal", "$sce", GameController]);
+    ["$log", "$routeParams", "GameService", "PlayerService", "currentUser", "Util", 'GameOption', "$filter", "NgTableParams", "$scope", "growl", "$uibModal", "$sce", "$window", GameController]);
 
 }(angular.module("civApp")));
