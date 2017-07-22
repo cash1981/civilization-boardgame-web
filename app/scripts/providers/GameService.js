@@ -48,9 +48,23 @@
             return $q.reject("No game to join");
           }
           return $http.post(baseUrl + game.id + "/join")
-            .then(function (response) {
-              return response.data;
-            });
+            .success(function (data, status, headers) {
+              var loc = headers('Location');
+              if (loc) {
+                /* jshint ignore:start */
+                var gameid = _.last(loc.split('/'));
+                if (gameid) {
+                  $location.path('/game/' + gameid);
+                  growl.success("Game joined!");
+                }
+                /* jshint ignore:end */
+              }
+              return data;
+            })
+            .error(function (data) {
+                growl.error("Could not join game");
+                return data;
+              });
         };
 
         var fetchGameByIdFromServer = function (id) {
@@ -348,8 +362,8 @@
           voteNo: voteNo,
           getChatList: getChatList,
           chat: chat,
-          publicChat:publicChat,
-          getPublicChatList:getPublicChatList,
+          publicChat: publicChat,
+          getPublicChatList: getPublicChatList,
           players: playersExceptLoggedIn,
           allPlayers: allPlayers,
           fetchPlayersFromServer: fetchPlayersFromServer,

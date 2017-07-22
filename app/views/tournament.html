@@ -1,0 +1,59 @@
+<div class="container" ng-controller="TournamentController as tournamentCtrl">
+
+  <div class="row row-offcanvas row-offcanvas-right">
+
+    <div class="jumbotron">
+      <h1>Tournament page</h1>
+
+      <p>Rules for the tournament:<br/>
+      <ol>
+        <li>There will be 2 CIVs drawned, you pick one to play. The opponent does the same. Next match, you will switch
+          CIVs and play a second game.
+          If you win both games you win. If each player wins one game each, the one with the fastest turn wins.
+          If both are same, its advanced tiebreak where we count points.
+        </li>
+        <li>If you loose you are out of the tournament.</li>
+        <li>This game will utilize Advanced Tiebreak and Advanced variant of CIV Arabia and Greece. However Greece will
+          get 2 culture instead of 1 for each tech the other player doesnt know.
+          Also Aztec only gets 1 unit instead of 2 when getting great person.
+        </li>
+        <li>You must make at least one move per day, if you cannot play one day, or go on holiday, write it in the chat.
+          The main point is to avoid that the tournament drags out and is waiting for players to finish
+        </li>
+        <li>There will be no relics used in the game. Meaning you must redraw if relics are drawn.</li>
+        <li>Tile 13 is banned, meaning you must redraw tile if this appears.</li>
+      </ol>
+      </p>
+      <p>This will be a Vanilla Wisdom and Warfare with FAQ 2.0, and rules from the bible found at <a
+        href="http://boardgamegeek.com/thread/1024510/ww-ufaq and FAQ 2.0"></a></p>
+    </div>
+    <div class="row">
+
+      <h2>Active tournament - Start date: To be announced</h2>
+
+      <p>Tournament costs $10 USD to enter. You can use the donate button and donate to me.
+        Please note that PayPal takes 2.9% plus $0.30 USD (around $0.6 USD). So the prize fund will reflect this amount.
+        The prize fund is 90% of the money I receive. The rest of 10% goes towards administration. The winner gets 70%
+        of the prize fund, whilst the second place gets 30%.
+        <br/><br/>
+        After you donate, send an email to cash@playciv.com and tell me which name you donated under, and which nickname
+        you have on this site.
+        Then you will be registered to enter the tournament.
+      </p>
+    </div>
+    <!--/span-->
+
+    <div class="row">
+      <p><a class="btn btn-primary" ng-href="#/tournament" ng-click="signupTourney()" role="button">Join tournament</a>
+      </p>
+      <p>
+        <b>Signup for tournament closes as soon as we get at least 16 or 32 players, but no later than 12th of august!</b>
+        <b>The rules of the tournament might change, so please look here before the tournament starts!</b>
+      </p>
+    </div>
+  </div>
+  <!--/span-->
+
+</div><!--/row-->
+
+</div><!--/.container-->

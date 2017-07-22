@@ -51,6 +51,9 @@
          }
          */
       })
+      .when('/tournament', {
+        templateUrl: 'views/tournament.html',
+      })
       .when('/faq', {
         templateUrl: 'views/faq.html'
       })
