@@ -1,4 +1,4 @@
-<div class="container" ng-controller="TournamentController as tournamentCtrl">
+<div class="container">
 
   <div class="row row-offcanvas row-offcanvas-right">
 
@@ -44,16 +44,38 @@
     <!--/span-->
 
     <div class="row">
+      <h3>Tournament signups</h3>
+      <table class="table table-striped table-hover table-condensed text-center">
+        <thead>
+        <tr>
+          <th class="text-center">#</th>
+          <th class="text-center">Username</th>
+          <th class="text-center">Paid</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="player in tournamentCtrl.players track by $index">
+          <th scope="row">{{$index+1}}</th>
+          <td>{{player.username}}</td>
+          <td ng-if="player.paid" class="table-success" >Has paid tourney fee!</td>
+          <td ng-if="!player.paid" class="table-danger">Waiting for tourney payment</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="row">
       <p><a class="btn btn-primary" ng-href="#/tournament" ng-click="signupTourney()" role="button">Join tournament</a>
       </p>
+
       <p>
-        <b>Signup for tournament closes as soon as we get at least 16 or 32 players, but no later than 12th of august!</b>
+        <b>Signup for tournament closes as soon as we get at least 16 or 32 players, but no later than 12th of
+          august!</b>
         <b>The rules of the tournament might change, so please look here before the tournament starts!</b>
       </p>
     </div>
   </div>
-  <!--/span-->
-
-</div><!--/row-->
 
 </div><!--/.container-->

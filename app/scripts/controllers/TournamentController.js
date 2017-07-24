@@ -1,23 +1,29 @@
 'use strict';
 (function (module) {
-  var TournamentController = function ($scope, growl, $http, BASE_URL) {
-    var baseUrl = BASE_URL + "/tournament/";
+  var TournamentController = function (tournaments, $scope, growl, $http, BASE_URL, TournamentService) {
+    var model = this;
+    model.players = [];
+    updatePlayersTable(tournaments);
 
-    $scope.signupTourney = function() {
-      return $http.put(baseUrl + "signup/1")
-        .success(function (data) {
-          growl.success("Tournament joined!");
-          return data;
+    $scope.signupTourney = function (tournamentNumber) {
+      if (!tournamentNumber) {
+        tournamentNumber = 1;
+      }
+      TournamentService.signup(tournamentNumber)
+        .then(function (data) {
+          updatePlayersTable(data);
         })
-        .error(function (data) {
-          growl.error("Could not join tournament");
-          return data;
-        });
-    }
+    };
 
+
+    function updatePlayersTable(tourneys) {
+      if (tourneys && tourneys[0].players) {
+        model.players = tourneys[0].players;
+      }
+    }
   };
 
   module.controller("TournamentController",
-    ["$scope", "growl", "$http", "BASE_URL", TournamentController]);
+    ["tournaments", "$scope", "growl", "$http", "BASE_URL", "TournamentService", TournamentController]);
 
 }(angular.module("civApp")));

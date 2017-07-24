@@ -23,47 +23,46 @@
         templateUrl: 'views/list.html',
         controller: "GameListController as gameListCtrl",
         resolve: {
-          games: ["GameService", function(m) {
+          games: ["GameService", function (m) {
             return m.getAllGames();
           }],
-          winners: ["GameService", function(m) {
+          winners: ["GameService", function (m) {
             return m.winners();
           }],
-          civhighscores: ["GameService", function(m) {
+          civhighscores: ["GameService", function (m) {
             return m.civhighscores();
           }]
         }
       })
-      .when('/game/:id', {
+      .when('/game/:id/', {
         templateUrl: 'views/game.html',
         controller: "ChatController as chatCtrl",
         resolve: {
-          chatList: ["GameService", "$route", function(m, r) {
+          chatList: ["GameService", "$route", function (m, r) {
             //return m.getChatList(r.$$url.split('/')[2]);
             return m.getChatList(r.current.params.id);
           }]
         }
-        //Use resolve when you want the data to appear before going to the page
-        /*
-         ,resolve: {
-         game = function(GameService) { GameService.getGame(gameId) }
-         Then put this game in the controller, but you need to define controller here also
-         }
-         */
       })
-      .when('/tournament', {
+      .when('/tournament/', {
         templateUrl: 'views/tournament.html',
+        controller: "TournamentController as tournamentCtrl",
+        resolve: {
+          tournaments: ["TournamentService", function (t) {
+            return t.getTournaments();
+          }]
+        }
       })
-      .when('/faq', {
+      .when('/faq/', {
         templateUrl: 'views/faq.html'
       })
-      .when('/about', {
+      .when('/about/', {
         templateUrl: 'views/about.html'
       })
-      .when('/logout', {
+      .when('/logout/', {
         redirectTo: '/'
       })
-      .when('/endgame', {
+      .when('/endgame/', {
         redirectTo: '/'
       })
       .otherwise({
