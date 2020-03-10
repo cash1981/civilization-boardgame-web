@@ -25,12 +25,6 @@
         resolve: {
           games: ["GameService", function (m) {
             return m.getAllGames();
-          }],
-          winners: ["GameService", function (m) {
-            return m.winners();
-          }],
-          civhighscores: ["GameService", function (m) {
-            return m.civhighscores();
           }]
         }
       })
@@ -39,7 +33,6 @@
         controller: "ChatController as chatCtrl",
         resolve: {
           chatList: ["GameService", "$route", function (m, r) {
-            //return m.getChatList(r.$$url.split('/')[2]);
             return m.getChatList(r.current.params.id);
           }]
         }
@@ -50,6 +43,18 @@
         resolve: {
           tournaments: ["TournamentService", function (t) {
             return t.getTournaments();
+          }]
+        }
+      })
+      .when('/highscore/', {
+        templateUrl: 'views/highscore.html',
+        controller: "HighscoreController as highscoreCtrl",
+        resolve: {
+          playerHighscore: ["GameService", function (m) {
+            return m.playerHighscore();
+          }],
+          civHighscores: ["GameService", function (m) {
+            return m.civHighscores();
           }]
         }
       })

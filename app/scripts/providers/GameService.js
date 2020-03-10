@@ -334,15 +334,15 @@
             });
         };
 
-        var winners = function () {
-          var url = baseUrl + "winners/";
+        var playerHighscore = function () {
+          var url = baseUrl + "playerhighscore/";
           return $http.get(url, {cache: true})
             .then(function (response) {
               return response.data;
             });
         };
 
-        var civhighscores = function () {
+        var civHighscores = function () {
           var url = baseUrl + "civhighscore/";
           return $http.get(url, {cache: true})
             .then(function (response) {
@@ -371,8 +371,8 @@
           withdrawFromGame: withdrawFromGame,
           updateMapLink: updateMapLink,
           updateAssetLink: updateAssetLink,
-          winners: winners,
-          civhighscores: civhighscores
+          playerHighscore: playerHighscore,
+          civHighscores: civHighscores
         };
       }];
 

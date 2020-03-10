@@ -33,6 +33,18 @@
               allowfullscreen></iframe>
     </div>
 
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Responsive ad -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-6375020735571940"
+         data-ad-slot="9001603009"
+         data-ad-format="auto"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
   <div class="container-fluid">
     <!-- Social media content -->
     <div class="row">
@@ -69,7 +81,7 @@
       <div class="col-md-6">
         <h2>News - 12.01.2018 - 1vs1 Tournament</h2>
 
-        <p>Becuase of lack of interest. Tournament play is cancelled</p>
+        <p>Because of lack of interest. Tournament play is cancelled</p>
       </div>
     </div>
   </div>
@@ -128,40 +140,7 @@
             <dir-pagination-controls pagination-id="activeGames"></dir-pagination-controls>
           </div>
         </uib-tab>
-        <uib-tab heading="Most wins" class="col-md-3 col-xs-12">
 
-
-          <table ng-table="gameListCtrl.winnersList"
-                 class="table table-condensed table-hover table-striped  text-center">
-            <caption>
-              <strong><label style="font-size: 1.5em;">Total number of players:
-                {{gameListCtrl.totalNumberOfPlayers}}</label></strong>
-            </caption>
-            <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
-              <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
-              <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
-              <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
-              <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
-            </tr>
-          </table>
-
-        </uib-tab>
-        <uib-tab heading="Civilization highscore" class="col-md-3 col-xs-12">
-
-          <table ng-table="gameListCtrl.civhighscores"
-                 class="table table-condensed table-hover table-striped  text-center">
-            <caption>
-              <strong><label style="font-size: 1.5em;">Total number of games finished:
-                {{gameListCtrl.totalNumberOfGames}}</label></strong>
-            </caption>
-            <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
-              <td data-title="'Civilization'" sortable="'civ'">{{row.civ}}</td>
-              <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
-              <td data-title="'Number of attempts'" sortable="'totalAttempt'">{{row.totalAttempt}}</td>
-              <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
-            </tr>
-          </table>
-        </uib-tab>
         <uib-tab heading="Finished Games" class="col-md-4 col-xs-12">
 
           <div class="table-responsive padd-top-7">

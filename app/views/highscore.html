@@ -1,0 +1,134 @@
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-6375020735571940",
+    enable_page_level_ads: true
+  });
+</script>
+<div class="container-fluid">
+  <div class="jumbotron">
+    <div class="container-fluid">
+      <h1>Highscore</h1>
+
+      <p class="lead">
+        Who is the best? And which Civs are the strongest?
+      </p>
+
+    </div>
+  </div>
+
+  <div class="row"></div>
+
+  <div class="row">
+
+    <uib-tabset justified="true" type="pills">
+      <uib-tab heading="Player highscore" class="col-lg-6 col-md-6 col-xs-12 padd-top-7">
+        <uib-tabset justified="true" type="pills">
+          <uib-tab heading="Total wins" class="col-md-3 col-xs-12">
+            <table ng-table="highscoreCtrl.winnersList"
+                   class="table table-condensed table-hover table-striped  text-center">
+              <caption>
+                <strong><label style="font-size: 1.5em;">Total number of players:
+                  {{highscoreCtrl.totalNumberOfPlayers}}<br/>
+
+                  Total number of games:
+                  {{highscoreCtrl.totalNumberOfGames}}</label></strong>
+              </caption>
+              <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+                <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
+                <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+                <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
+                <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
+              </tr>
+            </table>
+          </uib-tab>
+          <uib-tab heading="5 player game" class="col-md-3 col-xs-12">
+            <table ng-table="highscoreCtrl.fiveWinnersList"
+                   class="table table-condensed table-hover table-striped  text-center">
+              <caption>
+                <strong><label style="font-size: 1.5em;">Total number of 5 player games played:
+                  {{highscoreCtrl.fivePlayerGamesTotal}}</label></strong>
+              </caption>
+              <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+                <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
+                <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+                <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
+                <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="4 player game" class="col-md-3 col-xs-12">
+            <table ng-table="highscoreCtrl.fourWinnersList"
+                   class="table table-condensed table-hover table-striped  text-center">
+              <caption>
+                <strong><label style="font-size: 1.5em;">Total number of 4 player games played:
+                  {{highscoreCtrl.fourPlayerGamesTotal}}</label></strong>
+              </caption>
+              <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+                <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
+                <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+                <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
+                <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="3 player game" class="col-md-3 col-xs-12">
+            <table ng-table="highscoreCtrl.threeWinnersList"
+                   class="table table-condensed table-hover table-striped  text-center">
+              <caption>
+                <strong><label style="font-size: 1.5em;">Total number of 3 player games played:
+                  {{highscoreCtrl.threePlayerGamesTotal}}</label></strong>
+              </caption>
+              <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+                <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
+                <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+                <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
+                <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="2 player game" class="col-md-3 col-xs-12">
+            <table ng-table="highscoreCtrl.twoWinnersList"
+                   class="table table-condensed table-hover table-striped  text-center">
+              <caption>
+                <strong><label style="font-size: 1.5em;">Total number of 2 player games played:
+                  {{highscoreCtrl.twoPlayerGamesTotal}}</label></strong>
+              </caption>
+              <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+                <td data-title="'Username'" sortable="'username'">{{row.username}}</td>
+                <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+                <td data-title="'Number of attempts'" sortable="'attempts'">{{row.attempts}}</td>
+                <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
+              </tr>
+            </table>
+          </uib-tab>
+        </uib-tabset>
+      </uib-tab>
+
+      <uib-tab heading="Civilization highscore" class="col-lg-6 col-md-6 col-xs-12 padd-top-7">
+
+        <table ng-table="highscoreCtrl.civhighscores"
+               class="table table-condensed table-hover table-striped  text-center">
+          <caption>
+            <strong><label style="font-size: 1.5em;">Total number of players:
+              {{highscoreCtrl.totalNumberOfPlayers}}<br/>
+
+              Total number of games:
+              {{highscoreCtrl.totalNumberOfGames}}</label></strong>
+          </caption>
+          <tr ng-repeat="row in $data track by $index" ng-class-even="'row-even'" ng-class-odd="'row-odd'">
+            <td data-title="'Civilization'" sortable="'civ'">{{row.civ}}</td>
+            <td data-title="'Total wins'" sortable="'totalWins'">{{row.totalWins}}</td>
+            <td data-title="'Number of attempts'" sortable="'totalAttempt'">{{row.totalAttempt}}</td>
+            <td data-title="'Efficiency'" sortable="'percentWin'">{{row.percentWin}}</td>
+          </tr>
+        </table>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+
+</div>
+
