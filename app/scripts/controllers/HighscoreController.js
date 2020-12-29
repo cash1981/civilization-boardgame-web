@@ -140,8 +140,94 @@
       getData: function (params) {
         // use build-in angular filter
         // update table params
-        var orderedData = params.sorting() ? $filter('orderBy')(civHighscores, params.orderBy()) : civHighscores;
-        params.total(civHighscores.length);
+        var orderedData = params.sorting() ? $filter('orderBy')(civHighscores.winners, params.orderBy()) : civHighscores.winners;
+        params.total(civHighscores.winners.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: {
+        $data: {}, $emit: function () {
+        }
+      }
+    });
+
+   /* jshint ignore:start */
+    model.civFiveWinnersList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(civHighscores.fiveWinners, params.orderBy()) : civHighscores.fiveWinners;
+        params.total(civHighscores.fiveWinners.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: {
+        $data: {}, $emit: function () {
+        }
+      }
+    });
+
+    /* jshint ignore:start */
+    model.civFourWinnersList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        var orderedData = params.sorting() ? $filter('orderBy')(civHighscores.fourWinners, params.orderBy()) : civHighscores.fourWinners;
+        params.total(civHighscores.fourWinners.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: {
+        $data: {}, $emit: function () {
+        }
+      }
+    });
+
+    /* jshint ignore:start */
+    model.civThreeWinnersList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(civHighscores.threeWinners, params.orderBy()) : civHighscores.threeWinners;
+        params.total(civHighscores.threeWinners.length);
+        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+      },
+      $scope: {
+        $data: {}, $emit: function () {
+        }
+      }
+    });
+
+    /* jshint ignore:start */
+    model.civTwoWinnersList = new NgTableParams({
+      page: 1,            // show first page
+      count: 10,          // count per page
+      sorting: {
+        totalWins: 'desc'     // initial sorting
+      }
+    }, {
+      total: 0, // length of data
+      getData: function (params) {
+        // use build-in angular filter
+        // update table params
+        var orderedData = params.sorting() ? $filter('orderBy')(civHighscores.twoWinners, params.orderBy()) : civHighscores.twoWinners;
+        params.total(civHighscores.twoWinners.length);
         return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
       },
       $scope: {
