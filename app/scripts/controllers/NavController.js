@@ -16,16 +16,16 @@
     model.registerVerification = null;
     model.winner = null;
 
-    model.clearOptions = function() {
+    model.clearOptions = function () {
       GameOption.setShowValue(false);
       GameOption.setShowEndGameValue(false);
       GameOption.setShowAdminValue(false);
     };
 
-    model.endGame = function(winner) {
+    model.endGame = function (winner) {
       var game = GameService.getGameById(winner.pbfId);
 
-      if((game && game.player && game.player.gameCreator) || model.user.username === 'admin') {
+      if ((game && game.player && game.player.gameCreator) || model.user.username === 'admin') {
         model.clearOptions();
         GameService.endGame(winner.pbfId, winner.username);
       } else {
@@ -33,15 +33,15 @@
       }
     };
 
-    model.withdrawGame = function() {
+    model.withdrawGame = function () {
       var game = GameService.getGameById($routeParams.id);
-      if(game && game.player) {
-        if(game.player.gameCreator) {
+      if (game && game.player) {
+        if (game.player.gameCreator) {
           growl.error('As game creator you cannot withdraw from the game. You can only end it!');
           return;
         }
 
-        if(game.player.username === model.user.username) {
+        if (game.player.username === model.user.username) {
           model.clearOptions();
           GameService.withdrawFromGame($routeParams.id);
         } else {
@@ -50,8 +50,8 @@
       }
     };
 
-    model.deleteGame = function() {
-      if("admin" === model.user.username) {
+    model.deleteGame = function () {
+      if ("admin" === model.user.username) {
         model.clearOptions();
         AdminService.deleteGame($routeParams.id);
       } else {
@@ -59,15 +59,15 @@
       }
     };
 
-    model.openNotes = function(size) {
+    model.openNotes = function (size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'gamenotes.html',
         controller: 'NoteController as noteCtrl',
         size: size
       });
 
-      modalInstance.result.then(function(note) {
-        if(note) {
+      modalInstance.result.then(function (note) {
+        if (note) {
           PlayerService.saveNote($routeParams.id, note);
         }
       }, function () {
@@ -87,15 +87,15 @@
       basicauth.logout();
     };
 
-    model.openSignup = function(size) {
+    model.openSignup = function (size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'signup.html',
         controller: 'RegisterController as registerCtrl',
         size: size
       });
 
-      modalInstance.result.then(function(register) {
-        if(register) {
+      modalInstance.result.then(function (register) {
+        if (register) {
           basicauth.register(register);
         }
       }, function () {
@@ -103,15 +103,15 @@
       });
     };
 
-    model.openForgotPassword = function(size) {
+    model.openForgotPassword = function (size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'forgotpassword.html',
         controller: 'RegisterController as registerCtrl',
         size: size
       });
 
-      modalInstance.result.then(function(forgotpass) {
-        if(forgotpass) {
+      modalInstance.result.then(function (forgotpass) {
+        if (forgotpass) {
           basicauth.forgotpass(forgotpass);
         }
       }, function () {
@@ -119,50 +119,59 @@
       });
     };
 
-    model.openGeneralInfo = function(size) {
+    model.openGeneralInfo = function (size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'image1.html',
         controller: 'RegisterController as registerCtrl',
         size: size
       });
 
-      modalInstance.result.then(function() {
+      modalInstance.result.then(function () {
       }, function () {
         //Cancel callback here
       });
     };
 
-    model.openTechOverview = function(size) {
+    model.openTechOverview = function (size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'image2.html',
         controller: 'RegisterController as registerCtrl',
         size: size
       });
 
-      modalInstance.result.then(function() {
+      modalInstance.result.then(function () {
       }, function () {
         //Cancel callback here
       });
     };
 
-    model.openEndGame = function(size) {
+    model.openEndGame = function (size) {
       var modalInstance = $uibModal.open({
         templateUrl: 'endGame.html',
         controller: 'TradeController as tradeCtrl',
         size: size,
         resolve: {
-          players: function() {
+          players: function () {
             return GameService.allPlayers($routeParams.id);
           },
-          item : undefined
+          item: undefined
         }
       });
 
-      modalInstance.result.then(function(winner) {
+      modalInstance.result.then(function (winner) {
         model.endGame(winner);
       }, function () {
         //Cancel callback here
       });
+    };
+
+    model.takeButton = function () {
+      var game = GameService.getGameById($routeParams.id);
+      if (game && game.player) {
+        PlayerService.takeTurnButton($routeParams.id);
+      } else {
+        growl.error('Could not take button');
+      }
     };
   };
 

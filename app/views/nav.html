@@ -27,6 +27,8 @@
         <ul class="dropdown-menu">
           <li>
             <a ng-click="navCtrl.openNotes('lg')">Personal game notes</a></li>
+          <li><a ng-really-message="This will give you turn button, Are you sure?"
+                 ng-really-click="navCtrl.takeButton()">Take turn button</a></li>
           <li role="separator" class="divider"></li>
           <li><a href="#/endgame"
                  ng-really-message="This will withdraw you from the current game. Are you sure?"
