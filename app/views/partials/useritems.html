@@ -154,7 +154,7 @@
 
   <div class="row" ng-show="userCtrl.greatPersons.length > 0">
     <div collapse="gpCollapse">
-      <div ng-repeat="item in userCtrl.greatPersons track by $index" class="thumbnail col-md-3">
+      <div ng-repeat="item in userCtrl.greatPersons track by $index" class="thumbnail col-xs-12 col-md-4 col-lg-3">
         <img ng-src="/images/useritems/{{item.greatperson.image}}"  uib-tooltip="{{item.greatperson.name}}"/>
 
         <div class="caption">
@@ -165,18 +165,25 @@
           </p>
 
           <p class="text-center">
-            <button ng-really-message="This will discard your item. Are you sure?"
+            <button ng-really-message="This will discard your great person. Are you sure?"
                     ng-really-click="userCtrl.discardItem(item)"
                     class="btn btn-sm btn-danger"
-                    uib-tooltip="Discard your item. This will make an entry in the game log">
-              Discard Great Person
+                    uib-tooltip="Discard your great person. This will make an entry in the game log">
+              Discard Item
             </button>
-            <button ng-really-message="This will reveal your item. Are you sure?"
+            <button ng-really-message="This will reveal your great person. Are you sure?"
                     ng-really-click="userCtrl.revealItem(item)"
                     ng-disabled="item.greatperson.hidden == false"
+                    class="btn btn-sm btn-warning"
+                    uib-tooltip="Reveal your great person. This will make an entry in the game log and display hidden information">
+              Reveal Item
+            </button>
+
+            <button ng-really-message="This will put your great person back in the deck and deck will be shuffled. Use this when you have made a mistake"
+                    ng-really-click="userCtrl.backInDeck(item)"
                     class="btn btn-sm btn-success"
-                    uib-tooltip="Reveal your item. This will make an entry in the game log and display hidden information">
-              Reveal Great Person
+                    uib-tooltip="Use this button when you have made a mistake. Great person will be put back in the deck and shuffle">
+              Put back in deck
             </button>
           </p>
         </div>
