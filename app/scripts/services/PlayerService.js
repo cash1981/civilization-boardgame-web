@@ -293,9 +293,14 @@
         return $q.reject("Couldn't get gameId");
       }
       return $http.put(baseUrl + gameId + "/turn/take")
-        .success(function () {
+        .success(function (response) {
           growl.success("Turn taken");
-        }).error(function (data) {
+          return response;
+        }).success(function (response) {
+          GameService.fetchGameByIdFromServer(gameId);
+          return response;
+        })
+        .error(function (data) {
           growl.error("Could not take turn button");
           return data;
         });
