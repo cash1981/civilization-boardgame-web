@@ -2,7 +2,7 @@
   "name": "civilizationweb",
   "version": "0.0.0",
   "dependencies": {
-    "express": "^4.12.3",
+    "express": "^4.17.3",
     "gzippo": "^0.2.0"
   },
   "devDependencies": {
